@@ -1,65 +1,168 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import HeroSection from "@/components/HeroSection";
+import ArticleCard from "@/components/ArticleCard";
+import PostCard from "@/components/PostCard";
+import { mockGuides, mockPosts } from "@/lib/mockData";
+import { BookOpen, Users, ArrowRight } from "lucide-react";
 
 export default function Home() {
+  // Get latest guides and trending posts
+  const latestGuides = mockGuides.slice(0, 3);
+  const trendingPosts = mockPosts.sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <HeroSection />
+
+      {/* Latest Guides Section */}
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8 flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <div className="mb-2 flex items-center gap-2">
+                <BookOpen className="text-blue-600" size={24} />
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  Latest Guides
+                </h2>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">
+                Expert tutorials and articles from our editorial team
+              </p>
+            </motion.div>
+            <Link
+              href="/guides"
+              className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              View All Guides
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {latestGuides.map((guide, index) => (
+              <ArticleCard key={guide.slug} guide={guide} index={index} />
+            ))}
+          </div>
+
+          <div className="mt-8 text-center sm:hidden">
+            <Link
+              href="/guides"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              View All Guides
+              <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Community Highlights Section */}
+      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8 flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="mb-2 flex items-center gap-2">
+                <Users className="text-orange-600" size={24} />
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  Trending Community Posts
+                </h2>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">
+                Popular posts from our community members
+              </p>
+            </motion.div>
+            <Link
+              href="/community"
+              className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+            >
+              View All Posts
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {trendingPosts.map((post, index) => (
+              <PostCard key={post.slug} post={post} index={index} />
+            ))}
+          </div>
+
+          <div className="mt-8 text-center sm:hidden">
+            <Link
+              href="/community"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              View All Posts
+              <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Features Section */}
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
+            <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
+              Why Join Our Community?
+            </h2>
+            <p className="mb-12 text-gray-600 dark:text-gray-400">
+              Everything you need to learn, grow, and connect
+            </p>
+          </motion.div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                icon: "📚",
+                title: "Expert Content",
+                description: "Access high-quality guides and tutorials written by industry experts."
+              },
+              {
+                icon: "🤝",
+                title: "Active Community",
+                description: "Connect with thousands of creators, developers, and designers."
+              },
+              {
+                icon: "🚀",
+                title: "Share & Learn",
+                description: "Share your knowledge and learn from others' experiences."
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="rounded-2xl bg-white p-8 text-center shadow-md dark:bg-gray-800"
+              >
+                <div className="mb-4 text-5xl">{feature.icon}</div>
+                <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
