@@ -9,15 +9,11 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  // 선택적으로 basePath를 지정 (워드프레스 내 서브폴더에 둘 경우)
-  // basePath: "/frontend",
-
   // ⚡ React Compiler 설정 유지
   reactCompiler: true,
-  output: "export",
-  images: {
-    unoptimized: true,
-  },
+
+  // 선택적으로 basePath를 지정 (워드프레스 내 서브폴더에 둘 경우)
+  // basePath: "/frontend",
 };
 
 export default nextConfig;
