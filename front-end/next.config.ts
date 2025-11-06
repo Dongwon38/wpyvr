@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
 
   // ⚡ React Compiler 설정 유지
   reactCompiler: true,
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
