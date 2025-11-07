@@ -42,11 +42,14 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         className={cn(
           "h-48 bg-gradient-to-br",
           isPast
-            ? "from-gray-400 to-gray-500"
+            ? "from-gray-400 to-gray-500 grayscale"
             : "from-blue-500 via-purple-500 to-pink-500"
         )}
       >
-        <div className="flex h-full items-center justify-center">
+        <div className={cn(
+          "flex h-full items-center justify-center",
+          isPast && "grayscale"
+        )}>
           <Calendar className="h-16 w-16 text-white opacity-50" />
         </div>
       </div>
