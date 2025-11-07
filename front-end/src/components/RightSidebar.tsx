@@ -6,6 +6,7 @@ import { X, LogIn, LogOut, HelpCircle, Users, MessageCircle, Send, User as UserI
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/features/auth/AuthForm";
+import { getRecentlyActiveUsers } from "@/lib/mockData";
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -18,13 +19,8 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const [message, setMessage] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
   
-  // Mock online users
-  const onlineUsers = [
-    { id: 1, name: "Sarah Kim", status: "online", avatar: "SK" },
-    { id: 2, name: "John Doe", status: "online", avatar: "JD" },
-    { id: 3, name: "Emma Lee", status: "away", avatar: "EL" },
-    { id: 4, name: "Mike Chen", status: "online", avatar: "MC" },
-  ];
+  // Get recently active users
+  const recentlyActiveUsers = getRecentlyActiveUsers(4);
 
   // Mock chat messages
   const chatMessages = [
@@ -178,48 +174,52 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             </>
           )}
 
-          {/* Online Users Section */}
+          {/* Recently Active Members Section */}
           <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-800">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Users size={20} className="text-green-500" />
+                <Users size={20} className="text-purple-500" />
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Online Users
+                  Recently Active Members
                 </h3>
               </div>
-              <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                {onlineUsers.filter(u => u.status === "online").length} online
-              </span>
             </div>
-            <div className="space-y-3">
-              {onlineUsers.map((user) => (
+            <div className="space-y-4">
+              {recentlyActiveUsers.map((member) => (
                 <div
-                  key={user.id}
-                  className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                  key={member.id}
+                  className="flex gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
                 >
-                  <div className="relative">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
-                      {user.avatar}
+                  <div className="flex-shrink-0">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
+                      {member.avatar}
                     </div>
-                    <span
-                      className={cn(
-                        "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800",
-                        user.status === "online" ? "bg-green-500" : "bg-yellow-500"
-                      )}
-                    />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                      {user.name}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                      {user.status}
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                        {member.name}
+                      </p>
+                      {member.memberType === "expert" && (
+                        <span className="flex-shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
+                          Expert
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+                      {member.bio}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-            <button className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700/50">
+            <button 
+              onClick={() => {
+                router.push("/members");
+                onClose();
+              }}
+              className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700/50"
+            >
               View All Members
             </button>
           </div>
