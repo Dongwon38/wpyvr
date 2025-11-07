@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Users, Info, X } from "lucide-react";
+import { Home, BookOpen, Users, Info, X, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LeftSidebarProps {
@@ -15,6 +15,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
 
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
+    { href: "/blog", label: "Blog", icon: FileText },
     { href: "/guides", label: "Guides", icon: BookOpen },
     { href: "/community", label: "Community", icon: Users },
     { href: "/about", label: "About", icon: Info },
