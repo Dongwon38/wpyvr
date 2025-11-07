@@ -64,5 +64,8 @@ require_once get_template_directory() . '/inc/custom-profile.php';
 // Include custom post type registration
 require_once get_template_directory() . '/inc/register-cpt.php';
 
+// Include taxonomy registration
+require_once get_template_directory() . '/inc/register-taxonomies.php';
+
 // Include ACF fields registration
 require_once get_template_directory() . '/inc/register-acf.php';
