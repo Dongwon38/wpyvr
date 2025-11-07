@@ -2,26 +2,22 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import ArticleCard from "@/components/ArticleCard";
 import PostCard from "@/components/PostCard";
 import EventCard from "@/components/EventCard";
 import { mockGuides, mockPosts, getUpcomingEvents, getPastEvents } from "@/lib/mockData";
 import { BookOpen, Users, ArrowRight, Calendar, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const [eventTab, setEventTab] = useState<"upcoming" | "past">("upcoming");
-  
   // Get latest guides and trending posts
   const latestGuides = mockGuides.slice(0, 3);
   const trendingPosts = mockPosts.sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
   
-  // Get events
-  const upcomingEvents = getUpcomingEvents();
-  const pastEvents = getPastEvents();
-  const displayedEvents = eventTab === "upcoming" ? upcomingEvents : pastEvents;
+  // Get all events sorted by date (upcoming first, then past)
+  const allEvents = [...getUpcomingEvents(), ...getPastEvents()].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  }).reverse(); // Reverse to show upcoming (future dates) first
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900">
@@ -56,35 +52,9 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Tab Buttons */}
-          <div className="mb-6 flex gap-2">
-            <button
-              onClick={() => setEventTab("upcoming")}
-              className={cn(
-                "rounded-lg px-6 py-2.5 text-sm font-semibold transition-all",
-                eventTab === "upcoming"
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-              )}
-            >
-              Upcoming ({upcomingEvents.length})
-            </button>
-            <button
-              onClick={() => setEventTab("past")}
-              className={cn(
-                "rounded-lg px-6 py-2.5 text-sm font-semibold transition-all",
-                eventTab === "past"
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-              )}
-            >
-              Past ({pastEvents.length})
-            </button>
-          </div>
-
           {/* Events Grid */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {displayedEvents.map((event, index) => (
+            {allEvents.map((event, index) => (
               <EventCard key={event.id} event={event} index={index} />
             ))}
           </div>
