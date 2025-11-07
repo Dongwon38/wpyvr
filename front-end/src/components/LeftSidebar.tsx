@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Users, Info, X, FileText, Calendar, HelpCircle } from "lucide-react";
+import { Home, BookOpen, Users, Info, X, FileText, Calendar, HelpCircle, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LeftSidebarProps {
@@ -20,6 +20,11 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
     { href: "/guides", label: "Guides", icon: BookOpen },
     { href: "/community", label: "Community", icon: Users },
     { href: "/about", label: "About", icon: Info },
+  ];
+
+  const legalLinks = [
+    { href: "/code-of-conduct", label: "Code of Conduct" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
   ];
 
   return (
@@ -88,6 +93,34 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
               );
             })}
           </nav>
+
+          {/* Legal Links */}
+          <div className="border-t border-gray-200 px-4 py-3 dark:border-gray-800">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <Shield size={14} />
+              <span>Legal</span>
+            </div>
+            <div className="space-y-1">
+              {legalLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={onClose}
+                    className={cn(
+                      "block rounded-lg px-3 py-2 text-xs font-medium transition-all",
+                      isActive
+                        ? "bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Bottom Section - Need Help */}
           <div className="border-t border-gray-200 p-4 dark:border-gray-800">
