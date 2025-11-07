@@ -2,20 +2,18 @@
 
 import { useState, useRef } from "react"
 import { Upload, User, Loader2 } from "lucide-react"
-import { storage } from "@/lib/firebase"
+import { storage, auth } from "@/lib/firebase"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 import imageCompression from "browser-image-compression"
 
 interface AvatarUploaderProps {
   currentAvatarUrl?: string
   onAvatarChange: (url: string) => void
-  userId: number
 }
 
 export default function AvatarUploader({
   currentAvatarUrl,
   onAvatarChange,
-  userId,
 }: AvatarUploaderProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -25,6 +23,13 @@ export default function AvatarUploader({
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Check if user is authenticated
+    const currentUser = auth.currentUser
+    if (!currentUser) {
+      alert("You must be logged in to upload an avatar")
+      return
+    }
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
@@ -61,10 +66,15 @@ export default function AvatarUploader({
       }
       reader.readAsDataURL(compressedFile)
 
-      // Upload to Firebase Storage
+      // Generate file name with timestamp to prevent overwrite
       const timestamp = Date.now()
-      const fileName = `avatars/${userId}_${timestamp}.jpg`
-      const storageRef = ref(storage, fileName)
+      const fileExtension = file.name.split('.').pop() || 'jpg'
+      const sanitizedFileName = `avatar_${timestamp}.${fileExtension}`
+      
+      // Upload to Firebase Storage with new path structure: avatars/{userId}/{fileName}
+      // userId is Firebase Auth UID (not WordPress user_id)
+      const filePath = `avatars/${currentUser.uid}/${sanitizedFileName}`
+      const storageRef = ref(storage, filePath)
       const uploadTask = uploadBytesResumable(storageRef, compressedFile)
 
       uploadTask.on(

@@ -122,7 +122,6 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         <AvatarUploader
           currentAvatarUrl={avatarUrl}
           onAvatarChange={setAvatarUrl}
-          userId={wpUser?.wp_user_id || 0}
         />
       </div>
 
