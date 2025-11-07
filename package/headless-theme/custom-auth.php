@@ -151,6 +151,11 @@ function custom_auth_sync_user(WP_REST_Request $request) {
     $user_data = get_userdata($user_id);
     $jwt = custom_generate_jwt_for_user($user_id);
 
+    // ✅ Update last_seen_at timestamp
+    if (function_exists('update_user_last_seen')) {
+        update_user_last_seen($user_id);
+    }
+
     return new WP_REST_Response([
         'success' => true,
         'wp_user_id' => $user_id,
@@ -225,6 +230,11 @@ function custom_auth_verify_jwt(WP_REST_Request $request) {
     $user_data = get_userdata($user_id);
     if (!$user_data) {
         return new WP_Error('user_not_found', 'User not found', ['status' => 404]);
+    }
+
+    // ✅ Update last_seen_at timestamp on token verification
+    if (function_exists('update_user_last_seen')) {
+        update_user_last_seen($user_id);
     }
 
     return new WP_REST_Response([

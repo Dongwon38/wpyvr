@@ -57,3 +57,6 @@ add_filter('show_admin_bar', '__return_false');
 
 // Include custom authentication integration
 require_once get_template_directory() . '/custom-auth.php';
+
+// Include custom profile management
+require_once get_template_directory() . '/custom-profile.php';
