@@ -148,11 +148,11 @@ export default function HeroSection() {
   const SecondaryIcon = slide.secondaryCTA.icon;
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-orange-50 px-4 py-20 dark:from-gray-900 dark:via-blue-950 dark:to-orange-950 sm:px-6 lg:px-8 lg:py-32">
+    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-orange-50 px-4 py-12 dark:from-gray-900 dark:via-blue-950 dark:to-orange-950 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-white/[0.02]" />
       
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative mx-auto max-w-6xl">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={currentSlide}
@@ -172,7 +172,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/50 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm backdrop-blur-sm dark:bg-gray-800/50 dark:text-gray-300"
+              className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/50 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm backdrop-blur-sm dark:bg-gray-800/50 dark:text-gray-300 sm:text-sm"
             >
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
@@ -186,7 +186,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-6 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl"
+              className="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl"
             >
               <span className="block">{slide.title}</span>
               <span className="bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
@@ -199,7 +199,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mx-auto mb-10 max-w-2xl text-lg text-gray-600 dark:text-gray-300 sm:text-xl"
+              className="mx-auto mb-6 max-w-2xl text-base text-gray-600 dark:text-gray-300 sm:text-lg"
             >
               {slide.description}
             </motion.p>
@@ -209,27 +209,27 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+              className="flex flex-col items-center justify-center gap-3 sm:flex-row"
             >
               <Link
                 href={slide.primaryCTA.href}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl sm:w-auto"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl sm:w-auto"
               >
-                <PrimaryIcon size={20} />
+                <PrimaryIcon size={18} />
                 {slide.primaryCTA.text}
                 <ArrowRight 
-                  size={20} 
+                  size={18} 
                   className="transition-transform group-hover:translate-x-1" 
                 />
               </Link>
               <Link
                 href={slide.secondaryCTA.href}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-gray-300 bg-white px-8 py-4 text-base font-semibold text-gray-900 shadow-lg transition-all hover:border-gray-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 sm:w-auto"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-lg transition-all hover:border-gray-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 sm:w-auto"
               >
-                <SecondaryIcon size={20} />
+                <SecondaryIcon size={18} />
                 {slide.secondaryCTA.text}
                 <ArrowRight 
-                  size={20} 
+                  size={18} 
                   className="transition-transform group-hover:translate-x-1" 
                 />
               </Link>
@@ -240,17 +240,17 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-16 grid gap-8 sm:grid-cols-3"
+              className="mt-10 grid gap-4 sm:grid-cols-3"
             >
               {slide.stats.map((stat, index) => (
                 <div
                   key={index}
-                  className="rounded-2xl bg-white/60 p-6 text-center backdrop-blur-sm dark:bg-gray-800/60"
+                  className="rounded-xl bg-white/60 p-4 text-center backdrop-blur-sm dark:bg-gray-800/60"
                 >
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
                     {stat.value}
                   </div>
-                  <div className="mt-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                  <div className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400 sm:text-sm">
                     {stat.label}
                   </div>
                 </div>
@@ -260,38 +260,38 @@ export default function HeroSection() {
         </AnimatePresence>
 
         {/* Navigation Controls */}
-        <div className="mt-12 flex items-center justify-center gap-4">
+        <div className="mt-8 flex items-center justify-center gap-3">
           {/* Previous Button */}
           <button
             onClick={prevSlide}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl dark:bg-gray-800/80 dark:text-white dark:hover:bg-gray-800"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-md backdrop-blur-sm transition-all hover:bg-white hover:shadow-lg dark:bg-gray-800/80 dark:text-white dark:hover:bg-gray-800"
             aria-label="Previous slide"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={20} />
           </button>
 
           {/* Slide Indicator Badge */}
-          <div className="flex items-center gap-3">
-            <div className="rounded-full bg-white/90 px-5 py-2.5 shadow-lg backdrop-blur-sm dark:bg-gray-800/90">
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-white/90 px-4 py-2 shadow-md backdrop-blur-sm dark:bg-gray-800/90">
+              <span className="text-base font-bold text-gray-900 dark:text-white">
                 {currentSlide + 1}
               </span>
-              <span className="mx-1.5 text-gray-400 dark:text-gray-500">/</span>
-              <span className="text-lg font-semibold text-gray-600 dark:text-gray-400">
+              <span className="mx-1 text-gray-400 dark:text-gray-500">/</span>
+              <span className="text-base font-semibold text-gray-600 dark:text-gray-400">
                 {totalSlides}
               </span>
             </div>
 
             {/* Dot Indicators */}
-            <div className="hidden gap-2 sm:flex">
+            <div className="hidden gap-1.5 sm:flex">
               {heroSlides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`h-2.5 rounded-full transition-all ${
+                  className={`h-2 rounded-full transition-all ${
                     index === currentSlide
-                      ? "w-8 bg-blue-600 dark:bg-blue-400"
-                      : "w-2.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600"
+                      ? "w-6 bg-blue-600 dark:bg-blue-400"
+                      : "w-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -302,10 +302,10 @@ export default function HeroSection() {
           {/* Next Button */}
           <button
             onClick={nextSlide}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg backdrop-blur-sm transition-all hover:bg-white hover:shadow-xl dark:bg-gray-800/80 dark:text-white dark:hover:bg-gray-800"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-md backdrop-blur-sm transition-all hover:bg-white hover:shadow-lg dark:bg-gray-800/80 dark:text-white dark:hover:bg-gray-800"
             aria-label="Next slide"
           >
-            <ChevronRight size={24} />
+            <ChevronRight size={20} />
           </button>
         </div>
       </div>
