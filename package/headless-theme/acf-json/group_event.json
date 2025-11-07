@@ -61,12 +61,12 @@
             "append": ""
         },
         {
-            "key": "field_event_attendees",
-            "label": "Attendees Count",
-            "name": "attendees",
+            "key": "field_event_link",
+            "label": "Event Link",
+            "name": "event_link",
             "aria-label": "",
-            "type": "number",
-            "instructions": "Number of registered\/attended participants",
+            "type": "url",
+            "instructions": "External link for registration or more information",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -74,13 +74,8 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": 0,
-            "min": 0,
-            "max": "",
-            "placeholder": "",
-            "step": "",
-            "prepend": "",
-            "append": ""
+            "default_value": "",
+            "placeholder": "https://example.com/register"
         },
         {
             "key": "field_event_image",
