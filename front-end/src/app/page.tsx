@@ -14,7 +14,7 @@ export default function Home() {
   const trendingPosts = mockPosts.sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-900">
       <HeroSection />
 
       {/* Latest Guides Section */}
