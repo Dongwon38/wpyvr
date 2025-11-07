@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { onAuthStateChanged, User, signOut as firebaseSignOut } from "firebase/auth"
 import { auth } from "@/lib/firebase"
+import { fetchUserProfile, type UserProfile } from "@/lib/profileApi"
 
 type WordPressUser = {
   wp_user_id: number
@@ -14,17 +15,21 @@ type WordPressUser = {
 type AuthContextType = {
   user: User | null
   wpUser: WordPressUser | null
+  userProfile: UserProfile | null
   loading: boolean
   syncWithWordPress: (firebaseUser: User) => Promise<void>
   logout: () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   wpUser: null,
+  userProfile: null,
   loading: true,
   syncWithWordPress: async () => {},
   logout: async () => {},
+  refreshProfile: async () => {},
 })
 
 const WP_API_URL = "https://wpyvr.bitebuddy.ca/backend/wp-json/custom-auth/v1"
@@ -32,6 +37,7 @@ const WP_API_URL = "https://wpyvr.bitebuddy.ca/backend/wp-json/custom-auth/v1"
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [wpUser, setWpUser] = useState<WordPressUser | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
   // Load WordPress JWT from localStorage on mount
@@ -45,6 +51,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     }
   }, [])
+
+  // Fetch user profile
+  const loadUserProfile = async (wpUserData: WordPressUser) => {
+    try {
+      const profile = await fetchUserProfile(wpUserData.wp_user_id, wpUserData.jwt)
+      setUserProfile(profile)
+      console.log("✅ User profile loaded")
+    } catch (error) {
+      console.error("❌ Failed to load user profile:", error)
+      // Profile might not exist yet, which is fine
+      setUserProfile(null)
+    }
+  }
+
+  // Refresh profile (can be called from components after update)
+  const refreshProfile = async () => {
+    if (wpUser) {
+      await loadUserProfile(wpUser)
+    }
+  }
 
   // Sync Firebase user with WordPress
   const syncWithWordPress = async (firebaseUser: User) => {
@@ -84,6 +110,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("wp_user", JSON.stringify(wpUserData))
       
       console.log("✅ WordPress sync successful")
+
+      // Load user profile after successful sync
+      await loadUserProfile(wpUserData)
     } catch (error) {
       console.error("❌ WordPress sync error:", error)
       throw error
@@ -95,6 +124,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await firebaseSignOut(auth)
       setWpUser(null)
+      setUserProfile(null)
       localStorage.removeItem("wp_user")
       console.log("✅ Logged out successfully")
     } catch (error) {
@@ -118,12 +148,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           } catch (error) {
             console.error("Auto-sync failed:", error)
           }
+        } else {
+          // If we have stored WP user, load their profile
+          try {
+            const wpUserData = JSON.parse(storedWpUser)
+            await loadUserProfile(wpUserData)
+          } catch (error) {
+            console.error("Failed to load profile on mount:", error)
+          }
         }
       }
       
       // If user logged out from Firebase, clear WordPress data
       if (!firebaseUser) {
         setWpUser(null)
+        setUserProfile(null)
         localStorage.removeItem("wp_user")
       }
       
@@ -135,7 +174,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, wpUser, loading, syncWithWordPress, logout }}>
+    <AuthContext.Provider value={{ user, wpUser, userProfile, loading, syncWithWordPress, logout, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )
