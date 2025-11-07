@@ -110,8 +110,19 @@ export default function PrivacyPolicyPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="rounded-2xl bg-white p-8 shadow-md dark:bg-gray-800 sm:p-12"
         >
-          <div
-            className="prose prose-lg prose-green max-w-none dark:prose-invert prose-headings:font-bold prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-a:text-green-400 dark:hover:prose-a:text-green-300"
+          <article
+            className="prose prose-lg max-w-none dark:prose-invert
+              prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
+              prose-p:text-gray-700 dark:prose-p:text-gray-300
+              prose-a:text-green-600 prose-a:no-underline hover:prose-a:text-green-700 hover:prose-a:underline
+              dark:prose-a:text-green-400 dark:hover:prose-a:text-green-300
+              prose-strong:text-gray-900 dark:prose-strong:text-white
+              prose-ul:list-disc prose-ol:list-decimal
+              prose-li:text-gray-700 dark:prose-li:text-gray-300
+              prose-img:rounded-lg prose-img:shadow-md
+              prose-code:text-green-600 dark:prose-code:text-green-400
+              prose-pre:bg-gray-900 prose-pre:text-gray-100
+              prose-blockquote:border-l-green-600 prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300"
             dangerouslySetInnerHTML={{ __html: page.content }}
           />
         </motion.div>
