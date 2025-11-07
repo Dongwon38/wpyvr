@@ -1,0 +1,735 @@
+[
+  {
+    "key": "group_hero_slide",
+    "title": "Hero Slide Details",
+    "fields": [
+      {
+        "key": "field_hero_badge",
+        "label": "Badge Text",
+        "name": "badge",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Small badge text shown above the title (e.g., \"Join 10,000+ community members\")",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_hero_title",
+        "label": "Title",
+        "name": "title",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "First part of the heading (e.g., \"A place where\")",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_hero_highlight",
+        "label": "Highlight Text",
+        "name": "highlight",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Highlighted second part of heading (e.g., \"ideas, tools, and people meet\")",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_hero_description",
+        "label": "Description",
+        "name": "description",
+        "aria-label": "",
+        "type": "textarea",
+        "instructions": "Supporting text below the heading",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_hero_primary_cta",
+        "label": "Primary CTA",
+        "name": "primary_cta",
+        "aria-label": "",
+        "type": "group",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_primary_cta_text",
+            "label": "Button Text",
+            "name": "text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "Read Guides",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+          },
+          {
+            "key": "field_primary_cta_href",
+            "label": "Button Link",
+            "name": "href",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "/guides",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+          },
+          {
+            "key": "field_primary_cta_icon",
+            "label": "Icon Name",
+            "name": "icon",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Lucide icon name (e.g., BookOpen, Users)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "BookOpen",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+          }
+        ]
+      },
+      {
+        "key": "field_hero_secondary_cta",
+        "label": "Secondary CTA",
+        "name": "secondary_cta",
+        "aria-label": "",
+        "type": "group",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_secondary_cta_text",
+            "label": "Button Text",
+            "name": "text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "Join Community",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+          },
+          {
+            "key": "field_secondary_cta_href",
+            "label": "Button Link",
+            "name": "href",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "/community",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+          },
+          {
+            "key": "field_secondary_cta_icon",
+            "label": "Icon Name",
+            "name": "icon",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "Users",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+          }
+        ]
+      },
+      {
+        "key": "field_hero_stats",
+        "label": "Stats",
+        "name": "stats",
+        "aria-label": "",
+        "type": "repeater",
+        "instructions": "Add 3 statistics to display",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "table",
+        "pagination": 0,
+        "min": 3,
+        "max": 3,
+        "collapsed": "",
+        "button_label": "Add Stat",
+        "rows_per_page": 20,
+        "sub_fields": [
+          {
+            "key": "field_stat_label",
+            "label": "Label",
+            "name": "label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent_repeater": "field_hero_stats"
+          },
+          {
+            "key": "field_stat_value",
+            "label": "Value",
+            "name": "value",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent_repeater": "field_hero_stats"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "hero_slide"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "modified": 1699345200
+  },
+  {
+    "key": "group_guide",
+    "title": "Guide Details",
+    "fields": [
+      {
+        "key": "field_guide_image",
+        "label": "Featured Image URL",
+        "name": "image",
+        "aria-label": "",
+        "type": "image",
+        "instructions": "Upload or select a featured image",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "url",
+        "library": "all",
+        "min_width": "",
+        "min_height": "",
+        "min_size": "",
+        "max_width": "",
+        "max_height": "",
+        "max_size": "",
+        "mime_types": "",
+        "preview_size": "medium"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "guide"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "modified": 1699345200
+  },
+  {
+    "key": "group_community_post",
+    "title": "Community Post Details",
+    "fields": [
+      {
+        "key": "field_post_avatar",
+        "label": "Author Avatar",
+        "name": "avatar",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Emoji or icon for author avatar (e.g., 👤, 🧑‍💻)",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "👤",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_post_upvotes",
+        "label": "Upvotes",
+        "name": "upvotes",
+        "aria-label": "",
+        "type": "number",
+        "instructions": "Number of upvotes (also accessible via post meta)",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": 0,
+        "min": 0,
+        "max": "",
+        "placeholder": "",
+        "step": "",
+        "prepend": "",
+        "append": ""
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "community_post"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "modified": 1699345200
+  },
+  {
+    "key": "group_event",
+    "title": "Event Details",
+    "fields": [
+      {
+        "key": "field_event_date",
+        "label": "Event Date",
+        "name": "event_date",
+        "aria-label": "",
+        "type": "date_picker",
+        "instructions": "Select the event date",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "display_format": "F j, Y",
+        "return_format": "Y-m-d",
+        "first_day": 1
+      },
+      {
+        "key": "field_event_time",
+        "label": "Event Time",
+        "name": "time",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Event time (e.g., \"2:00 PM - 5:00 PM EST\")",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "2:00 PM - 5:00 PM EST",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_event_location",
+        "label": "Location",
+        "name": "location",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "Event location (e.g., \"Online (Zoom)\", \"Community Center\")",
+        "required": 1,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_event_attendees",
+        "label": "Attendees Count",
+        "name": "attendees",
+        "aria-label": "",
+        "type": "number",
+        "instructions": "Number of registered/attended participants",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": 0,
+        "min": 0,
+        "max": "",
+        "placeholder": "",
+        "step": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_event_image",
+        "label": "Event Image",
+        "name": "image",
+        "aria-label": "",
+        "type": "image",
+        "instructions": "Event featured image",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "url",
+        "library": "all",
+        "min_width": "",
+        "min_height": "",
+        "min_size": "",
+        "max_width": "",
+        "max_height": "",
+        "max_size": "",
+        "mime_types": "",
+        "preview_size": "medium"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "event"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "modified": 1699345200
+  },
+  {
+    "key": "group_site_settings",
+    "title": "Site Settings",
+    "fields": [
+      {
+        "key": "field_site_name",
+        "label": "Site Name",
+        "name": "site_name",
+        "aria-label": "",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "Community Hub",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_site_tagline",
+        "label": "Site Tagline",
+        "name": "site_tagline",
+        "aria-label": "",
+        "type": "textarea",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "A place where ideas, tools, and people meet. Join our community of creators and developers.",
+        "maxlength": "",
+        "rows": 2,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_social_links",
+        "label": "Social Media Links",
+        "name": "social_links",
+        "aria-label": "",
+        "type": "repeater",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "table",
+        "pagination": 0,
+        "min": 0,
+        "max": 0,
+        "collapsed": "",
+        "button_label": "Add Social Link",
+        "rows_per_page": 20,
+        "sub_fields": [
+          {
+            "key": "field_social_platform",
+            "label": "Platform",
+            "name": "platform",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "choices": {
+              "github": "GitHub",
+              "twitter": "Twitter",
+              "linkedin": "LinkedIn",
+              "email": "Email",
+              "facebook": "Facebook",
+              "instagram": "Instagram"
+            },
+            "default_value": false,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "parent_repeater": "field_social_links"
+          },
+          {
+            "key": "field_social_url",
+            "label": "URL",
+            "name": "url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "parent_repeater": "field_social_links"
+          },
+          {
+            "key": "field_social_icon",
+            "label": "Icon Name",
+            "name": "icon",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Lucide icon name (e.g., Github, Twitter, Linkedin, Mail)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent_repeater": "field_social_links"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "options_page",
+          "operator": "==",
+          "value": "site-settings"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1699345200
+  }
+]
