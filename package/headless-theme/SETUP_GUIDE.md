@@ -130,8 +130,8 @@ curl -X GET "https://your-domain.com/wp-json/custom-profile/v1/get?user_id=1" \
 
 ```
 headless-theme/
-├── custom-auth.php           # Firebase auth + JWT endpoints
-├── custom-profile.php        # User profile endpoints
+├── /inc/custom-auth.php           # Firebase auth + JWT endpoints
+├── /inc/custom-profile.php        # User profile endpoints
 ├── functions.php             # Main theme file
 ├── style.css                 # Theme metadata
 ├── index.php                 # Blank (headless theme)

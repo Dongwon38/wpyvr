@@ -1,17 +1,30 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, Clock, MapPin, Users } from "lucide-react";
-import { Event } from "@/lib/mockData";
+import { Calendar, Clock, MapPin, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export interface EventCardData {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  thumbnail?: string;
+  eventDate: string;
+  time: string;
+  location: string;
+  link?: string;
+  isPast: boolean;
+}
+
 interface EventCardProps {
-  event: Event;
+  event: EventCardData;
   index?: number;
 }
 
 export default function EventCard({ event, index = 0 }: EventCardProps) {
-  const isPast = event.type === "past";
+  const isPast = event.isPast;
 
   return (
     <motion.div
@@ -37,44 +50,55 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         </span>
       </div>
 
-      {/* Event Image Placeholder */}
-      <div
-        className={cn(
-          "h-48 bg-gradient-to-br",
-          isPast
-            ? "from-gray-400 to-gray-500"
-            : "from-blue-500 via-purple-500 to-pink-500"
-        )}
-      >
-        <div className="flex h-full items-center justify-center">
-          <Calendar className="h-16 w-16 text-white opacity-50" />
+      {/* Event Image */}
+      <Link href={`/events/${event.slug}`} className="block">
+        <div
+          className={cn(
+            "relative h-48 overflow-hidden bg-gradient-to-br",
+            isPast
+              ? "from-gray-400 to-gray-500"
+              : "from-blue-500 via-purple-500 to-pink-500"
+          )}
+        >
+          {event.thumbnail ? (
+            <img
+              src={event.thumbnail}
+              alt={event.title}
+              className={cn(
+                "h-full w-full object-cover transition-transform duration-300 group-hover:scale-105",
+                isPast && "grayscale"
+              )}
+            />
+          ) : (
+            <div className={cn(
+              "flex h-full items-center justify-center",
+              isPast && "grayscale"
+            )}>
+              <Calendar className="h-16 w-16 text-white opacity-50" />
+            </div>
+          )}
         </div>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-6">
-        {/* Category */}
-        <div className="mb-2">
-          <span className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            {event.category}
-          </span>
-        </div>
-
         {/* Title */}
-        <h3 className="mb-3 text-xl font-bold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
-          {event.title}
-        </h3>
+        <Link href={`/events/${event.slug}`} className="group/title">
+          <h3 className="mb-3 text-xl font-bold text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+            {event.title}
+          </h3>
+        </Link>
 
         {/* Description */}
         <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
-          {event.description}
+          {event.excerpt}
         </p>
 
         {/* Event Details */}
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <Calendar size={16} className="text-blue-600 dark:text-blue-400" />
-            <span>{new Date(event.date).toLocaleDateString("en-US", {
+            <span>{new Date(event.eventDate).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric"
@@ -88,29 +112,31 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
 
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <MapPin size={16} className="text-orange-600 dark:text-orange-400" />
-            <span>{event.location}</span>
+            <span className="line-clamp-1">{event.location}</span>
           </div>
-
-          {event.attendees && (
-            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <Users size={16} className="text-green-600 dark:text-green-400" />
-              <span>{event.attendees} {isPast ? "attended" : "registered"}</span>
-            </div>
-          )}
         </div>
 
-        {/* Action Button */}
-        {!isPast && (
-          <button className="mt-4 w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-lg">
-            Register Now
-          </button>
-        )}
-
-        {isPast && (
-          <button className="mt-4 w-full rounded-lg border-2 border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700/50">
-            View Summary
-          </button>
-        )}
+        {/* Action Buttons */}
+        <div className="mt-4 flex gap-2">
+          <Link
+            href={`/events/${event.slug}`}
+            className="flex-1 rounded-lg border-2 border-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-blue-600 transition-all hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+          >
+            {isPast ? "View Details" : "Learn More"}
+          </Link>
+          
+          {!isPast && event.link && (
+            <a
+              href={event.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-lg"
+            >
+              Register
+              <ExternalLink size={14} />
+            </a>
+          )}
+        </div>
       </div>
     </motion.div>
   );

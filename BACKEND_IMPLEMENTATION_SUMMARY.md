@@ -65,7 +65,7 @@ Step-by-step setup instructions:
 ### 1. **`/package/headless-theme/functions.php`**
 - ✅ Added `require_once` for `custom-profile.php`
 
-### 2. **`/package/headless-theme/custom-auth.php`**
+### 2. **`/package/headless-theme/inc/custom-auth.php`**
 - ✅ Added `last_seen_at` update on `/sync` endpoint
 - ✅ Added `last_seen_at` update on `/verify` endpoint
 - ✅ Integrated with profile management system
@@ -314,8 +314,8 @@ The backend is fully compatible with the Next.js frontend created earlier:
 
 ```
 /package/headless-theme/
-├── custom-auth.php              [Modified] Auth & JWT
-├── custom-profile.php           [New] Profile endpoints
+├── /inc/custom-auth.php              [Modified] Auth & JWT
+├── /inc/custom-profile.php           [New] Profile endpoints
 ├── functions.php                [Modified] Include profile
 ├── style.css                    [Existing] Theme meta
 ├── index.php                    [Existing] Blank file

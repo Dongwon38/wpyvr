@@ -26,7 +26,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Header */}
       <section className="border-b border-gray-200 bg-white px-4 py-12 dark:border-gray-800 dark:bg-gray-800 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
