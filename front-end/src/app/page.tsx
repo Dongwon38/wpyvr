@@ -2,23 +2,34 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import ArticleCard from "@/components/ArticleCard";
 import PostCard from "@/components/PostCard";
-import { mockGuides, mockPosts } from "@/lib/mockData";
-import { BookOpen, Users, ArrowRight } from "lucide-react";
+import EventCard from "@/components/EventCard";
+import { mockGuides, mockPosts, getUpcomingEvents, getPastEvents } from "@/lib/mockData";
+import { BookOpen, Users, ArrowRight, Calendar, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
+  const [eventTab, setEventTab] = useState<"upcoming" | "past">("upcoming");
+  
   // Get latest guides and trending posts
   const latestGuides = mockGuides.slice(0, 3);
   const trendingPosts = mockPosts.sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
+  
+  // Get events
+  const upcomingEvents = getUpcomingEvents();
+  const pastEvents = getPastEvents();
+  const displayedEvents = eventTab === "upcoming" ? upcomingEvents : pastEvents;
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900">
+      {/* Hero Section */}
       <HeroSection />
 
-      {/* Latest Guides Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      {/* Events Section */}
+      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <motion.div
@@ -27,36 +38,63 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               <div className="mb-2 flex items-center gap-2">
-                <BookOpen className="text-blue-600" size={24} />
+                <Calendar className="text-purple-600" size={24} />
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Latest Guides
+                  Community Events
                 </h2>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
-                Expert tutorials and articles from our editorial team
+                Join workshops, meetups, and learning sessions
               </p>
             </motion.div>
             <Link
-              href="/guides"
+              href="/events"
               className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
             >
-              View All Guides
+              View All Events
               <ArrowRight size={16} />
             </Link>
           </div>
 
+          {/* Tab Buttons */}
+          <div className="mb-6 flex gap-2">
+            <button
+              onClick={() => setEventTab("upcoming")}
+              className={cn(
+                "rounded-lg px-6 py-2.5 text-sm font-semibold transition-all",
+                eventTab === "upcoming"
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              )}
+            >
+              Upcoming ({upcomingEvents.length})
+            </button>
+            <button
+              onClick={() => setEventTab("past")}
+              className={cn(
+                "rounded-lg px-6 py-2.5 text-sm font-semibold transition-all",
+                eventTab === "past"
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              )}
+            >
+              Past ({pastEvents.length})
+            </button>
+          </div>
+
+          {/* Events Grid */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {latestGuides.map((guide, index) => (
-              <ArticleCard key={guide.slug} guide={guide} index={index} />
+            {displayedEvents.map((event, index) => (
+              <EventCard key={event.id} event={event} index={index} />
             ))}
           </div>
 
           <div className="mt-8 text-center sm:hidden">
             <Link
-              href="/guides"
+              href="/events"
               className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              View All Guides
+              View All Events
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -64,7 +102,7 @@ export default function Home() {
       </section>
 
       {/* Community Highlights Section */}
-      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <motion.div
@@ -109,6 +147,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Latest Guides Section */}
+      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8 flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="mb-2 flex items-center gap-2">
+                <BookOpen className="text-blue-600" size={24} />
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  Expert Guides
+                </h2>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">
+                In-depth tutorials and articles from our editorial team
+              </p>
+            </motion.div>
+            <Link
+              href="/guides"
+              className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+            >
+              View All Guides
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {latestGuides.map((guide, index) => (
+              <ArticleCard key={guide.slug} guide={guide} index={index} />
+            ))}
+          </div>
+
+          <div className="mt-8 text-center sm:hidden">
+            <Link
+              href="/guides"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              View All Guides
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
@@ -118,9 +202,12 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
-              Why Join Our Community?
-            </h2>
+            <div className="mb-4 flex items-center justify-center gap-2">
+              <Sparkles className="text-yellow-500" size={28} />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Why Join Our Community?
+              </h2>
+            </div>
             <p className="mb-12 text-gray-600 dark:text-gray-400">
               Everything you need to learn, grow, and connect
             </p>
@@ -161,6 +248,32 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="mb-4 text-4xl font-bold text-white sm:text-5xl">
+              Ready to Get Started?
+            </h2>
+            <p className="mb-8 text-xl text-white/90">
+              Join our community today and start your journey with fellow creators
+            </p>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <button className="w-full rounded-2xl bg-white px-8 py-4 text-base font-semibold text-blue-600 shadow-xl transition-all hover:bg-gray-100 hover:shadow-2xl sm:w-auto">
+                Create Free Account
+              </button>
+              <button className="w-full rounded-2xl border-2 border-white px-8 py-4 text-base font-semibold text-white transition-all hover:bg-white/10 sm:w-auto">
+                Learn More
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

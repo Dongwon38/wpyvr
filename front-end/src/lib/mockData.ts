@@ -21,6 +21,19 @@ export interface Post {
   avatar?: string;
 }
 
+export interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  type: "upcoming" | "past";
+  category: string;
+  attendees?: number;
+  image?: string;
+}
+
 export const mockGuides: Guide[] = [
   {
     slug: "start-your-first-website",
@@ -539,4 +552,87 @@ export const getAllCategories = (): string[] => {
 export const getAllTags = (): string[] => {
   const allTags = mockPosts.flatMap(post => post.tags);
   return [...new Set(allTags)];
+};
+
+export const mockEvents: Event[] = [
+  {
+    id: 1,
+    title: "Web Development Workshop",
+    description: "Join us for a hands-on workshop covering modern web development practices with React and Next.js.",
+    date: "2025-11-15",
+    time: "2:00 PM - 5:00 PM EST",
+    location: "Online (Zoom)",
+    type: "upcoming",
+    category: "Workshop",
+    attendees: 45,
+    image: "/event-workshop.jpg"
+  },
+  {
+    id: 2,
+    title: "Design Systems Masterclass",
+    description: "Learn how to build and maintain scalable design systems for your organization.",
+    date: "2025-11-20",
+    time: "10:00 AM - 12:00 PM EST",
+    location: "Virtual Event",
+    type: "upcoming",
+    category: "Masterclass",
+    attendees: 78,
+    image: "/event-design.jpg"
+  },
+  {
+    id: 3,
+    title: "Community Meetup & Networking",
+    description: "Connect with fellow developers, designers, and creators in this casual networking event.",
+    date: "2025-11-25",
+    time: "6:00 PM - 8:00 PM EST",
+    location: "Community Center",
+    type: "upcoming",
+    category: "Meetup",
+    attendees: 120,
+    image: "/event-meetup.jpg"
+  },
+  {
+    id: 4,
+    title: "React Performance Deep Dive",
+    description: "An in-depth look at optimizing React applications for maximum performance.",
+    date: "2025-10-28",
+    time: "3:00 PM - 6:00 PM EST",
+    location: "Online (Zoom)",
+    type: "past",
+    category: "Workshop",
+    attendees: 95,
+    image: "/event-react.jpg"
+  },
+  {
+    id: 5,
+    title: "Accessibility in Web Design",
+    description: "Making the web accessible for everyone: best practices and practical tips.",
+    date: "2025-10-15",
+    time: "1:00 PM - 3:00 PM EST",
+    location: "Virtual Event",
+    type: "past",
+    category: "Webinar",
+    attendees: 150,
+    image: "/event-a11y.jpg"
+  },
+  {
+    id: 6,
+    title: "Career Growth for Developers",
+    description: "Strategies for advancing your career in tech, from junior to senior positions.",
+    date: "2025-10-05",
+    time: "7:00 PM - 8:30 PM EST",
+    location: "Online Panel",
+    type: "past",
+    category: "Panel Discussion",
+    attendees: 210,
+    image: "/event-career.jpg"
+  }
+];
+
+export const getUpcomingEvents = (): Event[] => {
+  return mockEvents.filter(event => event.type === "upcoming");
+};
+
+export const getPastEvents = (): Event[] => {
+  return mockEvents.filter(event => event.type === "past");
 };
