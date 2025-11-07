@@ -155,8 +155,8 @@ $allowed_origins = [
 
 ```
 /wp-content/themes/headless-theme/
-├── custom-auth.php          # Auth endpoints
-├── custom-profile.php       # Profile endpoints
+├── /inc/custom-auth.php          # Auth endpoints
+├── /inc/custom-profile.php       # Profile endpoints
 ├── functions.php            # Theme init
 └── API_DOCUMENTATION.md     # Full docs
 ```

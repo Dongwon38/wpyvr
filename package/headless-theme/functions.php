@@ -56,7 +56,13 @@ add_filter('show_admin_bar', '__return_false');
 // TESTING
 
 // Include custom authentication integration
-require_once get_template_directory() . '/custom-auth.php';
+require_once get_template_directory() . '/inc/custom-auth.php';
 
 // Include custom profile management
-require_once get_template_directory() . '/custom-profile.php';
+require_once get_template_directory() . '/inc/custom-profile.php';
+
+// Include custom post type registration
+require_once get_template_directory() . '/inc/register-cpt.php';
+
+// Include ACF fields registration
+require_once get_template_directory() . '/inc/register-acf.php';
