@@ -15,20 +15,20 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex w-full">
       {/* Left Sidebar - Fixed on desktop */}
       <LeftSidebar 
         isOpen={leftSidebarOpen} 
         onClose={() => setLeftSidebarOpen(false)} 
       />
 
-      {/* Main Content Wrapper */}
-      <div className="flex min-h-screen flex-1 flex-col lg:ml-0">
-        <div className="flex flex-1">
+      {/* Main Content Wrapper - Unified scroll container */}
+      <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col lg:flex-row">
           {/* Main Content - Takes remaining space */}
-          <main className="min-h-screen w-full flex-1 lg:w-0">{children}</main>
+          <main className="w-full flex-1 lg:w-0">{children}</main>
 
-          {/* Right Sidebar - Fixed width on desktop */}
+          {/* Right Sidebar - Fixed width on desktop, flows with content */}
           <RightSidebar 
             isOpen={rightSidebarOpen} 
             onClose={() => setRightSidebarOpen(false)} 
