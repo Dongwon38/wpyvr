@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { X, LogIn, HelpCircle, Users, MessageCircle, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { X, LogIn, LogOut, HelpCircle, Users, MessageCircle, Send, User as UserIcon, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
+import AuthForm from "@/features/auth/AuthForm";
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -10,7 +13,10 @@ interface RightSidebarProps {
 }
 
 export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
+  const router = useRouter();
+  const { user, wpUser, userProfile, logout, loading } = useAuth();
   const [message, setMessage] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
   // Mock online users
   const onlineUsers = [
@@ -33,6 +39,22 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
       // Handle message send logic here
       setMessage("");
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  const openAuthModal = () => {
+    setShowAuthModal(true);
+  };
+
+  const closeAuthModal = () => {
+    setShowAuthModal(false);
   };
 
   return (
@@ -63,24 +85,98 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
         </button>
 
         <div className="space-y-4 p-4 pt-16 lg:pt-4">
-          {/* Login Section */}
-          <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-md">
-            <div className="mb-4 flex items-center gap-2">
-              <LogIn size={20} />
-              <h3 className="text-lg font-bold">Join Our Community</h3>
-            </div>
-            <p className="mb-4 text-sm opacity-90">
-              Sign in to unlock all features and connect with fellow creators.
-            </p>
-            <div className="space-y-2">
-              <button className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition-all hover:bg-gray-100">
-                Sign In
-              </button>
-              <button className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10">
-                Create Account
-              </button>
-            </div>
-          </div>
+          {/* Login/User Section */}
+          {!loading && (
+            <>
+              {user && wpUser ? (
+                // Logged in state
+                <div className="rounded-2xl bg-gradient-to-br from-green-600 to-teal-600 p-6 text-white shadow-md">
+                  <div className="mb-4 flex items-center gap-3">
+                    {userProfile?.avatar_url || user.photoURL ? (
+                      <img 
+                        src={userProfile?.avatar_url || user.photoURL || ""} 
+                        alt={userProfile?.nickname || wpUser.display_name}
+                        className="h-12 w-12 rounded-full border-2 border-white object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-green-600 font-bold">
+                        <UserIcon size={24} />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold truncate">
+                        Hi, {userProfile?.nickname || wpUser.display_name}! 👋
+                      </h3>
+                      <p className="text-xs opacity-90 truncate">
+                        {userProfile?.job_title || wpUser.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Profile Status */}
+                  {userProfile?.greeting ? (
+                    <div className="mb-4 rounded-lg bg-white/10 p-3">
+                      <p className="text-sm opacity-95 italic">
+                        "{userProfile.greeting}"
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="mb-4 rounded-lg bg-white/20 p-3">
+                      <p className="text-sm opacity-95">
+                        Let's complete your profile to connect with the community!
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="space-y-2">
+                    <button 
+                      onClick={() => {
+                        router.push("/profile");
+                        onClose();
+                      }}
+                      className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-green-600 transition-all hover:bg-gray-100 flex items-center justify-center gap-2"
+                    >
+                      <Settings size={18} />
+                      Manage My Info
+                    </button>
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10 flex items-center justify-center gap-2"
+                    >
+                      <LogOut size={18} />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                // Not logged in state
+                <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-md">
+                  <div className="mb-4 flex items-center gap-2">
+                    <LogIn size={20} />
+                    <h3 className="text-lg font-bold">Join Our Community</h3>
+                  </div>
+                  <p className="mb-4 text-sm opacity-90">
+                    Sign in to unlock all features and connect with fellow creators.
+                  </p>
+                  <div className="space-y-2">
+                    <button 
+                      onClick={openAuthModal}
+                      className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition-all hover:bg-gray-100"
+                    >
+                      Sign In
+                    </button>
+                    <button 
+                      onClick={openAuthModal}
+                      className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
+                    >
+                      Create Account
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
 
           {/* Help Banner Section */}
           <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
@@ -197,6 +293,22 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           </div>
         </div>
       </aside>
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-md">
+            <button
+              onClick={closeAuthModal}
+              className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-gray-600 shadow-lg transition-colors hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </button>
+            <AuthForm onSuccess={closeAuthModal} />
+          </div>
+        </div>
+      )}
     </>
   );
 }

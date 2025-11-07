@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,11 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="antialiased">
+        <AuthProvider>
         <Navbar />
         <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
-        <Footer />
+            {children}
+          </LayoutWrapper>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

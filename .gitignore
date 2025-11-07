@@ -39,3 +39,6 @@ front-end/.vercel
 # typescript
 front-end/*.tsbuildinfo
 front-end/next-env.d.ts
+
+package/headless-theme/firebase-service-account.json
+package/headless-theme/vendor/
