@@ -16,7 +16,7 @@ export default function Home() {
   
   // Get all events sorted by date (upcoming first, then past)
   const allEvents = [...getUpcomingEvents(), ...getPastEvents()].sort((a, b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
   }).reverse(); // Reverse to show upcoming (future dates) first
 
   return (
