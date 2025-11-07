@@ -11,11 +11,11 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
-      {/* Main Content */}
-      <main className="flex-1 w-full lg:w-auto">{children}</main>
+    <div className="relative flex w-full">
+      {/* Main Content - Takes remaining space */}
+      <main className="min-h-screen w-full flex-1 lg:w-0">{children}</main>
 
-      {/* Right Sidebar */}
+      {/* Right Sidebar - Fixed width on desktop */}
       <RightSidebar 
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
