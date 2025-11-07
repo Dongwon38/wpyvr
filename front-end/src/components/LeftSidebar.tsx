@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Users, Info, X, FileText, Calendar } from "lucide-react";
+import { Home, BookOpen, Users, Info, X, FileText, Calendar, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LeftSidebarProps {
@@ -89,13 +89,23 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
             })}
           </nav>
 
-          {/* Bottom Section */}
+          {/* Bottom Section - Need Help */}
           <div className="border-t border-gray-200 p-4 dark:border-gray-800">
-            <div className="rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 p-4 text-white">
-              <h4 className="mb-2 text-sm font-bold">Quick Tip</h4>
-              <p className="text-xs opacity-90">
-                Join our community to share your ideas and connect with creators!
+            <div className="rounded-lg bg-gradient-to-br from-orange-500 to-pink-500 p-4 text-white shadow-md">
+              <div className="mb-3 flex items-center gap-2">
+                <HelpCircle size={18} />
+                <h4 className="text-sm font-bold">Need Help?</h4>
+              </div>
+              <p className="mb-3 text-xs opacity-90">
+                Get instant support from our community moderators and experts.
               </p>
+              <button className="w-full rounded-lg bg-white px-4 py-2 text-xs font-semibold text-orange-600 transition-all hover:bg-gray-100">
+                Get Support
+              </button>
+              <div className="mt-3 flex items-center justify-between border-t border-white/20 pt-3 text-xs">
+                <span className="opacity-75">Available 24/7</span>
+                <span className="font-semibold">⚡ Fast Response</span>
+              </div>
             </div>
           </div>
         </div>
