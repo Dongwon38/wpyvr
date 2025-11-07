@@ -71,7 +71,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 dark:border-gray-800 dark:bg-gray-900 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:shadow-none",
+          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 dark:bg-gray-900 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:bg-gray-50 lg:shadow-none lg:dark:bg-gray-950",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -84,7 +84,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           <X size={24} />
         </button>
 
-        <div className="space-y-4 p-4 pt-16 lg:pt-4">
+        <div className="space-y-6 p-4 pt-16 lg:px-6 lg:py-8">
           {/* Login/User Section */}
           {!loading && (
             <>

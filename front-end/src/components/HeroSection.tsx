@@ -148,7 +148,7 @@ export default function HeroSection() {
   const SecondaryIcon = slide.secondaryCTA.icon;
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-orange-50 px-4 py-12 dark:from-gray-900 dark:via-blue-950 dark:to-orange-950 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-orange-50 px-4 py-16 dark:from-gray-950 dark:via-blue-950 dark:to-orange-950 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-white/[0.02]" />
       

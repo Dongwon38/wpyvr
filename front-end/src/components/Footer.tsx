@@ -11,7 +11,6 @@ export default function Footer() {
       { label: "Blog", href: "/blog" },
       { label: "Guides", href: "/guides" },
       { label: "Community", href: "/community" },
-      { label: "About", href: "/about" },
     ],
     legal: [
       { label: "Code of Conduct", href: "/code-of-conduct" },

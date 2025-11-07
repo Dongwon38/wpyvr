@@ -15,7 +15,7 @@ export default function GuidesPage() {
     : mockGuides.filter(guide => guide.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Header */}
       <section className="bg-gradient-to-br from-blue-600 to-purple-600 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl text-center">

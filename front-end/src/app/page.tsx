@@ -35,12 +35,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-950">
       {/* Hero Section */}
       <HeroSection />
 
       {/* Events Section */}
-      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <motion.div
@@ -146,7 +146,7 @@ export default function Home() {
       </section>
 
       {/* Latest Guides Section */}
-      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <motion.div
