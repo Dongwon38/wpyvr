@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@theme {
+  /* Custom font family */
+  --font-family-merriweather: var(--font-merriweather);
+}
+
+/* Apply Merriweather as the default font */
+body {
+  font-family: var(--font-merriweather), serif;
+}
