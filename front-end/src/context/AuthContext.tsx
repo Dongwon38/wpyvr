@@ -1,32 +1,141 @@
 "use client"
 import { createContext, useContext, useEffect, useState } from "react"
-import { onAuthStateChanged, User } from "firebase/auth"
+import { onAuthStateChanged, User, signOut as firebaseSignOut } from "firebase/auth"
 import { auth } from "@/lib/firebase"
+
+type WordPressUser = {
+  wp_user_id: number
+  email: string
+  display_name: string
+  roles: string[]
+  jwt: string
+}
 
 type AuthContextType = {
   user: User | null
+  wpUser: WordPressUser | null
   loading: boolean
+  syncWithWordPress: (firebaseUser: User) => Promise<void>
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  wpUser: null,
   loading: true,
+  syncWithWordPress: async () => {},
+  logout: async () => {},
 })
+
+const WP_API_URL = "https://wpyvr.bitebuddy.ca/backend/wp-json/custom-auth/v1"
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
+  const [wpUser, setWpUser] = useState<WordPressUser | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Load WordPress JWT from localStorage on mount
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const storedWpUser = localStorage.getItem("wp_user")
+    if (storedWpUser) {
+      try {
+        setWpUser(JSON.parse(storedWpUser))
+      } catch (e) {
+        localStorage.removeItem("wp_user")
+      }
+    }
+  }, [])
+
+  // Sync Firebase user with WordPress
+  const syncWithWordPress = async (firebaseUser: User) => {
+    try {
+      const token = await firebaseUser.getIdToken()
+      
+      const response = await fetch(`${WP_API_URL}/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: firebaseUser.displayName || "",
+          email: firebaseUser.email || "",
+          photoURL: firebaseUser.photoURL || "",
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || "WordPress sync failed")
+      }
+
+      const data = await response.json()
+      
+      // Store WordPress user data and JWT
+      const wpUserData: WordPressUser = {
+        wp_user_id: data.wp_user_id,
+        email: data.email,
+        display_name: data.display_name,
+        roles: data.roles,
+        jwt: data.jwt,
+      }
+      
+      setWpUser(wpUserData)
+      localStorage.setItem("wp_user", JSON.stringify(wpUserData))
+      
+      console.log("✅ WordPress sync successful")
+    } catch (error) {
+      console.error("❌ WordPress sync error:", error)
+      throw error
+    }
+  }
+
+  // Logout from both Firebase and WordPress
+  const logout = async () => {
+    try {
+      await firebaseSignOut(auth)
+      setWpUser(null)
+      localStorage.removeItem("wp_user")
+      console.log("✅ Logged out successfully")
+    } catch (error) {
+      console.error("❌ Logout error:", error)
+      throw error
+    }
+  }
+
+  useEffect(() => {
+    let isInitialLoad = true
+    
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
+      
+      // Only auto-sync on initial load if user exists in Firebase
+      if (firebaseUser && isInitialLoad) {
+        const storedWpUser = localStorage.getItem("wp_user")
+        if (!storedWpUser) {
+          try {
+            await syncWithWordPress(firebaseUser)
+          } catch (error) {
+            console.error("Auto-sync failed:", error)
+          }
+        }
+      }
+      
+      // If user logged out from Firebase, clear WordPress data
+      if (!firebaseUser) {
+        setWpUser(null)
+        localStorage.removeItem("wp_user")
+      }
+      
+      isInitialLoad = false
       setLoading(false)
     })
+    
     return unsubscribe
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, wpUser, loading, syncWithWordPress, logout }}>
       {children}
     </AuthContext.Provider>
   )

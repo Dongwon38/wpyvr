@@ -27,3 +27,6 @@ add_action('init', function () {
   remove_action('wp_head', 'feed_links', 2);
   remove_action('wp_head', 'feed_links_extra', 3);
 });
+
+// Include custom authentication integration
+require_once get_template_directory() . '/custom-auth.php';
