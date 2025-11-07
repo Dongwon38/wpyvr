@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -25,11 +23,9 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="antialiased">
         <AuthProvider>
-        <Navbar />
-        <LayoutWrapper>
+          <LayoutWrapper>
             {children}
           </LayoutWrapper>
-          <Footer />
         </AuthProvider>
       </body>
     </html>
