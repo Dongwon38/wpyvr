@@ -71,7 +71,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto  bg-white shadow-2xl transition-transform duration-300 dark:border-gray-800 dark:bg-gray-900 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0 lg:shadow-none",
+          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 dark:bg-gray-900 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:bg-gray-50 lg:shadow-none lg:dark:bg-gray-950",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -84,7 +84,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           <X size={24} />
         </button>
 
-        <div className="space-y-4 p-4 pt-16 lg:pt-4">
+        <div className="space-y-6 p-4 pt-16 lg:px-6 lg:py-8">
           {/* Login/User Section */}
           {!loading && (
             <>
@@ -177,24 +177,6 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               )}
             </>
           )}
-
-          {/* Help Banner Section */}
-          <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
-            <div className="mb-3 flex items-center gap-2">
-              <HelpCircle size={20} />
-              <h3 className="text-lg font-bold">Need Help?</h3>
-            </div>
-            <p className="mb-4 text-sm opacity-90">
-              Get instant support from our community moderators and experts.
-            </p>
-            <button className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-orange-600 transition-all hover:bg-gray-100">
-              Get Support
-            </button>
-            <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs">
-              <span className="opacity-75">Available 24/7</span>
-              <span className="font-semibold">⚡ Fast Response</span>
-            </div>
-          </div>
 
           {/* Online Users Section */}
           <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-800">

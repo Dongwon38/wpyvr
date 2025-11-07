@@ -1,31 +1,46 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/HeroSection";
 import ArticleCard from "@/components/ArticleCard";
 import PostCard from "@/components/PostCard";
-import EventCard from "@/components/EventCard";
-import { mockGuides, mockPosts, getUpcomingEvents, getPastEvents } from "@/lib/mockData";
+import EventCard, { EventCardData } from "@/components/EventCard";
+import { mockGuides, mockPosts } from "@/lib/mockData";
+import { fetchUpcomingEvents } from "@/lib/eventsApi";
 import { BookOpen, Users, ArrowRight, Calendar, Sparkles } from "lucide-react";
 
 export default function Home() {
+  const [events, setEvents] = useState<EventCardData[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  
   // Get latest guides and trending posts
   const latestGuides = mockGuides.slice(0, 3);
   const trendingPosts = mockPosts.sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
   
-  // Get all events sorted by date (upcoming first, then past)
-  const allEvents = [...getUpcomingEvents(), ...getPastEvents()].sort((a, b) => {
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
-  }).reverse(); // Reverse to show upcoming (future dates) first
+  useEffect(() => {
+    async function loadEvents() {
+      try {
+        const data = await fetchUpcomingEvents();
+        setEvents(data.slice(0, 3)); // Show only 3 events on home page
+      } catch (error) {
+        console.error('Failed to load events:', error);
+      } finally {
+        setEventsLoading(false);
+      }
+    }
+
+    loadEvents();
+  }, []);
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-950">
       {/* Hero Section */}
       <HeroSection />
 
       {/* Events Section */}
-      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <motion.div
@@ -36,7 +51,7 @@ export default function Home() {
               <div className="mb-2 flex items-center gap-2">
                 <Calendar className="text-purple-600" size={24} />
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Community Events
+                  Events
                 </h2>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
@@ -53,11 +68,24 @@ export default function Home() {
           </div>
 
           {/* Events Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {allEvents.map((event, index) => (
-              <EventCard key={event.id} event={event} index={index} />
-            ))}
-          </div>
+          {eventsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-purple-600"></div>
+            </div>
+          ) : events.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {events.map((event, index) => (
+                <EventCard key={event.id} event={event} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl bg-gray-100 p-12 text-center dark:bg-gray-700">
+              <Calendar className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+              <p className="text-gray-600 dark:text-gray-400">
+                No upcoming events at the moment. Check back soon!
+              </p>
+            </div>
+          )}
 
           <div className="mt-8 text-center sm:hidden">
             <Link
@@ -118,7 +146,7 @@ export default function Home() {
       </section>
 
       {/* Latest Guides Section */}
-      <section className="bg-white px-4 py-16 dark:bg-gray-800 sm:px-6 lg:px-8">
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <motion.div
