@@ -17,14 +17,12 @@ import {
 import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
 
 type SortOption = "default" | "name-asc" | "name-desc";
-type FilterMemberType = "all" | "member" | "expert";
 
 export default function MembersPage() {
   const [members, setMembers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("default");
-  const [filterMemberType, setFilterMemberType] = useState<FilterMemberType>("all");
   const [filterSpecialty, setFilterSpecialty] = useState<string>("all");
 
   useEffect(() => {
@@ -62,11 +60,6 @@ export default function MembersPage() {
       );
     }
 
-    // Member type filter
-    if (filterMemberType !== "all") {
-      filtered = filtered.filter(member => member.member_type === filterMemberType);
-    }
-
     // Specialty filter
     if (filterSpecialty !== "all") {
       filtered = filtered.filter(member =>
@@ -102,7 +95,7 @@ export default function MembersPage() {
     }
 
     return filtered;
-  }, [members, searchQuery, sortBy, filterMemberType, filterSpecialty]);
+  }, [members, searchQuery, sortBy, filterSpecialty]);
 
   // Loading state
   if (loading) {
@@ -174,21 +167,9 @@ export default function MembersPage() {
               </select>
             </div>
 
-            {/* Filter by Member Type */}
+            {/* Filter by Specialty */}
             <div className="flex items-center gap-2">
               <Filter className="text-gray-500" size={18} />
-              <select
-                value={filterMemberType}
-                onChange={(e) => setFilterMemberType(e.target.value as FilterMemberType)}
-                className="rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-              >
-                <option value="all">All Members</option>
-                <option value="member">Regular Members</option>
-                <option value="expert">Experts</option>
-              </select>
-            </div>
-
-            {/* Filter by Specialty */}
             <div className="flex items-center gap-2">
               <select
                 value={filterSpecialty}
@@ -206,7 +187,7 @@ export default function MembersPage() {
           </div>
 
           {/* Active Filters Summary */}
-          {(searchQuery || filterMemberType !== "all" || filterSpecialty !== "all") && (
+          {(searchQuery || filterSpecialty !== "all") && (
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Active Filters:
@@ -214,11 +195,6 @@ export default function MembersPage() {
               {searchQuery && (
                 <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
                   Search: {searchQuery}
-                </span>
-              )}
-              {filterMemberType !== "all" && (
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                  Type: {filterMemberType}
                 </span>
               )}
               {filterSpecialty !== "all" && (
@@ -229,7 +205,6 @@ export default function MembersPage() {
               <button
                 onClick={() => {
                   setSearchQuery("");
-                  setFilterMemberType("all");
                   setFilterSpecialty("all");
                   setSortBy("default");
                 }}
@@ -444,7 +419,6 @@ export default function MembersPage() {
             <button
               onClick={() => {
                 setSearchQuery("");
-                setFilterMemberType("all");
                 setFilterSpecialty("all");
                 setSortBy("default");
               }}

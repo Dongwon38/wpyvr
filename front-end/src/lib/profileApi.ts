@@ -28,7 +28,7 @@ export type UserProfile = {
   specialties: string[]
   company: string
   website: string
-  member_type: 'member' | 'expert'
+  profile_visibility: 'public' | 'private'
   social_links: SocialLink[]
   privacy_settings: PrivacySettings
   email?: string
@@ -47,7 +47,7 @@ export type ProfileUpdatePayload = {
   company: string
   website: string
   avatar_url: string
-  member_type: 'member' | 'expert'
+  profile_visibility: 'public' | 'private'
   social_links: SocialLink[]
   privacy_settings: PrivacySettings
 }

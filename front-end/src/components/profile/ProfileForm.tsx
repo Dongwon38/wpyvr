@@ -17,7 +17,7 @@ interface ProfileFormProps {
     company: string
     website: string
     avatar_url: string
-    member_type: 'member' | 'expert'
+    profile_visibility: 'public' | 'private'
     social_links: SocialLink[]
     privacy_settings: PrivacySettings
   }
@@ -46,7 +46,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [company, setCompany] = useState(initialData?.company || "")
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
-  const [memberType, setMemberType] = useState<'member' | 'expert'>(initialData?.member_type || 'member')
+  const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(initialData?.profile_visibility || 'public')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
     initialData?.social_links || []
   )
@@ -142,7 +142,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         company: company.trim(),
         website: website.trim(),
         avatar_url: avatarUrl,
-        member_type: memberType,
+        profile_visibility: profileVisibility,
         social_links: validSocialLinks,
         privacy_settings: privacySettings,
       }
@@ -204,26 +204,47 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           />
         </div>
 
-        {/* Member Type */}
+        {/* Profile Visibility */}
         <div>
-          <label
-            htmlFor="memberType"
-            className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
-          >
-            Member Type
+          <label className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white">
+            Profile Visibility
           </label>
-          <select
-            id="memberType"
-            value={memberType}
-            onChange={(e) => setMemberType(e.target.value as 'member' | 'expert')}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          >
-            <option value="member">Regular Member</option>
-            <option value="expert">Expert Member</option>
-          </select>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Expert members are highlighted in the community
-          </p>
+          <div className="space-y-3">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="radio"
+                name="profileVisibility"
+                value="public"
+                checked={profileVisibility === 'public'}
+                onChange={(e) => setProfileVisibility(e.target.value as 'public' | 'private')}
+                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+              />
+              <div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">Public</span>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Your profile appears in the members list</p>
+              </div>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="radio"
+                name="profileVisibility"
+                value="private"
+                checked={profileVisibility === 'private'}
+                onChange={(e) => setProfileVisibility(e.target.value as 'public' | 'private')}
+                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+              />
+              <div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">Private</span>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Your profile is hidden from the members list</p>
+              </div>
+            </label>
+          </div>
+          <div className="mt-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
+            <p className="text-xs text-blue-800 dark:text-blue-300">
+              💡 <strong>Note:</strong> Setting your profile to private will completely remove you from the members list.
+              You can still control the visibility of individual information (position, company, etc.) using the toggle switches below.
+            </p>
+          </div>
         </div>
       </div>
 
