@@ -243,10 +243,3 @@ export default function EventDetailPage() {
     </div>
   );
 }
-
-// Required for static export with dynamic routes
-export async function generateStaticParams() {
-  // Return empty array to allow dynamic rendering
-  // Events will be fetched at request time
-  return [];
-}
