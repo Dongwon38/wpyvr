@@ -31,7 +31,8 @@ function custom_profile_create_table() {
         specialties JSON DEFAULT NULL,
         company VARCHAR(255) DEFAULT NULL,
         website VARCHAR(255) DEFAULT NULL,
-        member_type ENUM('member', 'expert') DEFAULT 'member',
+        profile_visibility ENUM('public', 'private') DEFAULT 'private',
+        custom_email VARCHAR(255) DEFAULT NULL,
         social_links JSON DEFAULT NULL,
         privacy_settings JSON DEFAULT NULL,
         last_active_at DATETIME DEFAULT NULL,
@@ -41,7 +42,7 @@ function custom_profile_create_table() {
         UNIQUE KEY user_id_unique (user_id),
         FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE,
         INDEX idx_last_active (last_active_at),
-        INDEX idx_member_type (member_type)
+        INDEX idx_profile_visibility (profile_visibility)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -184,9 +185,10 @@ function custom_profile_update(WP_REST_Request $request) {
     $position = sanitize_text_field($request->get_param('position'));
     $specialties = $request->get_param('specialties') ?? [];
     $company = sanitize_text_field($request->get_param('company'));
-    $website = esc_url_raw($request->get_param('website'));
-    $avatar_url = esc_url_raw($request->get_param('avatar_url'));
-    $member_type = sanitize_text_field($request->get_param('member_type')) ?: 'member';
+    $website = sanitize_text_field($request->get_param('website'));
+    $avatar_url = sanitize_text_field($request->get_param('avatar_url'));
+    $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'private';
+    $custom_email = sanitize_email($request->get_param('custom_email'));
     $social_links = $request->get_param('social_links') ?? [];
     $privacy_settings = $request->get_param('privacy_settings') ?? [];
 
@@ -200,9 +202,9 @@ function custom_profile_update(WP_REST_Request $request) {
         return new WP_Error('validation_error', 'Nickname is required', ['status' => 400]);
     }
 
-    // Validate member_type
-    if (!in_array($member_type, ['member', 'expert'])) {
-        $member_type = 'member';
+    // Validate profile_visibility
+    if (!in_array($profile_visibility, ['public', 'private'])) {
+        $profile_visibility = 'private';
     }
 
     // Check if WP user exists
@@ -264,14 +266,15 @@ function custom_profile_update(WP_REST_Request $request) {
         'company' => $company,
         'website' => $website,
         'avatar_url' => $avatar_url,
-        'member_type' => $member_type,
+        'profile_visibility' => $profile_visibility,
+        'custom_email' => $custom_email,
         'social_links' => $social_links_json,
         'privacy_settings' => $privacy_json,
         'last_active_at' => $current_time,
         'updated_at' => $current_time,
     ];
 
-    $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'];
+    $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'];
 
     // Check if profile exists
     $existing = $wpdb->get_var(
@@ -329,7 +332,8 @@ function custom_profile_update(WP_REST_Request $request) {
             'company' => $company,
             'website' => $website,
             'avatar_url' => $avatar_url,
-            'member_type' => $member_type,
+            'profile_visibility' => $profile_visibility,
+            'custom_email' => $custom_email,
             'social_links' => $sanitized_social_links,
             'privacy_settings' => $sanitized_privacy,
             'updated_at' => $current_time
@@ -346,7 +350,7 @@ function custom_profile_get_all_members(WP_REST_Request $request) {
     $table_name = $wpdb->prefix . 'user_profiles';
     $users_table = $wpdb->prefix . 'users';
 
-    // Fetch all profiles with user data
+    // Fetch only public profiles with user data
     $profiles = $wpdb->get_results("
         SELECT 
             p.*,
@@ -354,6 +358,7 @@ function custom_profile_get_all_members(WP_REST_Request $request) {
             u.display_name
         FROM $table_name p
         INNER JOIN $users_table u ON p.user_id = u.ID
+        WHERE p.profile_visibility = 'public'
         ORDER BY p.last_active_at DESC
     ", ARRAY_A);
 
@@ -379,6 +384,7 @@ function custom_profile_get_all_members(WP_REST_Request $request) {
         if (!empty($privacy)) {
             if (isset($privacy['show_email']) && !$privacy['show_email']) {
                 $profile['user_email'] = null;
+                $profile['custom_email'] = null;
             }
             if (isset($privacy['show_position']) && !$privacy['show_position']) {
                 $profile['position'] = null;

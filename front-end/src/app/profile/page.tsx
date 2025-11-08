@@ -103,7 +103,8 @@ export default function ProfilePage() {
                     company: profile.company || "",
                     website: profile.website || "",
                     avatar_url: profile.avatar_url || "",
-                    member_type: profile.member_type || 'member',
+                    profile_visibility: profile.profile_visibility || 'private',
+                    custom_email: profile.custom_email || "",
                     social_links: profile.social_links || [],
                     privacy_settings: {
                       show_email: profile.privacy_settings?.show_email ?? false,
@@ -128,7 +129,7 @@ export default function ProfilePage() {
             <li>• Add specialties to showcase your skills and expertise</li>
             <li>• Upload a profile photo to make your profile more personal</li>
             <li>• Use privacy settings to control what information is public</li>
-            <li>• Expert members are highlighted in the community members page</li>
+            <li>• Set your profile to Private to hide from the members list</li>
           </ul>
         </div>
       </div>

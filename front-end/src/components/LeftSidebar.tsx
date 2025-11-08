@@ -18,7 +18,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
     { href: "/events", label: "Events", icon: Calendar },
     { href: "/members", label: "Members", icon: UsersRound },
     { href: "/blog", label: "Blog", icon: FileText },
-    { href: "/guides", label: "Guides", icon: BookOpen },
+    // { href: "/guides", label: "Guides", icon: BookOpen }, // Commented out - will be used later
     { href: "/community", label: "Community", icon: Users },
   ];
 
