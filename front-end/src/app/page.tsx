@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/HeroSection";
 import ArticleCard from "@/components/ArticleCard";
-import PostCard from "@/components/PostCard";
+import PostListItem from "@/components/PostListItem";
 import EventCard, { EventCardData } from "@/components/EventCard";
 import { mockGuides, mockPosts } from "@/lib/mockData";
 import { fetchEventsSortedByDate } from "@/lib/eventsApi";
@@ -40,9 +40,9 @@ export default function Home() {
       <HeroSection />
 
       {/* Events Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -50,11 +50,11 @@ export default function Home() {
             >
               <div className="mb-2 flex items-center gap-2">
                 <Calendar className="text-purple-600" size={24} />
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
                   Events
                 </h2>
               </div>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Latest upcoming and past events
               </p>
             </motion.div>
@@ -73,7 +73,7 @@ export default function Home() {
               <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-purple-600"></div>
             </div>
           ) : events.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {events.map((event, index) => (
                 <EventCard key={event.id} event={event} index={index} />
               ))}
@@ -100,9 +100,9 @@ export default function Home() {
       </section>
 
       {/* Community Highlights Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -110,11 +110,11 @@ export default function Home() {
             >
               <div className="mb-2 flex items-center gap-2">
                 <Users className="text-orange-600" size={24} />
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
                   Trending Community Posts
                 </h2>
               </div>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Popular posts from our community members
               </p>
             </motion.div>
@@ -127,9 +127,9 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {trendingPosts.map((post, index) => (
-              <PostCard key={post.slug} post={post} index={index} />
+              <PostListItem key={post.slug} post={post} index={index} />
             ))}
           </div>
 
@@ -146,9 +146,9 @@ export default function Home() {
       </section>
 
       {/* Latest Guides Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -156,11 +156,11 @@ export default function Home() {
             >
               <div className="mb-2 flex items-center gap-2">
                 <BookOpen className="text-blue-600" size={24} />
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
                   Expert Guides
                 </h2>
               </div>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 In-depth tutorials and articles from our editorial team
               </p>
             </motion.div>
@@ -173,7 +173,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {latestGuides.map((guide, index) => (
               <ArticleCard key={guide.slug} guide={guide} index={index} />
             ))}
@@ -192,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -202,11 +202,11 @@ export default function Home() {
           >
             <div className="mb-4 flex items-center justify-center gap-2">
               <Sparkles className="text-yellow-500" size={28} />
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
                 Why Join Our Community?
               </h2>
             </div>
-            <p className="mb-12 text-gray-600 dark:text-gray-400">
+            <p className="mb-10 text-sm text-gray-600 dark:text-gray-400">
               Everything you need to learn, grow, and connect
             </p>
           </motion.div>
