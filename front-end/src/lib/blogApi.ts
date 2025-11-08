@@ -3,6 +3,8 @@
  * Connects to WordPress REST API for standard Posts (Blog)
  */
 
+import { decodeHtmlEntities } from './utils';
+
 const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'http://localhost:8000';
 
 export interface WordPressBlogPost {
@@ -60,9 +62,9 @@ function transformBlogPostData(data: WordPressBlogPost): BlogPost {
   return {
     id: data.id,
     slug: data.slug,
-    title: data.title.rendered,
+    title: decodeHtmlEntities(data.title.rendered),
     content: data.content.rendered,
-    excerpt: data.excerpt.rendered.replace(/<[^>]*>/g, '').trim(), // Strip HTML tags
+    excerpt: decodeHtmlEntities(data.excerpt.rendered.replace(/<[^>]*>/g, '').trim()), // Strip HTML tags and decode
     date: data.date,
     author: {
       name: data.author_name || 'Anonymous',

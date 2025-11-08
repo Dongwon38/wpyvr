@@ -69,3 +69,6 @@ require_once get_template_directory() . '/inc/register-taxonomies.php';
 
 // Include ACF fields registration
 require_once get_template_directory() . '/inc/register-acf.php';
+
+// Include contact form functionality
+require_once get_template_directory() . '/inc/functions-contact.php';

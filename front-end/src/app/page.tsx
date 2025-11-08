@@ -10,7 +10,8 @@ import EventCard, { EventCardData } from "@/components/EventCard";
 import { mockPosts } from "@/lib/mockData";
 import { fetchEventsSortedByDate } from "@/lib/eventsApi";
 import { fetchLatestBlogPosts, type BlogPost as ApiBlogPost } from "@/lib/blogApi";
-import { FileText, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock } from "lucide-react";
+import { FileText, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock, Mail } from "lucide-react";
+import ContactForm from "@/components/ContactForm";
 
 // Blog post format for component
 interface BlogPost {
@@ -321,6 +322,36 @@ export default function Home() {
                 Learn More
               </button>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-10 text-center"
+          >
+            <div className="mb-4 flex items-center justify-center gap-2">
+              <Mail className="text-blue-600" size={28} />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Contact Us
+              </h2>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400">
+              Have a question or suggestion? We'd love to hear from you.
+            </p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <ContactForm />
           </motion.div>
         </div>
       </section>
