@@ -193,8 +193,14 @@ function custom_profile_update(WP_REST_Request $request) {
     $position = sanitize_text_field($request->get_param('position'));
     $specialties = $request->get_param('specialties') ?? [];
     $company = sanitize_text_field($request->get_param('company'));
-    $website = sanitize_text_field($request->get_param('website'));
-    $avatar_url = sanitize_text_field($request->get_param('avatar_url'));
+    // Use esc_url_raw() for URLs to preserve encoding
+    $website = !empty($request->get_param('website')) 
+        ? esc_url_raw($request->get_param('website')) 
+        : '';
+    // Use esc_url_raw() for URLs to preserve encoding (e.g., %2F in Firebase URLs)
+    $avatar_url = !empty($request->get_param('avatar_url')) 
+        ? esc_url_raw($request->get_param('avatar_url')) 
+        : '';
     $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'private';
     $custom_email = sanitize_email($request->get_param('custom_email'));
     $social_links = $request->get_param('social_links') ?? [];
@@ -202,6 +208,7 @@ function custom_profile_update(WP_REST_Request $request) {
     
     error_log("📥 [UPDATE Profile] Received update request for user_id: $user_id");
     error_log("🖼️ [UPDATE Profile] Avatar URL received: " . ($avatar_url ?: 'EMPTY'));
+    error_log("🔍 [UPDATE Profile] Avatar URL length: " . strlen($avatar_url));
 
     // Users can only update their own profile
     if ($authenticated_user_id !== $user_id) {
@@ -235,11 +242,11 @@ function custom_profile_update(WP_REST_Request $request) {
         }
     }
 
-    // Sanitize social links
+    // Sanitize social links - use esc_url_raw() for URLs
     $sanitized_social_links = [];
     if (is_array($social_links)) {
         foreach ($social_links as $link) {
-            if (isset($link['type']) && isset($link['url'])) {
+            if (isset($link['type']) && isset($link['url']) && !empty($link['url'])) {
                 $sanitized_social_links[] = [
                     'type' => sanitize_text_field($link['type']),
                     'url' => esc_url_raw($link['url'])
