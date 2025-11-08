@@ -117,20 +117,6 @@ export default function ContactForm() {
         </p>
       </div>
 
-      {/* Success Message */}
-      {status.type === "success" && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 flex items-center gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-900/20"
-        >
-          <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-          <p className="text-sm text-green-800 dark:text-green-300">
-            {status.message}
-          </p>
-        </motion.div>
-      )}
-
       {/* Error Message */}
       {status.type === "error" && (
         <motion.div
@@ -286,7 +272,7 @@ export default function ContactForm() {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={status.type === "loading"}
+          disabled={status.type === "loading" || status.type === "success"}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
         >
           {status.type === "loading" ? (
@@ -301,6 +287,20 @@ export default function ContactForm() {
             </>
           )}
         </button>
+
+        {/* Success Message - Below Button */}
+        {status.type === "success" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-900/20"
+          >
+            <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
+            <p className="text-sm font-medium text-green-800 dark:text-green-300">
+              Thank you for contacting us! We'll get back to you soon.
+            </p>
+          </motion.div>
+        )}
       </form>
     </div>
   );
