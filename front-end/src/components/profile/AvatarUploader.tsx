@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Upload, User, Loader2 } from "lucide-react"
 import { storage, auth } from "@/lib/firebase"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
@@ -18,6 +18,21 @@ export default function AvatarUploader({
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [previewUrl, setPreviewUrl] = useState(currentAvatarUrl || "")
+  const [imageError, setImageError] = useState(false)
+
+  // Log current avatar URL on mount/update
+  useEffect(() => {
+    if (currentAvatarUrl) {
+      console.log("🖼️ Current Avatar URL:", currentAvatarUrl)
+      console.log("🔍 URL validation:", {
+        hasProtocol: currentAvatarUrl.startsWith('http'),
+        includesFirebase: currentAvatarUrl.includes('firebasestorage'),
+        includesSlashEncoding: currentAvatarUrl.includes('%2F'),
+        length: currentAvatarUrl.length
+      })
+      setImageError(false)
+    }
+  }, [currentAvatarUrl])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +106,14 @@ export default function AvatarUploader({
         async () => {
           // Upload completed successfully
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
-          console.log("✅ Avatar uploaded:", downloadURL)
+          console.log("✅ Avatar uploaded successfully!")
+          console.log("📁 Storage path:", filePath)
+          console.log("🔗 Download URL:", downloadURL)
+          console.log("🔍 URL breakdown:", {
+            bucket: storage.app.options.storageBucket,
+            path: filePath,
+            encodedPath: encodeURIComponent(filePath).replace(/%2F/g, '%2F')
+          })
           onAvatarChange(downloadURL)
           setUploading(false)
           setUploadProgress(0)
@@ -109,15 +131,28 @@ export default function AvatarUploader({
       <div className="relative">
         {/* Avatar Preview */}
         <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-gray-200 bg-gradient-to-br from-blue-100 to-purple-100 dark:border-gray-700 dark:from-blue-900 dark:to-purple-900">
-          {previewUrl ? (
+          {previewUrl && !imageError ? (
             <img
               src={previewUrl}
               alt="Avatar"
               className="h-full w-full object-cover"
+              onError={(e) => {
+                console.error("❌ Avatar image failed to load:", previewUrl)
+                console.error("Image error event:", e)
+                setImageError(true)
+              }}
+              onLoad={() => {
+                console.log("✅ Avatar image loaded successfully")
+              }}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
               <User size={48} className="text-gray-400" />
+              {imageError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100 dark:bg-red-900/30">
+                  <p className="text-xs text-red-600 dark:text-red-400">Failed to load</p>
+                </div>
+              )}
             </div>
           )}
 

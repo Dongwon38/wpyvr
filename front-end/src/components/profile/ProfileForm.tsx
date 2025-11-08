@@ -55,6 +55,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [company, setCompany] = useState(initialData?.company || "")
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
+
+  // Debug log for avatar URL
+  useEffect(() => {
+    console.log("📝 ProfileForm - Avatar URL state:", avatarUrl)
+    console.log("📝 ProfileForm - Initial avatar from props:", initialData?.avatar_url)
+  }, [avatarUrl, initialData?.avatar_url])
   const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(
     initialData?.profile_visibility || 'private'
   )

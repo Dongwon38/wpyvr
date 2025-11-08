@@ -259,17 +259,34 @@ export default function MembersPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           {/* Avatar */}
-                          {member.avatar_url ? (
-                            <img
-                              src={member.avatar_url}
-                              alt={member.nickname}
-                              className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
-                              {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
-                            </div>
-                          )}
+                          <div className="relative h-14 w-14 flex-shrink-0">
+                            {member.avatar_url ? (
+                              <>
+                                <img
+                                  src={member.avatar_url}
+                                  alt={member.nickname}
+                                  className="h-14 w-14 rounded-full object-cover"
+                                  onError={(e) => {
+                                    console.error(`❌ Avatar failed to load for ${member.nickname}:`, member.avatar_url)
+                                    // Hide the broken image and show placeholder
+                                    e.currentTarget.style.display = 'none'
+                                    const placeholder = e.currentTarget.nextElementSibling as HTMLElement
+                                    if (placeholder) placeholder.style.display = 'flex'
+                                  }}
+                                  onLoad={() => {
+                                    console.log(`✅ Avatar loaded for ${member.nickname}`)
+                                  }}
+                                />
+                                <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                                  {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                                </div>
+                              </>
+                            ) : (
+                              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                                {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                              </div>
+                            )}
+                          </div>
                           
                           {/* Member Details - Name centered vertically with avatar */}
                           <div className="flex items-center gap-2">
