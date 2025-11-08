@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, LogIn, LogOut, HelpCircle, Users, MessageCircle, Send, User as UserIcon, Settings } from "lucide-react";
+import { X, LogIn, LogOut, User as UserIcon, Settings, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/features/auth/AuthForm";
-import { getRecentlyActiveUsers } from "@/lib/mockData";
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -16,26 +15,27 @@ interface RightSidebarProps {
 export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const router = useRouter();
   const { user, wpUser, userProfile, logout, loading } = useAuth();
-  const [message, setMessage] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
   
-  // Get recently active users
-  const recentlyActiveUsers = getRecentlyActiveUsers(4);
-
-  // Mock chat messages
-  const chatMessages = [
-    { id: 1, user: "Sarah", message: "Hey everyone! 👋", time: "2m ago" },
-    { id: 2, user: "John", message: "Working on a new project", time: "5m ago" },
-    { id: 3, user: "Emma", message: "Anyone free for code review?", time: "10m ago" },
+  // Community links
+  const communityLinks = [
+    {
+      id: 1,
+      name: "Discord Community",
+      description: "Join our Discord server",
+      url: "https://discord.gg/4E2Awg9m2M",
+      icon: "💬",
+      color: "from-indigo-500 to-blue-500"
+    },
+    {
+      id: 2,
+      name: "Meetup Group",
+      description: "RSVP to our events",
+      url: "https://www.meetup.com/vancouver-wordpress-meetup-group/",
+      icon: "📅",
+      color: "from-red-500 to-pink-500"
+    },
   ];
-
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim()) {
-      // Handle message send logic here
-      setMessage("");
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -174,104 +174,62 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             </>
           )}
 
-          {/* Recently Active Members Section */}
+          {/* Community Links Section */}
           <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-800">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users size={20} className="text-purple-500" />
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Recently Active Members
-                </h3>
-              </div>
+            <div className="mb-4">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                Join Our Community
+              </h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                Connect with us on these platforms
+              </p>
             </div>
-            <div className="space-y-4">
-              {recentlyActiveUsers.map((member) => (
-                <div
-                  key={member.id}
-                  className="flex gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
+            
+            <div className="space-y-3">
+              {communityLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block rounded-xl bg-gradient-to-br p-4 transition-all hover:shadow-lg"
+                  style={{
+                    backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))`,
+                  }}
                 >
-                  <div className="flex-shrink-0">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
-                      {member.avatar}
+                  <div className={`rounded-xl bg-gradient-to-br ${link.color} p-4 transition-transform group-hover:scale-105`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">{link.icon}</span>
+                        <div>
+                          <h4 className="font-bold text-white">
+                            {link.name}
+                          </h4>
+                          <p className="text-sm text-white/90">
+                            {link.description}
+                          </p>
+                        </div>
+                      </div>
+                      <ExternalLink 
+                        size={20} 
+                        className="flex-shrink-0 text-white/80 transition-transform group-hover:translate-x-1" 
+                      />
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                        {member.name}
-                      </p>
-                      {member.memberType === "expert" && (
-                        <span className="flex-shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
-                          Expert
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
-                      {member.bio}
-                    </p>
-                  </div>
-                </div>
+                </a>
               ))}
             </div>
+
+            {/* View Members Button */}
             <button 
               onClick={() => {
                 router.push("/members");
                 onClose();
               }}
-              className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700/50"
+              className="mt-4 w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-blue-700 hover:shadow-lg"
             >
-              View All Members
+              View Community Members
             </button>
-          </div>
-
-          {/* Chat Section */}
-          <div className="rounded-2xl bg-white shadow-md dark:bg-gray-800">
-            <div className="border-b border-gray-200 p-4 dark:border-gray-700">
-              <div className="flex items-center gap-2">
-                <MessageCircle size={20} className="text-blue-500" />
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Community Chat
-                </h3>
-              </div>
-            </div>
-            
-            {/* Chat Messages */}
-            <div className="h-64 space-y-3 overflow-y-auto p-4">
-              {chatMessages.map((msg) => (
-                <div key={msg.id} className="group">
-                  <div className="mb-1 flex items-center gap-2">
-                    <span className="text-xs font-semibold text-gray-900 dark:text-white">
-                      {msg.user}
-                    </span>
-                    <span className="text-xs text-gray-400">{msg.time}</span>
-                  </div>
-                  <div className="rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                    {msg.message}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Chat Input */}
-            <form onSubmit={handleSendMessage} className="border-t border-gray-200 p-4 dark:border-gray-700">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                />
-                <button
-                  type="submit"
-                  disabled={!message.trim()}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  aria-label="Send message"
-                >
-                  <Send size={18} />
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </aside>
