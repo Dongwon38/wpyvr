@@ -9,51 +9,33 @@ import PostSlider from "@/components/PostSlider";
 import EventCard, { EventCardData } from "@/components/EventCard";
 import { mockPosts } from "@/lib/mockData";
 import { fetchEventsSortedByDate } from "@/lib/eventsApi";
+import { fetchLatestBlogPosts, type BlogPost as ApiBlogPost } from "@/lib/blogApi";
 import { FileText, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock } from "lucide-react";
-import { BlogPost } from "@/components/BlogPostCard";
 
-// Mock blog posts data
-const mockBlogPosts: BlogPost[] = [
-  {
-    id: 1,
-    slug: "getting-started-with-wordpress-headless",
-    title: "Getting Started with WordPress Headless CMS",
-    excerpt: "Learn how to build modern web applications using WordPress as a headless CMS.",
-    date: "2024-01-15",
-    author: { name: "Sarah Johnson", avatar: undefined },
-    categories: ["Tutorial", "WordPress"],
-    readTime: "8 min read",
-  },
-  {
-    id: 2,
-    slug: "building-scalable-nextjs-applications",
-    title: "Building Scalable Next.js Applications",
-    excerpt: "Discover best practices for creating performant and scalable applications with Next.js 14.",
-    date: "2024-01-10",
-    author: { name: "Michael Chen", avatar: undefined },
-    categories: ["Next.js", "Development"],
-    readTime: "12 min read",
-  },
-  {
-    id: 3,
-    slug: "modern-ui-design-principles",
-    title: "Modern UI Design Principles for 2024",
-    excerpt: "Explore the latest trends in UI/UX design and learn how to create beautiful interfaces.",
-    date: "2024-01-05",
-    author: { name: "Emma Rodriguez", avatar: undefined },
-    categories: ["Design", "UI/UX"],
-    readTime: "6 min read",
-  },
-];
+// Blog post format for component
+interface BlogPost {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  author: {
+    name: string;
+    avatar?: string;
+  };
+  categories?: string[];
+  readTime: string;
+}
 
 export default function Home() {
   const [events, setEvents] = useState<EventCardData[]>([]);
   const [eventsLoading, setEventsLoading] = useState(true);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [blogLoading, setBlogLoading] = useState(true);
   
-  // Get trending posts, recent posts, and latest blog posts
+  // Get trending posts and recent posts
   const trendingPosts = [...mockPosts].sort((a, b) => b.upvotes - a.upvotes);
   const recentPosts = [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const latestBlogPosts = mockBlogPosts.slice(0, 3);
   
   useEffect(() => {
     async function loadEvents() {
@@ -67,7 +49,31 @@ export default function Home() {
       }
     }
 
+    async function loadBlogPosts() {
+      try {
+        const data = await fetchLatestBlogPosts(3);
+        
+        if (data.length > 0) {
+          const transformedPosts: BlogPost[] = data.map(post => ({
+            id: post.id,
+            slug: post.slug,
+            title: post.title,
+            excerpt: post.excerpt,
+            date: post.date,
+            author: post.author,
+            readTime: post.readTime,
+          }));
+          setBlogPosts(transformedPosts);
+        }
+      } catch (error) {
+        console.error('Failed to load blog posts:', error);
+      } finally {
+        setBlogLoading(false);
+      }
+    }
+
     loadEvents();
+    loadBlogPosts();
   }, []);
 
   return (
@@ -203,11 +209,25 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {latestBlogPosts.map((post, index) => (
-              <BlogListItem key={post.id} post={post} index={index} />
-            ))}
-          </div>
+          {/* Loading State */}
+          {blogLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+            </div>
+          ) : blogPosts.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {blogPosts.map((post, index) => (
+                <BlogListItem key={post.id} post={post} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl bg-gray-100 p-12 text-center dark:bg-gray-700">
+              <FileText className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+              <p className="text-gray-600 dark:text-gray-400">
+                No blog posts yet. Check back soon!
+              </p>
+            </div>
+          )}
 
           <div className="mt-8 text-center sm:hidden">
             <Link

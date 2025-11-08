@@ -1,9 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BlogListItem from "@/components/BlogListItem";
-import { BlogPost } from "@/components/BlogPostCard";
+import { fetchBlogPosts, fetchCategories, type BlogPost as ApiBlogPost, type Category } from "@/lib/blogApi";
+
+// Transform API BlogPost to component BlogPost format
+interface BlogPost {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  author: {
+    name: string;
+    avatar?: string;
+  };
+  categories?: string[];
+  readTime: string;
+}
 
 // Mock blog posts data - Ready for WordPress API integration
 const mockBlogPosts: BlogPost[] = [
@@ -89,14 +104,58 @@ const mockBlogPosts: BlogPost[] = [
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [posts, setPosts] = useState<BlogPost[]>(mockBlogPosts);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadBlogData() {
+      try {
+        setLoading(true);
+        
+        // Fetch categories
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
+
+        // Fetch blog posts
+        const postsData = await fetchBlogPosts();
+        
+        if (postsData.length > 0) {
+          // Transform API posts to component format
+          const transformedPosts: BlogPost[] = postsData.map(post => ({
+            id: post.id,
+            slug: post.slug,
+            title: post.title,
+            excerpt: post.excerpt,
+            date: post.date,
+            author: post.author,
+            categories: post.categories.map(catId => {
+              const cat = categoriesData.find(c => c.id === catId);
+              return cat ? cat.name : '';
+            }).filter(Boolean),
+            readTime: post.readTime,
+          }));
+          setPosts(transformedPosts);
+        }
+      } catch (error) {
+        console.error('Error loading blog data:', error);
+        // Fall back to mock data on error
+        setPosts(mockBlogPosts);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadBlogData();
+  }, []);
 
   // Get all unique categories
-  const allCategories = ["All", ...new Set(mockBlogPosts.flatMap(post => post.categories || []))];
+  const allCategories = ["All", ...categories.map(cat => cat.name)];
 
   // Filter posts by category
   const filteredPosts = selectedCategory === "All"
-    ? mockBlogPosts
-    : mockBlogPosts.filter(post => post.categories?.includes(selectedCategory));
+    ? posts
+    : posts.filter(post => post.categories?.includes(selectedCategory));
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -140,15 +199,24 @@ export default function BlogPage() {
 
           {/* Results Count */}
           <p className="mb-4 text-sm font-normal text-gray-500 dark:text-gray-500">
-            {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
+            {loading ? 'Loading...' : `${filteredPosts.length} ${filteredPosts.length === 1 ? 'post' : 'posts'}`}
           </p>
 
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+            </div>
+          )}
+
           {/* Blog Posts Grid */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPosts.map((post, index) => (
-              <BlogListItem key={post.id} post={post} index={index} />
-            ))}
-          </div>
+          {!loading && (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {filteredPosts.map((post, index) => (
+                <BlogListItem key={post.id} post={post} index={index} />
+              ))}
+            </div>
+          )}
 
           {/* Empty State */}
           {filteredPosts.length === 0 && (
