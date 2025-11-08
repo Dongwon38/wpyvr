@@ -127,12 +127,16 @@ export default function EventDetailPage() {
                   Date
                 </p>
                 <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
-                  {new Date(event.eventDate).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
+                  {(() => {
+                    const [year, month, day] = event.eventDate.split('-').map(Number);
+                    const date = new Date(year, month - 1, day);
+                    return date.toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    });
+                  })()}
                 </p>
               </div>
             </div>
@@ -212,7 +216,7 @@ export default function EventDetailPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 rounded-2xl bg-white p-8 shadow-md dark:bg-gray-800"
+          className="mb-8"
         >
           <div
             className="prose prose-lg dark:prose-invert max-w-none"
