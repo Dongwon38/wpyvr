@@ -99,24 +99,34 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
 
         {/* Event Details */}
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+          {/* Date and Time (combined) */}
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <Calendar size={16} className="text-blue-600 dark:text-blue-400" />
             <span>{(() => {
               const [year, month, day] = event.eventDate.split('-').map(Number);
+              const [hour, min] = event.startTime.split(':').map(Number);
               const date = new Date(year, month - 1, day);
-              return date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric"
-              });
+              const currentYear = new Date().getFullYear();
+              
+              // Format weekday and date
+              const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
+              const monthName = date.toLocaleDateString("en-US", { month: "short" });
+              
+              // Format start time
+              const period = hour >= 12 ? 'PM' : 'AM';
+              const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+              const timeStr = `${displayHour}:${min.toString().padStart(2, '0')} ${period}`;
+              
+              // Show year only if different from current year
+              if (year !== currentYear) {
+                return `${weekday}, ${monthName} ${day}, ${year}, ${timeStr}`;
+              }
+              
+              return `${weekday}, ${monthName} ${day}, ${timeStr}`;
             })()}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <Clock size={16} className="text-purple-600 dark:text-purple-400" />
-            <span>{event.formattedTime}</span>
-          </div>
-
+          {/* Location */}
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <MapPin size={16} className="text-orange-600 dark:text-orange-400" />
             {event.googleMapsUrl ? (
