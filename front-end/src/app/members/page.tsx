@@ -11,9 +11,7 @@ import {
   Briefcase, 
   Building2, 
   Globe, 
-  Star,
-  Award,
-  User as UserIcon
+  Award
 } from "lucide-react";
 import { mockUsers, getAllSpecialties, type User } from "@/lib/mockData";
 
@@ -76,31 +74,6 @@ export default function MembersPage() {
 
     return filtered;
   }, [searchQuery, sortBy, filterMemberType, filterSpecialty]);
-
-  const getMemberBadge = (member: User) => {
-    if (member.role === "staff") {
-      return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
-          <Award size={12} />
-          Staff
-        </span>
-      );
-    }
-    if (member.memberType === "expert") {
-      return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
-          <Star size={12} />
-          Expert
-        </span>
-      );
-    }
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-        <UserIcon size={12} />
-        Member
-      </span>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 dark:bg-gray-950">
@@ -269,77 +242,92 @@ export default function MembersPage() {
                       {/* Member Info */}
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          {/* Avatar - Larger size */}
+                          {/* Avatar */}
                           <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
                             {member.avatar}
                           </div>
                           
-                          {/* Member Details */}
-                          <div className="flex flex-col gap-1.5">
-                            {/* Badge on top */}
-                            <div>
-                              {getMemberBadge(member)}
-                            </div>
-                            
-                            {/* Name and Email on second line */}
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-gray-900 dark:text-white">
-                                {member.nickname || member.name}
+                          {/* Member Details - Name centered vertically with avatar */}
+                          <div className="flex items-center gap-2">
+                            {/* Staff Badge - only for staff */}
+                            {member.role === "staff" && (
+                              <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
+                                <Award size={10} />
+                                Staff
                               </span>
-                              
-                              {/* Email Icon Button */}
+                            )}
+                            
+                            {/* Name */}
+                            <span className="font-semibold text-gray-900 dark:text-white">
+                              {member.nickname || member.name}
+                            </span>
+                            
+                            {/* Email Icon Button - only if email exists */}
+                            {member.email && (
                               <a
                                 href={`mailto:${member.email}`}
                                 title={member.email}
-                                className="group relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
+                                className="group relative inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
                               >
-                                <Mail size={14} />
+                                <Mail size={13} />
                                 {/* Tooltip */}
                                 <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
                                   {member.email}
                                 </span>
                               </a>
-                            </div>
+                            )}
                           </div>
                         </div>
                       </td>
 
                       {/* Specialties */}
                       <td className="px-6 py-4">
-                        <div className="flex flex-wrap gap-1.5">
-                          {member.specialties.slice(0, 2).map((specialty) => (
-                            <span
-                              key={specialty}
-                              className="rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
-                            >
-                              {specialty}
-                            </span>
-                          ))}
-                          {member.specialties.length > 2 && (
-                            <span className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-                              +{member.specialties.length - 2}
-                            </span>
-                          )}
-                        </div>
+                        {member.specialties && member.specialties.length > 0 ? (
+                          <div className="flex flex-wrap gap-1.5">
+                            {member.specialties.slice(0, 2).map((specialty) => (
+                              <span
+                                key={specialty}
+                                className="rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+                              >
+                                {specialty}
+                              </span>
+                            ))}
+                            {member.specialties.length > 2 && (
+                              <span className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                                +{member.specialties.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
+                        )}
                       </td>
 
                       {/* Position / Company */}
                       <td className="px-6 py-4">
-                        <div className="flex flex-col gap-1">
-                          {/* Position - Top line */}
-                          <div className="flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white">
-                            <Briefcase size={14} className="flex-shrink-0 text-purple-500" />
-                            <span>{member.position}</span>
+                        {member.position || member.company ? (
+                          <div className="flex flex-col gap-1">
+                            {/* Position - Top line */}
+                            {member.position ? (
+                              <div className="flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white">
+                                <Briefcase size={14} className="flex-shrink-0 text-purple-500" />
+                                <span>{member.position}</span>
+                              </div>
+                            ) : (
+                              <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
+                            )}
+                            
+                            {/* Company - Bottom line (smaller text) */}
+                            {member.company && (
+                              <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                                <Building2 size={12} className="flex-shrink-0 text-gray-400" />
+                                <span>{member.company}</span>
+                              </div>
+                            )}
                           </div>
-                          
-                          {/* Company - Bottom line (smaller text) */}
-                          {member.company && (
-                            <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
-                              <Building2 size={12} className="flex-shrink-0 text-gray-400" />
-                              <span>{member.company}</span>
-                            </div>
-                          )}
-                        </div>
+                        ) : (
+                          <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
+                        )}
                       </td>
 
                       {/* Website */}
@@ -368,6 +356,13 @@ export default function MembersPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Privacy Notice */}
+            <div className="border-t border-gray-200 bg-gray-50 px-6 py-3 dark:border-gray-700 dark:bg-gray-900">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="font-medium">Note:</span> "—" indicates information is unavailable or set to private by the user.
+              </p>
             </div>
           </motion.div>
         ) : (
