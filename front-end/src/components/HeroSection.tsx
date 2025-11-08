@@ -182,11 +182,11 @@ export default function HeroSection() {
             </motion.div>
 
             {/* Main Heading */}
-            <motion.h1
+              <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl"
+                className="mb-4 text-3xl font-black tracking-tight text-gray-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl"
             >
               <span className="block">{slide.title}</span>
               <span className="bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
@@ -195,11 +195,11 @@ export default function HeroSection() {
             </motion.h1>
 
             {/* Subheadline */}
-            <motion.p
+              <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mx-auto mb-6 max-w-2xl text-base text-gray-600 dark:text-gray-300 sm:text-lg"
+                className="mx-auto mb-6 max-w-2xl text-base font-light text-gray-600 dark:text-gray-300 sm:text-lg"
             >
               {slide.description}
             </motion.p>
@@ -211,9 +211,9 @@ export default function HeroSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col items-center justify-center gap-3 sm:flex-row"
             >
-              <Link
+                <Link
                 href={slide.primaryCTA.href}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl sm:w-auto"
+                  className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl sm:w-auto"
               >
                 <PrimaryIcon size={18} />
                 {slide.primaryCTA.text}
@@ -222,9 +222,9 @@ export default function HeroSection() {
                   className="transition-transform group-hover:translate-x-1" 
                 />
               </Link>
-              <Link
+                <Link
                 href={slide.secondaryCTA.href}
-                className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-lg transition-all hover:border-gray-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 sm:w-auto"
+                  className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-900 shadow-lg transition-all hover:border-gray-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 sm:w-auto"
               >
                 <SecondaryIcon size={18} />
                 {slide.secondaryCTA.text}
@@ -247,10 +247,10 @@ export default function HeroSection() {
                   key={index}
                   className="rounded-xl bg-white/60 p-4 text-center backdrop-blur-sm dark:bg-gray-800/60"
                 >
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+                    <div className="text-2xl font-black text-gray-900 dark:text-white sm:text-3xl">
                     {stat.value}
                   </div>
-                  <div className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400 sm:text-sm">
+                    <div className="mt-1 text-xs font-normal text-gray-600 dark:text-gray-400 sm:text-sm">
                     {stat.label}
                   </div>
                 </div>
@@ -273,11 +273,11 @@ export default function HeroSection() {
           {/* Slide Indicator Badge */}
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-white/90 px-4 py-2 shadow-md backdrop-blur-sm dark:bg-gray-800/90">
-              <span className="text-base font-bold text-gray-900 dark:text-white">
+                <span className="text-base font-bold text-gray-900 dark:text-white">
                 {currentSlide + 1}
               </span>
               <span className="mx-1 text-gray-400 dark:text-gray-500">/</span>
-              <span className="text-base font-semibold text-gray-600 dark:text-gray-400">
+                <span className="text-base font-medium text-gray-600 dark:text-gray-400">
                 {totalSlides}
               </span>
             </div>

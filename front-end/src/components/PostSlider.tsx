@@ -118,9 +118,9 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
     <div className="relative">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {icon}
-          <h3 className="text-xl font-normal text-gray-900 dark:text-white">
+          <div className="flex items-center gap-2">
+            {icon}
+            <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             {title}
           </h3>
         </div>
@@ -174,13 +174,13 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
           ))}
 
           {/* View More Slide */}
-          <div className="w-full flex-shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]">
-            <Link
-              href="/community"
-              className="group flex h-full min-h-[300px] w-full flex-col items-center justify-center gap-4 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+            <div className="w-full flex-shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]">
+              <Link
+                href="/community"
+                className="group flex h-full min-h-[300px] w-full flex-col items-center justify-center gap-4 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <div className="text-5xl">👀</div>
-              <h3 className="text-xl font-normal text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                <h3 className="text-xl font-bold tracking-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
                 View All Posts
               </h3>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">

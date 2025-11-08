@@ -50,9 +50,9 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
           )}
           
           {/* Category Badge */}
-          {post.categories && post.categories.length > 0 && (
-            <div className="absolute left-4 top-4">
-              <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-900 shadow-sm backdrop-blur-sm dark:bg-gray-900/90 dark:text-white">
+            {post.categories && post.categories.length > 0 && (
+              <div className="absolute left-4 top-4">
+                <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-900 shadow-sm backdrop-blur-sm dark:bg-gray-900/90 dark:text-white">
                 {post.categories[0]}
               </span>
             </div>
@@ -86,14 +86,14 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
         </div>
 
         {/* Title */}
-        <Link href={`/blog/${post.slug}`} className="group/title">
-          <h3 className="mb-3 text-xl font-bold leading-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+          <Link href={`/blog/${post.slug}`} className="group/title">
+            <h3 className="mb-3 text-xl font-bold leading-tight tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
             {post.title}
           </h3>
         </Link>
 
         {/* Excerpt */}
-        <p className="mb-4 flex-1 text-gray-600 dark:text-gray-300 line-clamp-3">
+          <p className="mb-4 flex-1 font-light text-gray-600 dark:text-gray-300 line-clamp-3">
           {post.excerpt}
         </p>
 
@@ -116,9 +116,9 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
             </span>
           </div>
 
-          <Link
-            href={`/blog/${post.slug}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            <Link
+              href={`/blog/${post.slug}`}
+              className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
             Read More
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />

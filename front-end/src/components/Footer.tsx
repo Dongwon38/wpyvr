@@ -29,18 +29,18 @@ export default function Footer() {
       <div className="mx-auto w-full px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="space-y-4">
+              <h3 className="text-xl font-black tracking-tight text-gray-900 dark:text-white">
               Community Hub
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm font-light text-gray-600 dark:text-gray-400">
               A place where ideas, tools, and people meet. Join our community of creators and developers.
             </p>
           </div>
 
           {/* Navigation Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white">
+              <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 dark:text-white">
               Navigation
             </h4>
             <ul className="space-y-2">
@@ -48,7 +48,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white">
+              <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 dark:text-white">
               Legal
             </h4>
             <ul className="space-y-2">
@@ -67,7 +67,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -78,7 +78,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white">
+              <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 dark:text-white">
               Connect
             </h4>
             <div className="flex gap-4">
@@ -103,7 +103,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-8 border-t border-gray-200 pt-8 dark:border-gray-800">
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-center text-sm font-light text-gray-600 dark:text-gray-400">
             © {currentYear} Community Hub. All rights reserved.
           </p>
         </div>

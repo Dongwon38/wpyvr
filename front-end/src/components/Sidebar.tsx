@@ -30,7 +30,7 @@ export default function Sidebar({ type = "guides" }: SidebarProps) {
                   href={`/guides/${guide.slug}`}
                   className="group block"
                 >
-                  <h4 className="mb-1 text-sm font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                    <h4 className="mb-1 text-sm font-bold tracking-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
                     {guide.title}
                   </h4>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -42,12 +42,12 @@ export default function Sidebar({ type = "guides" }: SidebarProps) {
                 .sort((a, b) => b.upvotes - a.upvotes)
                 .slice(0, 3)
                 .map((post) => (
-                  <Link
-                    key={post.slug}
-                    href={`/community/${post.slug}`}
-                    className="group block"
+                    <Link
+                      key={post.slug}
+                      href={`/community/${post.slug}`}
+                      className="group block"
                   >
-                    <h4 className="mb-1 text-sm font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                      <h4 className="mb-1 text-sm font-bold tracking-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
                       {post.title}
                     </h4>
                     <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
@@ -76,7 +76,7 @@ export default function Sidebar({ type = "guides" }: SidebarProps) {
                   {index + 1}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {name}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -90,16 +90,16 @@ export default function Sidebar({ type = "guides" }: SidebarProps) {
       )}
 
       {/* Call to Action */}
-      <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-md">
-        <h3 className="mb-2 text-lg font-bold">
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-md">
+          <h3 className="mb-2 text-lg font-black tracking-tight">
           {type === "guides" ? "Want to Contribute?" : "Join the Discussion"}
         </h3>
-        <p className="mb-4 text-sm opacity-90">
+          <p className="mb-4 text-sm font-light opacity-90">
           {type === "guides"
             ? "Share your expertise and help others learn."
             : "Connect with fellow creators and share your journey."}
         </p>
-        <button className="w-full rounded-lg bg-white px-4 py-2 text-sm font-semibold text-blue-600 transition-all hover:bg-gray-100">
+          <button className="w-full rounded-lg bg-white px-4 py-2 text-sm font-bold text-blue-600 transition-all hover:bg-gray-100">
           Get Started
         </button>
       </div>

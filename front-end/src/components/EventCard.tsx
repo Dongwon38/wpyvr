@@ -41,10 +41,10 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       )}
     >
       {/* Badge */}
-      <div className="absolute right-4 top-4 z-10">
-        <span
+        <div className="absolute right-4 top-4 z-10">
+          <span
           className={cn(
-            "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide shadow-lg",
+              "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.3em] shadow-lg",
             isPast
               ? "bg-gray-500 text-white"
               : "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
@@ -83,16 +83,16 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
           )}
         </div>
         {/* Hover Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <span className="text-lg font-semibold text-white">View Details</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="text-lg font-bold text-white">View Details</span>
         </div>
       </Link>
 
       {/* Content */}
       <div className="p-6">
         {/* Title */}
-        <Link href={`/events/${event.slug}`} className="group/title">
-          <h3 className="mb-3 text-lg font-bold text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+          <Link href={`/events/${event.slug}`} className="group/title">
+            <h3 className="mb-3 text-lg font-bold tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
             {event.title}
           </h3>
         </Link>
@@ -100,7 +100,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         {/* Event Details */}
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
           {/* Date and Time (combined) */}
-          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             <Calendar size={16} className="text-blue-600 dark:text-blue-400" />
             <span>{(() => {
               const [year, month, day] = event.eventDate.split('-').map(Number);
@@ -127,7 +127,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
           </div>
 
           {/* Location */}
-          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             <MapPin size={16} className="text-orange-600 dark:text-orange-400" />
             {event.googleMapsUrl ? (
               <a

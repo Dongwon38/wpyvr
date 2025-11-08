@@ -80,10 +80,10 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-bold truncate">
+                        <h3 className="text-base font-bold tracking-tight truncate">
                         Hi, {userProfile?.nickname || wpUser.display_name}! 👋
                       </h3>
-                      <p className="text-xs opacity-90 truncate">
+                        <p className="text-xs font-light opacity-90 truncate">
                         {userProfile?.position || wpUser.email}
                       </p>
                     </div>
@@ -100,19 +100,19 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
 
                   {/* Action Buttons */}
                   <div className="flex gap-2">
-                    <button 
+                      <button 
                       onClick={() => {
                         router.push("/profile");
                         onClose();
                       }}
-                      className="flex-[2] rounded-lg bg-white px-3 py-2 text-xs font-semibold text-green-600 transition-all hover:bg-gray-100 flex items-center justify-center gap-1.5"
+                        className="flex-[2] rounded-lg bg-white px-3 py-2 text-xs font-bold text-green-600 transition-all hover:bg-gray-100 flex items-center justify-center gap-1.5"
                     >
                       <Settings size={14} />
                       Manage Info
                     </button>
-                    <button 
+                      <button 
                       onClick={handleLogout}
-                      className="flex-1 rounded-lg border border-white/30 px-3 py-2 text-xs font-semibold text-white transition-all hover:bg-white/10 flex items-center justify-center gap-1.5"
+                        className="flex-1 rounded-lg border border-white/30 px-3 py-2 text-xs font-medium text-white transition-all hover:bg-white/10 flex items-center justify-center gap-1.5"
                     >
                       <LogOut size={14} />
                       Sign Out
@@ -122,23 +122,23 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               ) : (
                 // Not logged in state
                 <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-md">
-                  <div className="mb-4 flex items-center gap-2">
-                    <LogIn size={20} />
-                    <h3 className="text-lg font-bold">Join Our Community</h3>
+                    <div className="mb-4 flex items-center gap-2">
+                      <LogIn size={20} />
+                      <h3 className="text-lg font-black tracking-tight">Join Our Community</h3>
                   </div>
-                  <p className="mb-4 text-sm opacity-90">
+                    <p className="mb-4 text-sm font-light opacity-90">
                     Sign in to unlock all features and connect with fellow creators.
                   </p>
                   <div className="space-y-2">
-                    <button 
+                      <button 
                       onClick={openAuthModal}
-                      className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-blue-600 transition-all hover:bg-gray-100"
+                        className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-blue-600 transition-all hover:bg-gray-100"
                     >
                       Sign In
                     </button>
-                    <button 
+                      <button 
                       onClick={openAuthModal}
-                      className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
+                        className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-white/10"
                     >
                       Create Account
                     </button>
@@ -153,19 +153,19 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
 
           {/* Need Help Section */}
           <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
-            <div className="mb-3 flex items-center gap-2">
-              <HelpCircle size={20} />
-              <h3 className="text-lg font-bold">Need Help?</h3>
+              <div className="mb-3 flex items-center gap-2">
+                <HelpCircle size={20} />
+                <h3 className="text-lg font-black tracking-tight">Need Help?</h3>
             </div>
-            <p className="mb-4 text-sm opacity-90">
+              <p className="mb-4 text-sm font-light opacity-90">
               Get instant support from our community moderators and experts.
             </p>
-            <button className="w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-orange-600 transition-all hover:bg-gray-100">
+              <button className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100">
               Get Support
             </button>
-            <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs">
+              <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs">
               <span className="opacity-75">Available 24/7</span>
-              <span className="font-semibold">⚡ Fast Response</span>
+                <span className="font-medium">⚡ Fast Response</span>
             </div>
           </div>
         </div>
