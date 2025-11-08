@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Calendar, ArrowLeft, Clock } from "lucide-react";
-import { fetchBlogPostBySlug, fetchBlogPosts } from "@/lib/blogApi";
+import { Calendar, ArrowLeft, Clock, ArrowRight } from "lucide-react";
+import { fetchBlogPostBySlug, fetchBlogPosts, fetchLatestBlogPosts } from "@/lib/blogApi";
+import BlogListItem from "@/components/BlogListItem";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -30,8 +31,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  // Fetch recent posts for recommendations (excluding current post)
+  const allRecentPosts = await fetchLatestBlogPosts(4);
+  const recentPosts = allRecentPosts
+    .filter(p => p.slug !== slug)
+    .slice(0, 3)
+    .map(p => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      date: p.date,
+      author: p.author,
+      readTime: p.readTime,
+    }));
+
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Navigation */}
       <section className="border-b border-gray-200 px-4 py-4 dark:border-gray-800 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
@@ -104,8 +120,60 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             className="prose prose-lg max-w-none dark:prose-invert"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          {/* Back to Blog Button */}
+          <div className="mt-10 border-t border-gray-200 pt-8 dark:border-gray-800">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-normal text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+            >
+              <ArrowLeft size={16} />
+              Back to All Articles
+            </Link>
+          </div>
         </div>
       </article>
+
+      {/* Recent Posts Section */}
+      {recentPosts.length > 0 && (
+        <section className="border-t border-gray-200 px-4 py-12 dark:border-gray-800 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                  Recent Articles
+                </h2>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  Continue reading more from our blog
+                </p>
+              </div>
+              <Link
+                href="/blog"
+                className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+              >
+                View All
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {recentPosts.map((recentPost, index) => (
+                <BlogListItem key={recentPost.id} post={recentPost} index={index} />
+              ))}
+            </div>
+
+            <div className="mt-6 text-center sm:hidden">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                View All Articles
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
