@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import PostCard from "@/components/PostCard";
+import PostListItem from "@/components/PostListItem";
 import { mockPosts, getAllTags } from "@/lib/mockData";
-import { Filter, TrendingUp, Clock } from "lucide-react";
+import { TrendingUp, Clock } from "lucide-react";
 
 export default function CommunityPage() {
   const [selectedTag, setSelectedTag] = useState<string>("All");
@@ -26,117 +26,91 @@ export default function CommunityPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
-      <section className="bg-gradient-to-br from-orange-600 to-purple-600 px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl text-center">
+      <section className="border-b border-gray-200 px-4 py-12 dark:border-gray-800 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           >
-            <h1 className="mb-4 text-4xl font-bold text-white sm:text-5xl">
-              Community Posts
+            <h1 className="mb-3 text-3xl font-normal text-gray-900 dark:text-white">
+              Community
             </h1>
-            <p className="mx-auto max-w-2xl text-lg text-orange-100">
-              Discover insights, experiences, and projects shared by our vibrant community.
+            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
+              Insights, experiences, and projects from our community
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Filters and Content */}
-      <section className="px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          {/* Filters */}
-          <div className="mb-8 space-y-6">
+      {/* Content */}
+      <section className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          {/* Toolbar - Filters and Sort */}
+          <div className="mb-6 flex flex-col gap-4 border-b border-gray-200 pb-6 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
             {/* Tag Filter */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className="mb-4 flex items-center gap-2">
-                <Filter size={20} className="text-gray-600 dark:text-gray-400" />
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Filter by Tag
-                </h2>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => setSelectedTag(tag)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                      selectedTag === tag
-                        ? "bg-orange-600 text-white shadow-md"
-                        : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    {tag === "All" ? tag : `#${tag}`}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
+            <div className="flex flex-wrap items-center gap-2">
+              {tags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedTag(tag)}
+                  className={`text-sm font-normal transition-colors ${
+                    selectedTag === tag
+                      ? "text-gray-900 underline decoration-orange-500 decoration-2 underline-offset-4 dark:text-white"
+                      : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
+                  }`}
+                >
+                  {tag === "All" ? tag : `#${tag}`}
+                </button>
+              ))}
+            </div>
 
             {/* Sort Options */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-wrap items-center gap-4"
-            >
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                Sort by:
-              </span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setSortBy("newest")}
-                  className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                    sortBy === "newest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <Clock size={16} />
-                  Newest
-                </button>
-                <button
-                  onClick={() => setSortBy("popular")}
-                  className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                    sortBy === "popular"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <TrendingUp size={16} />
-                  Popular
-                </button>
-              </div>
-            </motion.div>
+            <div className="flex items-center gap-3 text-sm">
+              <button
+                onClick={() => setSortBy("newest")}
+                className={`inline-flex items-center gap-1.5 font-normal transition-colors ${
+                  sortBy === "newest"
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
+                }`}
+              >
+                <Clock size={14} />
+                Newest
+              </button>
+              <span className="text-gray-300 dark:text-gray-700">|</span>
+              <button
+                onClick={() => setSortBy("popular")}
+                className={`inline-flex items-center gap-1.5 font-normal transition-colors ${
+                  sortBy === "popular"
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
+                }`}
+              >
+                <TrendingUp size={14} />
+                Popular
+              </button>
+            </div>
           </div>
 
           {/* Results Count */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mb-6 text-sm text-gray-600 dark:text-gray-400"
-          >
-            Showing {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
-          </motion.p>
+          <p className="mb-4 text-sm font-normal text-gray-500 dark:text-gray-500">
+            {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
+          </p>
 
-          {/* Posts Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {/* Posts List */}
+          <div>
             {filteredPosts.map((post, index) => (
-              <PostCard key={post.slug} post={post} index={index} />
+              <PostListItem key={post.slug} post={post} index={index} />
             ))}
           </div>
 
           {/* Empty State */}
           {filteredPosts.length === 0 && (
-            <div className="py-16 text-center">
-              <p className="text-lg text-gray-600 dark:text-gray-400">
+            <div className="py-12 text-center">
+              <p className="text-base text-gray-500 dark:text-gray-500">
                 No posts found with this tag.
               </p>
             </div>
