@@ -91,9 +91,9 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="mb-2 flex items-center gap-2">
-                <Calendar className="text-purple-600" size={24} />
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                <div className="mb-2 flex items-center gap-2">
+                  <Calendar className="text-purple-600" size={24} />
+                  <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Events
                 </h2>
               </div>
@@ -103,7 +103,7 @@ export default function Home() {
             </motion.div>
             <Link
               href="/events"
-              className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+                className="hidden items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
             >
               View All Events
               <ArrowRight size={16} />
@@ -133,7 +133,7 @@ export default function Home() {
           <div className="mt-8 text-center sm:hidden">
             <Link
               href="/events"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               View All Events
               <ArrowRight size={16} />
@@ -153,7 +153,7 @@ export default function Home() {
           >
             <div className="mb-2 flex items-center gap-2">
               <Users className="text-orange-600" size={24} />
-              <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Community Posts
               </h2>
             </div>
@@ -193,7 +193,7 @@ export default function Home() {
             >
               <div className="mb-2 flex items-center gap-2">
                 <FileText className="text-blue-600" size={24} />
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Latest Articles
                 </h2>
               </div>
@@ -203,7 +203,7 @@ export default function Home() {
             </motion.div>
             <Link
               href="/blog"
-              className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+                className="hidden items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
             >
               View All Articles
               <ArrowRight size={16} />
@@ -233,7 +233,7 @@ export default function Home() {
           <div className="mt-8 text-center sm:hidden">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               View All Articles
               <ArrowRight size={16} />

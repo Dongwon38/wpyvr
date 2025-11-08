@@ -21,9 +21,9 @@ export default function ArticleCard({ guide, index = 0 }: ArticleCardProps) {
     >
       {/* Category Badge */}
       <div className="absolute right-4 top-4 z-10">
-        <span
+          <span
           className={cn(
-            "rounded-full px-3 py-1 text-xs font-semibold shadow-sm",
+              "rounded-full px-3 py-1 text-xs font-medium shadow-sm",
             guide.category === "Beginner" && "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
             guide.category === "Plugins" && "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
             guide.category === "Design" && "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
@@ -44,12 +44,12 @@ export default function ArticleCard({ guide, index = 0 }: ArticleCardProps) {
       {/* Content */}
       <div className="flex flex-1 flex-col p-6">
         <Link href={`/guides/${guide.slug}`} className="group/title">
-          <h3 className="mb-3 text-xl font-bold text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+            <h3 className="mb-3 text-xl font-bold tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
             {guide.title}
           </h3>
         </Link>
 
-        <p className="mb-4 flex-1 text-gray-600 dark:text-gray-300">
+          <p className="mb-4 flex-1 font-light text-gray-600 dark:text-gray-300">
           {guide.excerpt}
         </p>
 
@@ -66,9 +66,9 @@ export default function ArticleCard({ guide, index = 0 }: ArticleCardProps) {
         </div>
 
         {/* Read More Link */}
-        <Link
+          <Link
           href={`/guides/${guide.slug}`}
-          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
           Read More
           <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />

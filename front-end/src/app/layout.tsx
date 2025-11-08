@@ -1,30 +1,50 @@
 import type { Metadata } from "next";
-import { Merriweather } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { AuthProvider } from "@/context/AuthContext";
 
-// Google Fonts - Merriweather with Black weight (900)
-const merriweather = Merriweather({
-  weight: ['900'], // Black weight
-  subsets: ["latin"],
+const merriweather = localFont({
+  src: [
+    {
+      path: "./fonts/Merriweather-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Merriweather-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Merriweather-Regular.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Merriweather-Bold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Merriweather-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Merriweather-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  fallback: [
+    "Georgia",
+    "Times New Roman",
+    "serif",
+  ],
   variable: "--font-merriweather",
   display: "swap",
 });
-
-// Alternative: If you want to use local font files instead, uncomment below and comment out the Google Fonts import above
-// import localFont from "next/font/local";
-// const merriweather = localFont({
-//   src: [
-//     {
-//       path: "./fonts/Merriweather-Black.ttf",
-//       weight: "900",
-//       style: "normal",
-//     },
-//   ],
-//   variable: "--font-merriweather",
-//   display: "swap",
-// });
 
 export const metadata: Metadata = {
   title: "Community Hub - Where Ideas, Tools, and People Meet",

@@ -37,23 +37,23 @@ export default function PostListItem({ post, index = 0 }: PostListItemProps) {
       {/* Content */}
       <div className="flex flex-col gap-2 py-4">
         {/* Title */}
-        <Link href={`/community/${post.slug}`} className="group/title">
-          <h2 className="text-lg font-normal leading-snug text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+          <Link href={`/community/${post.slug}`} className="group/title">
+            <h2 className="text-lg font-bold leading-snug tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
             {post.title}
           </h2>
         </Link>
 
         {/* Excerpt */}
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm font-light leading-relaxed text-gray-600 dark:text-gray-400">
           {post.excerpt}
         </p>
 
         {/* Meta Information */}
         <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500">
           {/* Author */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm">{post.avatar || "👤"}</span>
-            <span className="font-normal">{post.author}</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">{post.avatar || "👤"}</span>
+              <span className="font-medium">{post.author}</span>
           </div>
 
           {/* Date */}

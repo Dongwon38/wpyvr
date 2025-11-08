@@ -51,15 +51,15 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
 
         <div className="flex h-full flex-col">
           {/* Logo Section */}
-          <div className="border-b border-gray-200 px-6 py-8 dark:border-gray-800">
-            <Link 
-              href="/" 
-              className="block text-xl font-bold text-gray-900 transition-colors hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+            <div className="border-b border-gray-200 px-6 py-8 dark:border-gray-800">
+              <Link 
+                href="/" 
+                className="block text-xl font-black tracking-tight text-gray-900 transition-colors hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
               onClick={onClose}
             >
               Community Hub
             </Link>
-            <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-xs font-light text-gray-600 dark:text-gray-400">
               Where Ideas Meet
             </p>
           </div>
@@ -90,8 +90,8 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
           </nav>
 
           {/* Bottom Section - Community Links */}
-          <div className="border-t border-gray-200 p-4 dark:border-gray-800">
-            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            <div className="border-t border-gray-200 p-4 dark:border-gray-800">
+              <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-gray-500 dark:text-gray-400">
               Community
             </h4>
             <div className="space-y-2">
@@ -108,9 +108,9 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
                   className="h-8 w-8 rounded-lg bg-white p-1"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <MessageCircle size={14} />
-                    <span className="text-sm font-semibold">Discord</span>
+                    <div className="flex items-center gap-2">
+                      <MessageCircle size={14} />
+                      <span className="text-sm font-bold">Discord</span>
                   </div>
                   <p className="text-xs opacity-90">Quick chat</p>
                 </div>
@@ -129,9 +129,9 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
                   className="h-8 w-8 rounded-lg bg-white p-1"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <CalendarDays size={14} />
-                    <span className="text-sm font-semibold">Meetup</span>
+                    <div className="flex items-center gap-2">
+                      <CalendarDays size={14} />
+                      <span className="text-sm font-bold">Meetup</span>
                   </div>
                   <p className="text-xs opacity-90">Events</p>
                 </div>

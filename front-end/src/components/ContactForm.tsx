@@ -112,9 +112,9 @@ export default function ContactForm() {
         <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
           Get in Touch
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          폼을 제출하면 스태프에게 바로 연락이 전달됩니다. 문의해주셔서 감사합니다.
-        </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Share a few details below and our team will follow up with you shortly.
+          </p>
       </div>
 
       {/* Error Message */}
@@ -135,12 +135,12 @@ export default function ContactForm() {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Name */}
         <div>
-          <label
-            htmlFor="name"
-            className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            이름 <span className="text-red-500">*</span>
-          </label>
+            <label
+              htmlFor="name"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Name <span className="text-red-500">*</span>
+            </label>
           <input
             type="text"
             id="name"
@@ -155,12 +155,12 @@ export default function ContactForm() {
 
         {/* Email */}
         <div>
-          <label
-            htmlFor="email"
-            className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            이메일 <span className="text-red-500">*</span>
-          </label>
+            <label
+              htmlFor="email"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Email <span className="text-red-500">*</span>
+            </label>
           <input
             type="email"
             id="email"
@@ -175,12 +175,12 @@ export default function ContactForm() {
 
         {/* Phone */}
         <div>
-          <label
-            htmlFor="phone"
-            className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            전화번호
-          </label>
+            <label
+              htmlFor="phone"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Phone Number
+            </label>
           <input
             type="tel"
             id="phone"
@@ -188,18 +188,18 @@ export default function ContactForm() {
             value={formData.phone}
             onChange={handleChange}
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
-            placeholder="010-1234-5678"
+              placeholder="(555) 123-4567"
           />
         </div>
 
         {/* Preferred Contact Method */}
         <div>
-          <label
-            htmlFor="preferred_contact"
-            className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            선호하는 연락 방식
-          </label>
+            <label
+              htmlFor="preferred_contact"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Preferred Contact Method
+            </label>
           <div className="flex gap-4">
             <label className="flex cursor-pointer items-center">
               <input
@@ -210,9 +210,9 @@ export default function ContactForm() {
                 onChange={handleChange}
                 className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700"
               />
-              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                이메일
-              </span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  Email
+                </span>
             </label>
             <label className="flex cursor-pointer items-center">
               <input
@@ -223,21 +223,21 @@ export default function ContactForm() {
                 onChange={handleChange}
                 className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700"
               />
-              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                전화번호
-              </span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  Phone
+                </span>
             </label>
           </div>
         </div>
 
         {/* Subject */}
         <div>
-          <label
-            htmlFor="subject"
-            className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            제목
-          </label>
+            <label
+              htmlFor="subject"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Subject
+            </label>
           <input
             type="text"
             id="subject"
@@ -251,12 +251,12 @@ export default function ContactForm() {
 
         {/* Message */}
         <div>
-          <label
-            htmlFor="message"
-            className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            내용 <span className="text-red-500">*</span>
-          </label>
+            <label
+              htmlFor="message"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Message <span className="text-red-500">*</span>
+            </label>
           <textarea
             id="message"
             name="message"
@@ -273,7 +273,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={status.type === "loading" || status.type === "success"}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
         >
           {status.type === "loading" ? (
             <>
