@@ -30,7 +30,10 @@ export default function AvatarUploader({
         includesSlashEncoding: currentAvatarUrl.includes('%2F'),
         length: currentAvatarUrl.length
       })
+      setPreviewUrl(currentAvatarUrl)
       setImageError(false)
+    } else {
+      setPreviewUrl("")
     }
   }, [currentAvatarUrl])
   const fileInputRef = useRef<HTMLInputElement>(null)

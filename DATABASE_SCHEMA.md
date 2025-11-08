@@ -84,7 +84,7 @@ CREATE TABLE wp_user_profiles (
 | user_id | BIGINT(20) UNSIGNED | NO | - | FK to wp_users.ID |
 | nickname | VARCHAR(100) | YES | NULL | 사용자 닉네임 (필수) |
 | bio | TEXT | YES | NULL | 자기소개 |
-| avatar_url | VARCHAR(255) | YES | NULL | 프로필 이미지 URL |
+| avatar_url | TEXT | YES | NULL | 프로필 이미지 URL (Firebase 다운로드 URL 전체 저장 지원) |
 | position | VARCHAR(255) | YES | NULL | 직책/직함 |
 | specialties | JSON | YES | NULL | 전문 분야 배열 |
 | company | VARCHAR(255) | YES | NULL | 소속 회사 |

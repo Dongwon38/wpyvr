@@ -16,9 +16,9 @@ function custom_profile_create_table() {
     $table_name = $wpdb->prefix . 'user_profiles';
     $charset_collate = $wpdb->get_charset_collate();
 
-    // Check if table already exists
+    // Check if table already exists (dbDelta below will handle schema diffs)
     if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name) {
-        return;
+        // Intentionally fall through so dbDelta can update schema when needed
     }
 
     $sql = "CREATE TABLE $table_name (
@@ -26,7 +26,7 @@ function custom_profile_create_table() {
         user_id BIGINT(20) UNSIGNED NOT NULL,
         nickname VARCHAR(100) DEFAULT NULL,
         bio TEXT DEFAULT NULL,
-        avatar_url VARCHAR(255) DEFAULT NULL,
+        avatar_url TEXT DEFAULT NULL,
         position VARCHAR(255) DEFAULT NULL,
         specialties JSON DEFAULT NULL,
         company VARCHAR(255) DEFAULT NULL,
@@ -48,7 +48,7 @@ function custom_profile_create_table() {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 
-    error_log("✅ wp_user_profiles table created or already exists");
+    error_log("✅ wp_user_profiles table created or updated");
 }
 
 // Run table creation on theme activation
@@ -186,7 +186,11 @@ function custom_profile_update(WP_REST_Request $request) {
     $specialties = $request->get_param('specialties') ?? [];
     $company = sanitize_text_field($request->get_param('company'));
     $website = sanitize_text_field($request->get_param('website'));
-    $avatar_url = sanitize_text_field($request->get_param('avatar_url'));
+    $avatar_raw = $request->get_param('avatar_url');
+    $avatar_url = $avatar_raw ? esc_url_raw($avatar_raw) : '';
+    if (empty($avatar_url)) {
+        $avatar_url = null;
+    }
     $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'private';
     $custom_email = sanitize_email($request->get_param('custom_email'));
     $social_links = $request->get_param('social_links') ?? [];
