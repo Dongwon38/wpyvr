@@ -170,7 +170,6 @@ export default function MembersPage() {
             {/* Filter by Specialty */}
             <div className="flex items-center gap-2">
               <Filter className="text-gray-500" size={18} />
-            <div className="flex items-center gap-2">
               <select
                 value={filterSpecialty}
                 onChange={(e) => setFilterSpecialty(e.target.value)}
