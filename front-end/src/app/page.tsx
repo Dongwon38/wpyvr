@@ -4,21 +4,56 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/HeroSection";
-import ArticleCard from "@/components/ArticleCard";
+import BlogListItem from "@/components/BlogListItem";
 import PostSlider from "@/components/PostSlider";
 import EventCard, { EventCardData } from "@/components/EventCard";
-import { mockGuides, mockPosts } from "@/lib/mockData";
+import { mockPosts } from "@/lib/mockData";
 import { fetchEventsSortedByDate } from "@/lib/eventsApi";
-import { BookOpen, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock } from "lucide-react";
+import { FileText, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock } from "lucide-react";
+import { BlogPost } from "@/components/BlogPostCard";
+
+// Mock blog posts data
+const mockBlogPosts: BlogPost[] = [
+  {
+    id: 1,
+    slug: "getting-started-with-wordpress-headless",
+    title: "Getting Started with WordPress Headless CMS",
+    excerpt: "Learn how to build modern web applications using WordPress as a headless CMS.",
+    date: "2024-01-15",
+    author: { name: "Sarah Johnson", avatar: undefined },
+    categories: ["Tutorial", "WordPress"],
+    readTime: "8 min read",
+  },
+  {
+    id: 2,
+    slug: "building-scalable-nextjs-applications",
+    title: "Building Scalable Next.js Applications",
+    excerpt: "Discover best practices for creating performant and scalable applications with Next.js 14.",
+    date: "2024-01-10",
+    author: { name: "Michael Chen", avatar: undefined },
+    categories: ["Next.js", "Development"],
+    readTime: "12 min read",
+  },
+  {
+    id: 3,
+    slug: "modern-ui-design-principles",
+    title: "Modern UI Design Principles for 2024",
+    excerpt: "Explore the latest trends in UI/UX design and learn how to create beautiful interfaces.",
+    date: "2024-01-05",
+    author: { name: "Emma Rodriguez", avatar: undefined },
+    categories: ["Design", "UI/UX"],
+    readTime: "6 min read",
+  },
+];
 
 export default function Home() {
   const [events, setEvents] = useState<EventCardData[]>([]);
   const [eventsLoading, setEventsLoading] = useState(true);
   
-  // Get latest guides, trending posts, and recent posts
-  const latestGuides = mockGuides.slice(0, 3);
+  // Get trending posts, recent posts, and latest blog posts
   const trendingPosts = [...mockPosts].sort((a, b) => b.upvotes - a.upvotes);
   const recentPosts = [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const latestBlogPosts = mockBlogPosts.slice(0, 3);
   
   useEffect(() => {
     async function loadEvents() {
@@ -140,7 +175,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest Guides Section */}
+      {/* Latest Blog Posts Section */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-6 flex items-center justify-between">
@@ -150,36 +185,36 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               <div className="mb-2 flex items-center gap-2">
-                <BookOpen className="text-blue-600" size={24} />
+                <FileText className="text-blue-600" size={24} />
                 <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
-                  Expert Guides
+                  Latest Articles
                 </h2>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                In-depth tutorials and articles from our editorial team
+                In-depth tutorials and insights from our editorial team
               </p>
             </motion.div>
             <Link
-              href="/guides"
+              href="/blog"
               className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
             >
-              View All Guides
+              View All Articles
               <ArrowRight size={16} />
             </Link>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {latestGuides.map((guide, index) => (
-              <ArticleCard key={guide.slug} guide={guide} index={index} />
+            {latestBlogPosts.map((post, index) => (
+              <BlogListItem key={post.id} post={post} index={index} />
             ))}
           </div>
 
           <div className="mt-8 text-center sm:hidden">
             <Link
-              href="/guides"
+              href="/blog"
               className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              View All Guides
+              View All Articles
               <ArrowRight size={16} />
             </Link>
           </div>

@@ -10,7 +10,8 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/guides", label: "Guides" },
+    // { href: "/guides", label: "Guides" }, // Commented out - will be used later
+    { href: "/blog", label: "Blog" },
     { href: "/community", label: "Community" },
     { href: "/about", label: "About" },
   ];

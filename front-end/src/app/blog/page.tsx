@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import BlogPostCard, { BlogPost } from "@/components/BlogPostCard";
+import BlogListItem from "@/components/BlogListItem";
+import { BlogPost } from "@/components/BlogPostCard";
 
 // Mock blog posts data - Ready for WordPress API integration
 const mockBlogPosts: BlogPost[] = [
@@ -86,126 +88,78 @@ const mockBlogPosts: BlogPost[] = [
 ];
 
 export default function BlogPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  // Get all unique categories
+  const allCategories = ["All", ...new Set(mockBlogPosts.flatMap(post => post.categories || []))];
+
+  // Filter posts by category
+  const filteredPosts = selectedCategory === "All"
+    ? mockBlogPosts
+    : mockBlogPosts.filter(post => post.categories?.includes(selectedCategory));
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
-        >
-          <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
-            Blog
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-            Insights, tutorials, and stories from our community. Stay updated with the latest in web development and design.
-          </p>
-        </motion.div>
-
-        {/* Featured Post (First Post) */}
-        {mockBlogPosts.length > 0 && (
+      {/* Header */}
+      <section className="border-b border-gray-200 px-4 py-8 dark:border-gray-800 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-12"
+            transition={{ duration: 0.4 }}
           >
-            <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-1 shadow-xl">
-              <div className="rounded-xl bg-white dark:bg-gray-800">
-                <div className="grid gap-6 md:grid-cols-2">
-                  {/* Featured Image */}
-                  <div className="relative h-64 overflow-hidden rounded-l-xl bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900 dark:via-purple-900 dark:to-pink-900 md:h-auto">
-                    <div className="flex h-full w-full items-center justify-center">
-                      <div className="text-9xl opacity-20">⭐</div>
-                    </div>
-                    <div className="absolute left-4 top-4">
-                      <span className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-1.5 text-xs font-semibold text-white shadow-lg">
-                        Featured
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Featured Content */}
-                  <div className="flex flex-col justify-center p-8">
-                    <div className="mb-3 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        {mockBlogPosts[0].categories?.[0]}
-                      </span>
-                      <span>•</span>
-                      <span>{mockBlogPosts[0].readTime}</span>
-                    </div>
-                    <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
-                      {mockBlogPosts[0].title}
-                    </h2>
-                    <p className="mb-6 text-gray-600 dark:text-gray-300">
-                      {mockBlogPosts[0].excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
-                          {mockBlogPosts[0].author.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {mockBlogPosts[0].author.name}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {new Date(mockBlogPosts[0].date).toLocaleDateString('en-US', { 
-                              month: 'long', 
-                              day: 'numeric', 
-                              year: 'numeric' 
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      <a
-                        href={`/blog/${mockBlogPosts[0].slug}`}
-                        className="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:shadow-lg"
-                      >
-                        Read Article
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <h1 className="mb-3 text-3xl font-normal text-gray-900 dark:text-white">
+              Blog
+            </h1>
+            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
+              Insights, tutorials, and stories from our editorial team
+            </p>
           </motion.div>
-        )}
-
-        {/* Blog Posts Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {mockBlogPosts.slice(1).map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index + 1} />
-          ))}
         </div>
+      </section>
 
-        {/* Placeholder for Pagination */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-12 flex justify-center"
-        >
-          <div className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-            <span>More posts coming soon...</span>
+      {/* Content */}
+      <section className="px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          {/* Category Filter */}
+          <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-gray-200 pb-4 dark:border-gray-800">
+            {allCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`text-sm font-normal transition-colors ${
+                  selectedCategory === category
+                    ? "text-gray-900 underline decoration-blue-500 decoration-2 underline-offset-4 dark:text-white"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
-        </motion.div>
 
-        {/* API Integration Note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
-          className="mt-8 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-900"
-        >
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            💡 <strong>Developer Note:</strong> This page is ready for WordPress REST API integration.
-            Connect to <code className="rounded bg-gray-200 px-2 py-1 dark:bg-gray-800">wp-json/wp/v2/posts</code> to fetch real blog data.
+          {/* Results Count */}
+          <p className="mb-4 text-sm font-normal text-gray-500 dark:text-gray-500">
+            {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
           </p>
-        </motion.div>
-      </div>
+
+          {/* Blog Posts Grid */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {filteredPosts.map((post, index) => (
+              <BlogListItem key={post.id} post={post} index={index} />
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {filteredPosts.length === 0 && (
+            <div className="py-12 text-center">
+              <p className="text-base text-gray-500 dark:text-gray-500">
+                No posts found in this category.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
