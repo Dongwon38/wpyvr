@@ -66,61 +66,55 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             <>
               {user && wpUser ? (
                 // Logged in state
-                <div className="rounded-2xl bg-gradient-to-br from-green-600 to-teal-600 p-6 text-white shadow-md">
-                  <div className="mb-4 flex items-center gap-3">
+                <div className="rounded-2xl bg-gradient-to-br from-green-600 to-teal-600 p-5 text-white shadow-md">
+                  <div className="mb-3 flex items-center gap-3">
                     {userProfile?.avatar_url || user.photoURL ? (
                       <img 
                         src={userProfile?.avatar_url || user.photoURL || ""} 
                         alt={userProfile?.nickname || wpUser.display_name}
-                        className="h-12 w-12 rounded-full border-2 border-white object-cover"
+                        className="h-10 w-10 rounded-full border-2 border-white object-cover"
                       />
                     ) : (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-green-600 font-bold">
-                        <UserIcon size={24} />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-green-600 font-bold">
+                        <UserIcon size={20} />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold truncate">
+                      <h3 className="text-base font-bold truncate">
                         Hi, {userProfile?.nickname || wpUser.display_name}! 👋
                       </h3>
                       <p className="text-xs opacity-90 truncate">
-                        {userProfile?.job_title || wpUser.email}
+                        {userProfile?.position || wpUser.email}
                       </p>
                     </div>
                   </div>
 
-                  {/* Profile Status */}
-                  {userProfile?.greeting ? (
-                    <div className="mb-4 rounded-lg bg-white/10 p-3">
-                      <p className="text-sm opacity-95 italic">
-                        "{userProfile.greeting}"
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="mb-4 rounded-lg bg-white/20 p-3">
-                      <p className="text-sm opacity-95">
-                        Let's complete your profile to connect with the community!
+                  {/* Profile Bio (optional) */}
+                  {userProfile?.bio && (
+                    <div className="mb-3 rounded-lg bg-white/10 p-2.5">
+                      <p className="text-xs opacity-95 italic line-clamp-2">
+                        "{userProfile.bio}"
                       </p>
                     </div>
                   )}
 
                   {/* Action Buttons */}
-                  <div className="space-y-2">
+                  <div className="flex gap-2">
                     <button 
                       onClick={() => {
                         router.push("/profile");
                         onClose();
                       }}
-                      className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-green-600 transition-all hover:bg-gray-100 flex items-center justify-center gap-2"
+                      className="flex-[2] rounded-lg bg-white px-3 py-2 text-xs font-semibold text-green-600 transition-all hover:bg-gray-100 flex items-center justify-center gap-1.5"
                     >
-                      <Settings size={18} />
-                      Manage My Info
+                      <Settings size={14} />
+                      Manage Info
                     </button>
                     <button 
                       onClick={handleLogout}
-                      className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10 flex items-center justify-center gap-2"
+                      className="flex-1 rounded-lg border border-white/30 px-3 py-2 text-xs font-semibold text-white transition-all hover:bg-white/10 flex items-center justify-center gap-1.5"
                     >
-                      <LogOut size={18} />
+                      <LogOut size={14} />
                       Sign Out
                     </button>
                   </div>
@@ -153,6 +147,9 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               )}
             </>
           )}
+
+          {/* Divider */}
+          <div className="border-t border-gray-200 dark:border-gray-800"></div>
 
           {/* Need Help Section */}
           <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
