@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Save, Plus, X, Loader2, Lock, Unlock } from "lucide-react"
+import { Save, Plus, X, Loader2, Lock, Unlock, Mail } from "lucide-react"
 import AvatarUploader from "./AvatarUploader"
 import Switch from "@/components/ui/Switch"
 import { useAuth } from "@/context/AuthContext"
@@ -18,6 +18,7 @@ interface ProfileFormProps {
     website: string
     avatar_url: string
     profile_visibility: 'public' | 'private'
+    custom_email: string
     social_links: SocialLink[]
     privacy_settings: PrivacySettings
   }
@@ -38,6 +39,14 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
     show_specialties: false,
   }
 
+  // Initialize email settings
+  useEffect(() => {
+    if (initialData?.custom_email) {
+      setUseCustomEmail(true)
+      setCustomEmail(initialData.custom_email)
+    }
+  }, [initialData])
+
   // Form state
   const [nickname, setNickname] = useState(initialData?.nickname || "")
   const [bio, setBio] = useState(initialData?.bio || "")
@@ -46,7 +55,11 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [company, setCompany] = useState(initialData?.company || "")
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
-  const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(initialData?.profile_visibility || 'private')
+  const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(
+    initialData?.profile_visibility || 'private'
+  )
+  const [useCustomEmail, setUseCustomEmail] = useState(false)
+  const [customEmail, setCustomEmail] = useState("")
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
     initialData?.social_links || []
   )
@@ -143,6 +156,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         website: website.trim(),
         avatar_url: avatarUrl,
         profile_visibility: profileVisibility,
+        custom_email: useCustomEmail ? customEmail.trim() : '',
         social_links: validSocialLinks,
         privacy_settings: privacySettings,
       }
@@ -157,9 +171,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         text: "✅ Profile updated successfully!",
       })
 
-      // Redirect back to home after a short delay
+      // Refresh the current page after a short delay
       setTimeout(() => {
-        router.push("/")
+        router.refresh()
       }, 1500)
     } catch (error) {
       console.error("Failed to update profile:", error)
@@ -460,6 +474,67 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
       </div>
 
+      {/* Email */}
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-sm font-semibold text-gray-900 dark:text-white">
+            Email Address
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {privacySettings.show_email ? "Public" : "Private"}
+            </span>
+            <Switch
+              checked={privacySettings.show_email === true}
+              onCheckedChange={() => togglePrivacy('show_email')}
+              label="Toggle email visibility"
+            />
+          </div>
+        </div>
+        
+        <div className="space-y-3">
+          {/* Radio buttons for default/custom */}
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="emailType"
+                checked={!useCustomEmail}
+                onChange={() => setUseCustomEmail(false)}
+                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+              />
+              <span className="text-sm text-gray-900 dark:text-white">Use account email</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="emailType"
+                checked={useCustomEmail}
+                onChange={() => setUseCustomEmail(true)}
+                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+              />
+              <span className="text-sm text-gray-900 dark:text-white">Use custom email</span>
+            </label>
+          </div>
+
+          {/* Show account email or custom email input */}
+          {useCustomEmail ? (
+            <input
+              type="email"
+              value={customEmail}
+              onChange={(e) => setCustomEmail(e.target.value)}
+              placeholder="custom@example.com"
+              maxLength={255}
+              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+            />
+          ) : (
+            <div className="rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-gray-600 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400">
+              {wpUser?.email || 'No account email available'}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Website */}
       <div>
         <div className="mb-2 flex items-center justify-between">
@@ -482,10 +557,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
         <input
           id="website"
-          type="url"
+          type="text"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
-          placeholder="https://yoursite.com"
+          placeholder="yoursite.com or https://yoursite.com"
           maxLength={255}
           className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
         />
@@ -529,12 +604,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 <option value="other">Other</option>
               </select>
               <input
-                type="url"
+                type="text"
                 value={link.url}
                 onChange={(e) =>
                   handleSocialLinkChange(index, "url", e.target.value)
                 }
-                placeholder="https://..."
+                placeholder="username or https://..."
                 className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
               />
               <button

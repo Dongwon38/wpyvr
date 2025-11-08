@@ -286,17 +286,17 @@ export default function MembersPage() {
                               {member.nickname}
                             </span>
                             
-                            {/* Email Icon Button - only if email exists */}
-                            {member.user_email && (
+                            {/* Email Icon Button - show custom email if available, otherwise user_email */}
+                            {(member.custom_email || member.user_email) && (
                               <a
-                                href={`mailto:${member.user_email}`}
-                                title={member.user_email}
+                                href={`mailto:${member.custom_email || member.user_email}`}
+                                title={member.custom_email || member.user_email}
                                 className="group relative inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
                               >
                                 <Mail size={13} />
                                 {/* Tooltip */}
                                 <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
-                                  {member.user_email}
+                                  {member.custom_email || member.user_email}
                                 </span>
                               </a>
                             )}

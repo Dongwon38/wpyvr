@@ -32,6 +32,7 @@ function custom_profile_create_table() {
         company VARCHAR(255) DEFAULT NULL,
         website VARCHAR(255) DEFAULT NULL,
         profile_visibility ENUM('public', 'private') DEFAULT 'private',
+        custom_email VARCHAR(255) DEFAULT NULL,
         social_links JSON DEFAULT NULL,
         privacy_settings JSON DEFAULT NULL,
         last_active_at DATETIME DEFAULT NULL,
@@ -184,9 +185,10 @@ function custom_profile_update(WP_REST_Request $request) {
     $position = sanitize_text_field($request->get_param('position'));
     $specialties = $request->get_param('specialties') ?? [];
     $company = sanitize_text_field($request->get_param('company'));
-    $website = esc_url_raw($request->get_param('website'));
-    $avatar_url = esc_url_raw($request->get_param('avatar_url'));
+    $website = sanitize_text_field($request->get_param('website'));
+    $avatar_url = sanitize_text_field($request->get_param('avatar_url'));
     $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'private';
+    $custom_email = sanitize_email($request->get_param('custom_email'));
     $social_links = $request->get_param('social_links') ?? [];
     $privacy_settings = $request->get_param('privacy_settings') ?? [];
 
@@ -265,13 +267,14 @@ function custom_profile_update(WP_REST_Request $request) {
         'website' => $website,
         'avatar_url' => $avatar_url,
         'profile_visibility' => $profile_visibility,
+        'custom_email' => $custom_email,
         'social_links' => $social_links_json,
         'privacy_settings' => $privacy_json,
         'last_active_at' => $current_time,
         'updated_at' => $current_time,
     ];
 
-    $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'];
+    $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'];
 
     // Check if profile exists
     $existing = $wpdb->get_var(
@@ -330,6 +333,7 @@ function custom_profile_update(WP_REST_Request $request) {
             'website' => $website,
             'avatar_url' => $avatar_url,
             'profile_visibility' => $profile_visibility,
+            'custom_email' => $custom_email,
             'social_links' => $sanitized_social_links,
             'privacy_settings' => $sanitized_privacy,
             'updated_at' => $current_time
