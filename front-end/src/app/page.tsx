@@ -5,19 +5,20 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/HeroSection";
 import ArticleCard from "@/components/ArticleCard";
-import PostListItem from "@/components/PostListItem";
+import PostSlider from "@/components/PostSlider";
 import EventCard, { EventCardData } from "@/components/EventCard";
 import { mockGuides, mockPosts } from "@/lib/mockData";
 import { fetchEventsSortedByDate } from "@/lib/eventsApi";
-import { BookOpen, Users, ArrowRight, Calendar, Sparkles } from "lucide-react";
+import { BookOpen, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock } from "lucide-react";
 
 export default function Home() {
   const [events, setEvents] = useState<EventCardData[]>([]);
   const [eventsLoading, setEventsLoading] = useState(true);
   
-  // Get latest guides and trending posts
+  // Get latest guides, trending posts, and recent posts
   const latestGuides = mockGuides.slice(0, 3);
-  const trendingPosts = mockPosts.sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
+  const trendingPosts = [...mockPosts].sort((a, b) => b.upvotes - a.upvotes);
+  const recentPosts = [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
   useEffect(() => {
     async function loadEvents() {
@@ -102,45 +103,39 @@ export default function Home() {
       {/* Community Highlights Section */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex items-center justify-between">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="mb-2 flex items-center gap-2">
-                <Users className="text-orange-600" size={24} />
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
-                  Trending Community Posts
-                </h2>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Popular posts from our community members
-              </p>
-            </motion.div>
-            <Link
-              href="/community"
-              className="hidden items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
-            >
-              View All Posts
-              <ArrowRight size={16} />
-            </Link>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8"
+          >
+            <div className="mb-2 flex items-center gap-2">
+              <Users className="text-orange-600" size={24} />
+              <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                Community Posts
+              </h2>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Discover what our community is sharing
+            </p>
+          </motion.div>
+
+          {/* Trending Posts Slider */}
+          <div className="mb-12">
+            <PostSlider
+              posts={trendingPosts}
+              title="Trending Posts"
+              icon={<TrendingUp className="text-orange-500" size={20} />}
+            />
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {trendingPosts.map((post, index) => (
-              <PostListItem key={post.slug} post={post} index={index} />
-            ))}
-          </div>
-
-          <div className="mt-8 text-center sm:hidden">
-            <Link
-              href="/community"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              View All Posts
-              <ArrowRight size={16} />
-            </Link>
+          {/* Recent Posts Slider */}
+          <div>
+            <PostSlider
+              posts={recentPosts}
+              title="Recent Posts"
+              icon={<Clock className="text-blue-500" size={20} />}
+            />
           </div>
         </div>
       </section>
