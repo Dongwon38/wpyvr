@@ -18,13 +18,13 @@ export function decodeHtmlEntities(text: string): string {
       '&gt;': '>',
       '&quot;': '"',
       '&#039;': "'",
-      '&#8211;': '–', // en-dash
-      '&#8212;': '—', // em-dash
-      '&#8216;': ''', // left single quote
-      '&#8217;': ''', // right single quote
-      '&#8220;': '"', // left double quote
-      '&#8221;': '"', // right double quote
-      '&#8230;': '…', // ellipsis
+      '&#8211;': '\u2013', // en-dash
+      '&#8212;': '\u2014', // em-dash
+      '&#8216;': '\u2018', // left single quote
+      '&#8217;': '\u2019', // right single quote
+      '&#8220;': '\u201C', // left double quote
+      '&#8221;': '\u201D', // right double quote
+      '&#8230;': '\u2026', // ellipsis
     };
 
     let decoded = text;
