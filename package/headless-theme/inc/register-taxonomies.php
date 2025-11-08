@@ -106,56 +106,40 @@ function wpyvr_register_taxonomies() {
   ]);
 
   // ========================
-  // 4. EVENT TYPE (upcoming/past)
+  // 4. EVENT TAGS
   // ========================
-  register_taxonomy('event_type', ['event'], [
+  register_taxonomy('event_tag', ['event'], [
     'labels' => [
-      'name' => __('Event Types', 'headless-theme'),
-      'singular_name' => __('Event Type', 'headless-theme'),
-      'all_items' => __('All Types', 'headless-theme'),
-      'edit_item' => __('Edit Type', 'headless-theme'),
-      'update_item' => __('Update Type', 'headless-theme'),
-      'add_new_item' => __('Add New Type', 'headless-theme'),
-      'new_item_name' => __('New Type Name', 'headless-theme'),
-      'menu_name' => __('Event Types', 'headless-theme'),
+      'name' => __('Event Tags', 'headless-theme'),
+      'singular_name' => __('Event Tag', 'headless-theme'),
+      'search_items' => __('Search Tags', 'headless-theme'),
+      'popular_items' => __('Popular Tags', 'headless-theme'),
+      'all_items' => __('All Tags', 'headless-theme'),
+      'edit_item' => __('Edit Tag', 'headless-theme'),
+      'update_item' => __('Update Tag', 'headless-theme'),
+      'add_new_item' => __('Add New Tag', 'headless-theme'),
+      'new_item_name' => __('New Tag Name', 'headless-theme'),
+      'separate_items_with_commas' => __('Separate tags with commas', 'headless-theme'),
+      'add_or_remove_items' => __('Add or remove tags', 'headless-theme'),
+      'choose_from_most_used' => __('Choose from most used tags', 'headless-theme'),
+      'menu_name' => __('Tags', 'headless-theme'),
     ],
-    'hierarchical' => false,
+    'hierarchical' => false, // Like tags
     'public' => true,
     'show_ui' => true,
     'show_in_rest' => true,
-    'rest_base' => 'event-types',
+    'rest_base' => 'event-tags',
     'show_admin_column' => true,
-    'show_in_nav_menus' => false,
-    'show_tagcloud' => false,
-    'meta_box_cb' => 'post_categories_meta_box', // Radio select in admin
+    'show_in_nav_menus' => true,
+    'show_tagcloud' => true,
     'rewrite' => [
-      'slug' => 'event-type',
+      'slug' => 'event-tag',
       'with_front' => false,
     ],
   ]);
 }
 add_action('init', 'wpyvr_register_taxonomies');
 
-/**
- * Pre-populate Event Types on theme activation
- */
-function wpyvr_create_default_event_types() {
-  // Only run if event_type taxonomy exists
-  if (!taxonomy_exists('event_type')) {
-    return;
-  }
-
-  $types = ['upcoming', 'past'];
-  
-  foreach ($types as $type) {
-    if (!term_exists($type, 'event_type')) {
-      wp_insert_term($type, 'event_type', [
-        'slug' => $type,
-      ]);
-    }
-  }
-}
-add_action('init', 'wpyvr_create_default_event_types', 20);
 
 /**
  * Pre-populate Guide Categories based on mock data

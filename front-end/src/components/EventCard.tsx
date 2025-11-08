@@ -12,10 +12,13 @@ export interface EventCardData {
   excerpt: string;
   thumbnail?: string;
   eventDate: string;
-  time: string;
-  location: string;
+  formattedTime: string;
+  locationTitle: string;
+  locationAddress?: string;
+  googleMapsUrl?: string;
   link?: string;
   isPast: boolean;
+  tags?: string[];
 }
 
 interface EventCardProps {
@@ -107,14 +110,44 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
 
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <Clock size={16} className="text-purple-600 dark:text-purple-400" />
-            <span>{event.time}</span>
+            <span>{event.formattedTime}</span>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <MapPin size={16} className="text-orange-600 dark:text-orange-400" />
-            <span className="line-clamp-1">{event.location}</span>
+            {event.googleMapsUrl ? (
+              <a
+                href={event.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="line-clamp-1 text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                {event.locationTitle}
+              </a>
+            ) : (
+              <span className="line-clamp-1">{event.locationTitle}</span>
+            )}
           </div>
         </div>
+
+        {/* Tags */}
+        {event.tags && event.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {event.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+              >
+                {tag}
+              </span>
+            ))}
+            {event.tags.length > 3 && (
+              <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                +{event.tags.length - 3}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="mt-4 flex gap-2">

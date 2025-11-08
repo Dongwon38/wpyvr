@@ -21,16 +21,25 @@ export interface EventData {
   date: string;
   acf: {
     event_date: string;
-    time: string;
-    location: string;
+    start_time: string;
+    end_time: string;
+    location_title: string;
+    location_address?: string;
     event_link?: string;
     image?: string;
   };
+  event_category?: number[];
+  event_tag?: number[];
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;
       alt_text: string;
     }>;
+    'wp:term'?: Array<Array<{
+      id: number;
+      name: string;
+      slug: string;
+    }>>;
   };
 }
 
@@ -43,10 +52,51 @@ export interface Event {
   thumbnail?: string;
   date: string;
   eventDate: string;
-  time: string;
-  location: string;
+  startTime: string;
+  endTime: string;
+  formattedTime: string; // Formatted time in Pacific Time
+  locationTitle: string;
+  locationAddress?: string;
+  googleMapsUrl?: string;
   link?: string;
   isPast: boolean;
+  categories?: string[];
+  tags?: string[];
+}
+
+/**
+ * Convert UTC time to Pacific Time
+ */
+function convertToPacificTime(date: string, time: string): Date {
+  // Combine date and time into ISO string
+  const dateTimeString = `${date}T${time}`;
+  const utcDate = new Date(dateTimeString + 'Z'); // Treat as UTC
+  
+  return utcDate;
+}
+
+/**
+ * Format time range in Pacific Time
+ */
+function formatPacificTime(startDate: Date, endDate: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'America/Los_Angeles'
+  };
+
+  const startFormatted = startDate.toLocaleString('en-US', options);
+  const endFormatted = endDate.toLocaleString('en-US', options);
+
+  return `${startFormatted} - ${endFormatted} PST`;
+}
+
+/**
+ * Generate Google Maps URL from address
+ */
+function getGoogleMapsUrl(address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
 
 /**
@@ -54,7 +104,21 @@ export interface Event {
  */
 function transformEventData(data: EventData): Event {
   const eventDate = new Date(data.acf.event_date);
-  const isPast = eventDate < new Date();
+  const now = new Date();
+  
+  // Convert times to Pacific Time
+  const startDateTime = convertToPacificTime(data.acf.event_date, data.acf.start_time);
+  const endDateTime = convertToPacificTime(data.acf.event_date, data.acf.end_time);
+  
+  // Check if event is past (compare with current date/time in Pacific timezone)
+  const isPast = startDateTime < now;
+  
+  // Format time for display
+  const formattedTime = formatPacificTime(startDateTime, endDateTime);
+
+  // Extract categories and tags from embedded data
+  const categories = data._embedded?.['wp:term']?.[0]?.map(term => term.name) || [];
+  const tags = data._embedded?.['wp:term']?.[1]?.map(term => term.name) || [];
 
   return {
     id: data.id,
@@ -65,10 +129,16 @@ function transformEventData(data: EventData): Event {
     thumbnail: data.acf.image || data._embedded?.['wp:featuredmedia']?.[0]?.source_url,
     date: data.date,
     eventDate: data.acf.event_date,
-    time: data.acf.time,
-    location: data.acf.location,
+    startTime: data.acf.start_time,
+    endTime: data.acf.end_time,
+    formattedTime,
+    locationTitle: data.acf.location_title,
+    locationAddress: data.acf.location_address,
+    googleMapsUrl: data.acf.location_address ? getGoogleMapsUrl(data.acf.location_address) : undefined,
     link: data.acf.event_link,
     isPast,
+    categories,
+    tags,
   };
 }
 
@@ -143,4 +213,28 @@ export async function fetchPastEvents(): Promise<Event[]> {
   return events
     .filter(event => event.isPast)
     .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime());
+}
+
+/**
+ * Get all event slugs for static generation
+ */
+export async function fetchEventSlugs(): Promise<string[]> {
+  try {
+    const response = await fetch(
+      `${WORDPRESS_API_URL}/wp-json/wp/v2/events?_fields=slug&per_page=100`,
+      {
+        next: { revalidate: 3600 }, // Revalidate every hour
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data: Array<{ slug: string }> = await response.json();
+    return data.map(event => event.slug);
+  } catch (error) {
+    console.error('Error fetching event slugs:', error);
+    return [];
+  }
 }
