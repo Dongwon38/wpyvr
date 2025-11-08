@@ -3,6 +3,8 @@
  * Connects to WordPress REST API for standard Pages
  */
 
+import { decodeHtmlEntities } from './utils';
+
 const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'http://localhost:8000';
 
 export interface WordPressPage {
@@ -38,9 +40,9 @@ function transformPageData(data: WordPressPage): Page {
   return {
     id: data.id,
     slug: data.slug,
-    title: data.title.rendered,
+    title: decodeHtmlEntities(data.title.rendered),
     content: data.content.rendered,
-    excerpt: data.excerpt?.rendered.replace(/<[^>]*>/g, ''), // Strip HTML tags
+    excerpt: data.excerpt?.rendered ? decodeHtmlEntities(data.excerpt.rendered.replace(/<[^>]*>/g, '')) : undefined, // Strip HTML tags and decode
     date: data.date,
     modified: data.modified,
   };

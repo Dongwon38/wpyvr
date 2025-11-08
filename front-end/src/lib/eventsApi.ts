@@ -3,6 +3,8 @@
  * Connects to WordPress REST API for Events custom post type
  */
 
+import { decodeHtmlEntities } from './utils';
+
 const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'http://localhost:8000';
 
 export interface EventData {
@@ -134,8 +136,8 @@ function transformEventData(data: EventData): Event {
   return {
     id: data.id,
     slug: data.slug,
-    title: data.title.rendered,
-    excerpt: data.excerpt.rendered.replace(/<[^>]*>/g, ''), // Strip HTML tags
+    title: decodeHtmlEntities(data.title.rendered),
+    excerpt: decodeHtmlEntities(data.excerpt.rendered.replace(/<[^>]*>/g, '')), // Strip HTML tags and decode
     content: data.content.rendered,
     thumbnail: data.acf.image || data._embedded?.['wp:featuredmedia']?.[0]?.source_url,
     date: data.date,
@@ -143,7 +145,7 @@ function transformEventData(data: EventData): Event {
     startTime: data.acf.start_time,
     endTime: data.acf.end_time,
     formattedTime,
-    locationTitle: data.acf.location_title,
+    locationTitle: decodeHtmlEntities(data.acf.location_title),
     locationAddress: data.acf.location_address,
     googleMapsUrl: data.acf.location_address ? getGoogleMapsUrl(data.acf.location_address) : undefined,
     link: data.acf.event_link,
