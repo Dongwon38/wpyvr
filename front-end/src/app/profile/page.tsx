@@ -97,11 +97,21 @@ export default function ProfilePage() {
               profile
                 ? {
                     nickname: profile.nickname || "",
-                    greeting: profile.greeting || "",
-                    job_title: profile.job_title || "",
+                    bio: profile.bio || "",
+                    position: profile.position || "",
+                    specialties: profile.specialties || [],
+                    company: profile.company || "",
                     website: profile.website || "",
                     avatar_url: profile.avatar_url || "",
+                    member_type: profile.member_type || 'member',
                     social_links: profile.social_links || [],
+                    privacy_settings: profile.privacy_settings || {
+                      show_email: true,
+                      show_position: true,
+                      show_company: true,
+                      show_website: true,
+                      show_specialties: true,
+                    },
                   }
                 : undefined
             }
@@ -109,15 +119,16 @@ export default function ProfilePage() {
         </div>
 
         {/* Help Text */}
-        <div className="mt-6 rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-300">
+        <div className="mt-6 rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
+          <h3 className="font-semibold text-purple-900 dark:text-purple-300">
             💡 Profile Tips
           </h3>
-          <ul className="mt-2 space-y-1 text-sm text-blue-800 dark:text-blue-400">
-            <li>• Your nickname and greeting are required to complete your profile</li>
+          <ul className="mt-2 space-y-1 text-sm text-purple-800 dark:text-purple-400">
+            <li>• Your nickname is required and visible to all members</li>
+            <li>• Add specialties to showcase your skills and expertise</li>
             <li>• Upload a profile photo to make your profile more personal</li>
-            <li>• Add social links to help others connect with you</li>
-            <li>• Your profile helps you stand out in the community</li>
+            <li>• Use privacy settings to control what information is public</li>
+            <li>• Expert members are highlighted in the community members page</li>
           </ul>
         </div>
       </div>
