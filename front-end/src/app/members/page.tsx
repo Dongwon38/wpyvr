@@ -74,12 +74,12 @@ export default function MembersPage() {
     }
 
     return filtered;
-  }, [mockUsers, searchQuery, sortBy, filterMemberType, filterSpecialty]);
+  }, [searchQuery, sortBy, filterMemberType, filterSpecialty]);
 
   const getMemberBadge = (member: User) => {
     if (member.role === "staff") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 px-3 py-1 text-xs font-semibold text-white">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
           <Award size={12} />
           Staff
         </span>
@@ -87,14 +87,14 @@ export default function MembersPage() {
     }
     if (member.memberType === "expert") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1 text-xs font-semibold text-white">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
           <Star size={12} />
           Expert
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
         <UserIcon size={12} />
         Member
       </span>
@@ -127,7 +127,7 @@ export default function MembersPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-8 rounded-2xl bg-white p-6 shadow-md dark:bg-gray-800"
+          className="mb-6 rounded-2xl bg-white p-6 shadow-md dark:bg-gray-800"
         >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
             {/* Search */}
@@ -230,99 +230,148 @@ export default function MembersPage() {
           Showing {filteredMembers.length} of {mockUsers.length} members
         </div>
 
-        {/* Members Grid */}
+        {/* Members Table */}
         {filteredMembers.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredMembers.map((member, index) => (
-              <motion.div
-                key={member.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-md transition-all hover:shadow-xl dark:bg-gray-800"
-              >
-                {/* Member Badge - Top Right */}
-                <div className="absolute right-4 top-4">
-                  {getMemberBadge(member)}
-                </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="overflow-hidden rounded-2xl bg-white shadow-md dark:bg-gray-800"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                      Member
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                      Position
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                      Specialties
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                      Company
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                      Type
+                    </th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                      Contact
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {filteredMembers.map((member, index) => (
+                    <motion.tr
+                      key={member.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.03 }}
+                      className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                    >
+                      {/* Member Info */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
+                            {member.avatar}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-gray-900 dark:text-white">
+                              {member.name}
+                            </div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              @{member.nickname}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
 
-                {/* Avatar and Basic Info */}
-                <div className="mb-4 flex items-start gap-4">
-                  <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-xl font-bold text-white">
-                    {member.avatar}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="mb-1 text-lg font-bold text-gray-900 dark:text-white">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      @{member.nickname}
-                    </p>
-                  </div>
-                </div>
+                      {/* Position */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                          <Briefcase size={16} className="flex-shrink-0 text-purple-500" />
+                          <span>{member.position}</span>
+                        </div>
+                      </td>
 
-                {/* Position */}
-                <div className="mb-3 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                  <Briefcase size={16} className="flex-shrink-0 text-purple-500" />
-                  <span className="font-medium">{member.position}</span>
-                </div>
+                      {/* Specialties */}
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {member.specialties.slice(0, 2).map((specialty) => (
+                            <span
+                              key={specialty}
+                              className="rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+                            >
+                              {specialty}
+                            </span>
+                          ))}
+                          {member.specialties.length > 2 && (
+                            <span className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                              +{member.specialties.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      </td>
 
-                {/* Bio */}
-                <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
-                  {member.bio}
-                </p>
+                      {/* Company */}
+                      <td className="px-6 py-4">
+                        {member.company ? (
+                          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                            <Building2 size={14} className="flex-shrink-0 text-gray-400" />
+                            <span>{member.company}</span>
+                          </div>
+                        ) : (
+                          <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
+                        )}
+                      </td>
 
-                {/* Specialties */}
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-2">
-                    {member.specialties.slice(0, 3).map((specialty) => (
-                      <span
-                        key={specialty}
-                        className="rounded-lg bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
-                      >
-                        {specialty}
-                      </span>
-                    ))}
-                    {member.specialties.length > 3 && (
-                      <span className="rounded-lg bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-                        +{member.specialties.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                </div>
+                      {/* Type Badge */}
+                      <td className="px-6 py-4">
+                        {getMemberBadge(member)}
+                      </td>
 
-                {/* Additional Info */}
-                <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
-                  {member.company && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <Building2 size={14} className="flex-shrink-0" />
-                      <span className="truncate">{member.company}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <Mail size={14} className="flex-shrink-0" />
-                    <span className="truncate">{member.email}</span>
-                  </div>
-                  {member.website && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Globe size={14} className="flex-shrink-0 text-gray-600 dark:text-gray-400" />
-                      <a
-                        href={member.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="truncate text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
-                      >
-                        {member.website.replace(/https?:\/\//, "")}
-                      </a>
-                    </div>
-                  )}
-                </div>
+                      {/* Contact */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-center gap-3">
+                          {/* Email Icon */}
+                          <a
+                            href={`mailto:${member.email}`}
+                            title={member.email}
+                            className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
+                          >
+                            <Mail size={18} />
+                            {/* Tooltip */}
+                            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
+                              {member.email}
+                            </span>
+                          </a>
 
-                {/* Hover Effect */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-transparent transition-colors group-hover:border-purple-500/20" />
-              </motion.div>
-            ))}
-          </div>
+                          {/* Website Icon */}
+                          {member.website && (
+                            <a
+                              href={member.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={member.website}
+                              className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
+                            >
+                              <Globe size={18} />
+                              {/* Tooltip */}
+                              <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
+                                {member.website.replace(/https?:\/\//, "")}
+                              </span>
+                            </a>
+                          )}
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
