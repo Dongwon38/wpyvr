@@ -17,14 +17,12 @@ import {
 import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
 
 type SortOption = "default" | "name-asc" | "name-desc";
-type FilterMemberType = "all" | "member" | "expert";
 
 export default function MembersPage() {
   const [members, setMembers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("default");
-  const [filterMemberType, setFilterMemberType] = useState<FilterMemberType>("all");
   const [filterSpecialty, setFilterSpecialty] = useState<string>("all");
 
   useEffect(() => {
@@ -62,11 +60,6 @@ export default function MembersPage() {
       );
     }
 
-    // Member type filter
-    if (filterMemberType !== "all") {
-      filtered = filtered.filter(member => member.member_type === filterMemberType);
-    }
-
     // Specialty filter
     if (filterSpecialty !== "all") {
       filtered = filtered.filter(member =>
@@ -102,7 +95,7 @@ export default function MembersPage() {
     }
 
     return filtered;
-  }, [members, searchQuery, sortBy, filterMemberType, filterSpecialty]);
+  }, [members, searchQuery, sortBy, filterSpecialty]);
 
   // Loading state
   if (loading) {
@@ -174,22 +167,9 @@ export default function MembersPage() {
               </select>
             </div>
 
-            {/* Filter by Member Type */}
-            <div className="flex items-center gap-2">
-              <Filter className="text-gray-500" size={18} />
-              <select
-                value={filterMemberType}
-                onChange={(e) => setFilterMemberType(e.target.value as FilterMemberType)}
-                className="rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-              >
-                <option value="all">All Members</option>
-                <option value="member">Regular Members</option>
-                <option value="expert">Experts</option>
-              </select>
-            </div>
-
             {/* Filter by Specialty */}
             <div className="flex items-center gap-2">
+              <Filter className="text-gray-500" size={18} />
               <select
                 value={filterSpecialty}
                 onChange={(e) => setFilterSpecialty(e.target.value)}
@@ -206,7 +186,7 @@ export default function MembersPage() {
           </div>
 
           {/* Active Filters Summary */}
-          {(searchQuery || filterMemberType !== "all" || filterSpecialty !== "all") && (
+          {(searchQuery || filterSpecialty !== "all") && (
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Active Filters:
@@ -214,11 +194,6 @@ export default function MembersPage() {
               {searchQuery && (
                 <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
                   Search: {searchQuery}
-                </span>
-              )}
-              {filterMemberType !== "all" && (
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                  Type: {filterMemberType}
                 </span>
               )}
               {filterSpecialty !== "all" && (
@@ -229,7 +204,6 @@ export default function MembersPage() {
               <button
                 onClick={() => {
                   setSearchQuery("");
-                  setFilterMemberType("all");
                   setFilterSpecialty("all");
                   setSortBy("default");
                 }}
@@ -241,25 +215,13 @@ export default function MembersPage() {
           )}
         </motion.div>
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <Loader2 size={48} className="mx-auto animate-spin text-purple-600" />
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
-                Loading members...
-              </p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Results Count */}
-            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-              Showing {filteredMembers.length} of {members.length} members
-            </div>
+        {/* Results Count */}
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Showing {filteredMembers.length} of {members.length} members
+        </div>
 
-            {/* Members Table */}
-            {filteredMembers.length > 0 ? (
+        {/* Members Table */}
+        {filteredMembers.length > 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -297,17 +259,34 @@ export default function MembersPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           {/* Avatar */}
-                          {member.avatar_url ? (
-                            <img
-                              src={member.avatar_url}
-                              alt={member.nickname}
-                              className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
-                              {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
-                            </div>
-                          )}
+                          <div className="relative h-14 w-14 flex-shrink-0">
+                            {member.avatar_url ? (
+                              <>
+                                <img
+                                  src={member.avatar_url}
+                                  alt={member.nickname}
+                                  className="h-14 w-14 rounded-full object-cover"
+                                  onError={(e) => {
+                                    console.error(`❌ Avatar failed to load for ${member.nickname}:`, member.avatar_url)
+                                    // Hide the broken image and show placeholder
+                                    e.currentTarget.style.display = 'none'
+                                    const placeholder = e.currentTarget.nextElementSibling as HTMLElement
+                                    if (placeholder) placeholder.style.display = 'flex'
+                                  }}
+                                  onLoad={() => {
+                                    console.log(`✅ Avatar loaded for ${member.nickname}`)
+                                  }}
+                                />
+                                <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                                  {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                                </div>
+                              </>
+                            ) : (
+                              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                                {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                              </div>
+                            )}
+                          </div>
                           
                           {/* Member Details - Name centered vertically with avatar */}
                           <div className="flex items-center gap-2">
@@ -324,17 +303,17 @@ export default function MembersPage() {
                               {member.nickname}
                             </span>
                             
-                            {/* Email Icon Button - only if email exists */}
-                            {member.user_email && (
+                            {/* Email Icon Button - show custom email if available, otherwise user_email */}
+                            {(member.custom_email || member.user_email) && (
                               <a
-                                href={`mailto:${member.user_email}`}
-                                title={member.user_email}
+                                href={`mailto:${member.custom_email || member.user_email}`}
+                                title={member.custom_email || member.user_email}
                                 className="group relative inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
                               >
                                 <Mail size={13} />
                                 {/* Tooltip */}
                                 <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
-                                  {member.user_email}
+                                  {member.custom_email || member.user_email}
                                 </span>
                               </a>
                             )}
@@ -444,7 +423,6 @@ export default function MembersPage() {
             <button
               onClick={() => {
                 setSearchQuery("");
-                setFilterMemberType("all");
                 setFilterSpecialty("all");
                 setSortBy("default");
               }}
@@ -453,8 +431,6 @@ export default function MembersPage() {
               Clear Filters
             </button>
           </motion.div>
-        )}
-          </>
         )}
       </div>
     </div>

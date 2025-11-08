@@ -159,6 +159,45 @@ add_action('init', 'wpyvr_register_custom_post_types');
  */
 add_action('rest_api_init', function() {
   
+  // Add featured image URL to posts (blog)
+  register_rest_field('post', 'featured_image_url', [
+    'get_callback' => function($object) {
+      if ($object['featured_media']) {
+        $image = wp_get_attachment_image_src($object['featured_media'], 'large');
+        return $image ? $image[0] : null;
+      }
+      return null;
+    },
+    'schema' => null,
+  ]);
+
+  // Add author details to posts (blog)
+  register_rest_field('post', 'author_name', [
+    'get_callback' => function($object) {
+      return get_the_author_meta('display_name', $object['author']);
+    },
+    'schema' => null,
+  ]);
+
+  // Add author avatar to posts (blog)
+  register_rest_field('post', 'author_avatar', [
+    'get_callback' => function($object) {
+      return get_avatar_url($object['author']);
+    },
+    'schema' => null,
+  ]);
+
+  // Add reading time to posts (blog)
+  register_rest_field('post', 'reading_time', [
+    'get_callback' => function($object) {
+      $content = get_post_field('post_content', $object['id']);
+      $word_count = str_word_count(strip_tags($content));
+      $reading_time = ceil($word_count / 200); // Assuming 200 words per minute
+      return $reading_time . ' min read';
+    },
+    'schema' => null,
+  ]);
+
   // Add ACF fields to guides
   register_rest_field('guide', 'acf', [
     'get_callback' => function($object) {
