@@ -62,12 +62,13 @@ export default function MembersPage() {
         break;
       case "default":
       default:
-        // Sort by role (staff first), then by last active
+        // Sort by role (staff first), then by most recent activity
         filtered.sort((a, b) => {
           const roleOrder = { admin: 0, staff: 1, member: 2 };
           if (roleOrder[a.role] !== roleOrder[b.role]) {
             return roleOrder[a.role] - roleOrder[b.role];
           }
+          // Most recent first (descending order)
           return new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime();
         });
         break;
@@ -246,19 +247,13 @@ export default function MembersPage() {
                       Member
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                      Position
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
                       Specialties
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                      Company
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                      Type
+                      Position / Company
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
-                      Contact
+                      Website
                     </th>
                   </tr>
                 </thead>
@@ -273,26 +268,39 @@ export default function MembersPage() {
                     >
                       {/* Member Info */}
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
+                        <div className="flex items-center gap-4">
+                          {/* Avatar - Larger size */}
+                          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
                             {member.avatar}
                           </div>
-                          <div>
-                            <div className="font-semibold text-gray-900 dark:text-white">
-                              {member.name}
+                          
+                          {/* Member Details */}
+                          <div className="flex flex-col gap-1.5">
+                            {/* Badge on top */}
+                            <div>
+                              {getMemberBadge(member)}
                             </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              @{member.nickname}
+                            
+                            {/* Name and Email on second line */}
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900 dark:text-white">
+                                {member.nickname || member.name}
+                              </span>
+                              
+                              {/* Email Icon Button */}
+                              <a
+                                href={`mailto:${member.email}`}
+                                title={member.email}
+                                className="group relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
+                              >
+                                <Mail size={14} />
+                                {/* Tooltip */}
+                                <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
+                                  {member.email}
+                                </span>
+                              </a>
                             </div>
                           </div>
-                        </div>
-                      </td>
-
-                      {/* Position */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                          <Briefcase size={16} className="flex-shrink-0 text-purple-500" />
-                          <span>{member.position}</span>
                         </div>
                       </td>
 
@@ -315,41 +323,29 @@ export default function MembersPage() {
                         </div>
                       </td>
 
-                      {/* Company */}
+                      {/* Position / Company */}
                       <td className="px-6 py-4">
-                        {member.company ? (
-                          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                            <Building2 size={14} className="flex-shrink-0 text-gray-400" />
-                            <span>{member.company}</span>
+                        <div className="flex flex-col gap-1">
+                          {/* Position - Top line */}
+                          <div className="flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <Briefcase size={14} className="flex-shrink-0 text-purple-500" />
+                            <span>{member.position}</span>
                           </div>
-                        ) : (
-                          <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
-                        )}
+                          
+                          {/* Company - Bottom line (smaller text) */}
+                          {member.company && (
+                            <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                              <Building2 size={12} className="flex-shrink-0 text-gray-400" />
+                              <span>{member.company}</span>
+                            </div>
+                          )}
+                        </div>
                       </td>
 
-                      {/* Type Badge */}
+                      {/* Website */}
                       <td className="px-6 py-4">
-                        {getMemberBadge(member)}
-                      </td>
-
-                      {/* Contact */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-center gap-3">
-                          {/* Email Icon */}
-                          <a
-                            href={`mailto:${member.email}`}
-                            title={member.email}
-                            className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
-                          >
-                            <Mail size={18} />
-                            {/* Tooltip */}
-                            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
-                              {member.email}
-                            </span>
-                          </a>
-
-                          {/* Website Icon */}
-                          {member.website && (
+                        <div className="flex items-center justify-center">
+                          {member.website ? (
                             <a
                               href={member.website}
                               target="_blank"
@@ -359,10 +355,12 @@ export default function MembersPage() {
                             >
                               <Globe size={18} />
                               {/* Tooltip */}
-                              <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
+                              <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
                                 {member.website.replace(/https?:\/\//, "")}
                               </span>
                             </a>
+                          ) : (
+                            <span className="text-sm text-gray-400 dark:text-gray-500">—</span>
                           )}
                         </div>
                       </td>
