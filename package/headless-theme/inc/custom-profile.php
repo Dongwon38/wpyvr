@@ -31,7 +31,7 @@ function custom_profile_create_table() {
         specialties JSON DEFAULT NULL,
         company VARCHAR(255) DEFAULT NULL,
         website VARCHAR(255) DEFAULT NULL,
-        profile_visibility ENUM('public', 'private') DEFAULT 'public',
+        profile_visibility ENUM('public', 'private') DEFAULT 'private',
         social_links JSON DEFAULT NULL,
         privacy_settings JSON DEFAULT NULL,
         last_active_at DATETIME DEFAULT NULL,
@@ -186,7 +186,7 @@ function custom_profile_update(WP_REST_Request $request) {
     $company = sanitize_text_field($request->get_param('company'));
     $website = esc_url_raw($request->get_param('website'));
     $avatar_url = esc_url_raw($request->get_param('avatar_url'));
-    $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'public';
+    $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'private';
     $social_links = $request->get_param('social_links') ?? [];
     $privacy_settings = $request->get_param('privacy_settings') ?? [];
 
@@ -202,7 +202,7 @@ function custom_profile_update(WP_REST_Request $request) {
 
     // Validate profile_visibility
     if (!in_array($profile_visibility, ['public', 'private'])) {
-        $profile_visibility = 'public';
+        $profile_visibility = 'private';
     }
 
     // Check if WP user exists

@@ -46,7 +46,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [company, setCompany] = useState(initialData?.company || "")
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
-  const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(initialData?.profile_visibility || 'public')
+  const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(initialData?.profile_visibility || 'private')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
     initialData?.social_links || []
   )
@@ -182,69 +182,134 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         />
       </div>
 
-      {/* Basic Info */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Nickname */}
-        <div>
-          <label
-            htmlFor="nickname"
-            className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
-          >
-            Nickname <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="nickname"
-            type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder="e.g., DW"
-            maxLength={100}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-            required
-          />
-        </div>
+      {/* Nickname */}
+      <div>
+        <label
+          htmlFor="nickname"
+          className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+        >
+          Nickname <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="nickname"
+          type="text"
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          placeholder="e.g., DW"
+          maxLength={100}
+          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+          required
+        />
+      </div>
 
-        {/* Profile Visibility */}
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white">
-            Profile Visibility
+      {/* Profile Visibility - Card Style */}
+      <div>
+        <label className="mb-3 block text-sm font-semibold text-gray-900 dark:text-white">
+          Profile Visibility <span className="text-red-500">*</span>
+        </label>
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Public Option Card */}
+          <label className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+            profileVisibility === 'public'
+              ? 'border-green-500 bg-green-50 dark:border-green-400 dark:bg-green-900/20'
+              : 'border-gray-300 bg-white hover:border-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500'
+          }`}>
+            <input
+              type="radio"
+              name="profileVisibility"
+              value="public"
+              checked={profileVisibility === 'public'}
+              onChange={(e) => setProfileVisibility(e.target.value as 'public' | 'private')}
+              className="sr-only"
+              required
+            />
+            <div className="flex items-start gap-3">
+              <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                profileVisibility === 'public'
+                  ? 'border-green-500 bg-green-500'
+                  : 'border-gray-300 dark:border-gray-600'
+              }`}>
+                {profileVisibility === 'public' && (
+                  <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                    <circle cx="6" cy="6" r="3" />
+                  </svg>
+                )}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <Unlock size={18} className={profileVisibility === 'public' ? 'text-green-600 dark:text-green-400' : 'text-gray-500'} />
+                  <span className={`text-base font-semibold ${
+                    profileVisibility === 'public'
+                      ? 'text-green-900 dark:text-green-300'
+                      : 'text-gray-900 dark:text-white'
+                  }`}>
+                    Public
+                  </span>
+                </div>
+                <p className={`mt-1 text-sm ${
+                  profileVisibility === 'public'
+                    ? 'text-green-700 dark:text-green-400'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}>
+                  Visible in members list
+                </p>
+              </div>
+            </div>
           </label>
-          <div className="space-y-3">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="radio"
-                name="profileVisibility"
-                value="public"
-                checked={profileVisibility === 'public'}
-                onChange={(e) => setProfileVisibility(e.target.value as 'public' | 'private')}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
-              />
-              <div>
-                <span className="text-sm font-medium text-gray-900 dark:text-white">Public</span>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Your profile appears in the members list</p>
+
+          {/* Private Option Card */}
+          <label className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+            profileVisibility === 'private'
+              ? 'border-purple-500 bg-purple-50 dark:border-purple-400 dark:bg-purple-900/20'
+              : 'border-gray-300 bg-white hover:border-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500'
+          }`}>
+            <input
+              type="radio"
+              name="profileVisibility"
+              value="private"
+              checked={profileVisibility === 'private'}
+              onChange={(e) => setProfileVisibility(e.target.value as 'public' | 'private')}
+              className="sr-only"
+              required
+            />
+            <div className="flex items-start gap-3">
+              <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                profileVisibility === 'private'
+                  ? 'border-purple-500 bg-purple-500'
+                  : 'border-gray-300 dark:border-gray-600'
+              }`}>
+                {profileVisibility === 'private' && (
+                  <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                    <circle cx="6" cy="6" r="3" />
+                  </svg>
+                )}
               </div>
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="radio"
-                name="profileVisibility"
-                value="private"
-                checked={profileVisibility === 'private'}
-                onChange={(e) => setProfileVisibility(e.target.value as 'public' | 'private')}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
-              />
-              <div>
-                <span className="text-sm font-medium text-gray-900 dark:text-white">Private</span>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Your profile is hidden from the members list</p>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <Lock size={18} className={profileVisibility === 'private' ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500'} />
+                  <span className={`text-base font-semibold ${
+                    profileVisibility === 'private'
+                      ? 'text-purple-900 dark:text-purple-300'
+                      : 'text-gray-900 dark:text-white'
+                  }`}>
+                    Private
+                  </span>
+                </div>
+                <p className={`mt-1 text-sm ${
+                  profileVisibility === 'private'
+                    ? 'text-purple-700 dark:text-purple-400'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}>
+                  Hidden from list
+                </p>
               </div>
-            </label>
-          </div>
-          <div className="mt-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
-            <p className="text-xs text-blue-800 dark:text-blue-300">
-              💡 <strong>Note:</strong> Setting your profile to private will completely remove you from the members list.
-              You can still control the visibility of individual information (position, company, etc.) using the toggle switches below.
-            </p>
-          </div>
+            </div>
+          </label>
+        </div>
+        <div className="mt-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
+          <p className="text-xs text-blue-800 dark:text-blue-300">
+            <strong>Note:</strong> Individual fields can be controlled separately with toggles below.
+          </p>
         </div>
       </div>
 
