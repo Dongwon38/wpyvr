@@ -384,6 +384,7 @@ function custom_profile_get_all_members(WP_REST_Request $request) {
         if (!empty($privacy)) {
             if (isset($privacy['show_email']) && !$privacy['show_email']) {
                 $profile['user_email'] = null;
+                $profile['custom_email'] = null;
             }
             if (isset($privacy['show_position']) && !$privacy['show_position']) {
                 $profile['position'] = null;
