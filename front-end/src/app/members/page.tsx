@@ -28,52 +28,56 @@ export default function MembersPage() {
 
   // Filter and sort members
   const filteredMembers = useMemo(() => {
-    let filtered = [...mockUsers];
+    let filtered = [...members];
 
     // Search filter
     if (searchQuery) {
       filtered = filtered.filter(member =>
-        member.nickname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.name.toLowerCase().includes(searchQuery.toLowerCase())
+        member.nickname?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     // Member type filter
     if (filterMemberType !== "all") {
-      filtered = filtered.filter(member => member.memberType === filterMemberType);
+      filtered = filtered.filter(member => member.member_type === filterMemberType);
     }
 
     // Specialty filter
     if (filterSpecialty !== "all") {
       filtered = filtered.filter(member =>
-        member.specialties.includes(filterSpecialty)
+        member.specialties && member.specialties.includes(filterSpecialty)
       );
     }
 
     // Sort
     switch (sortBy) {
       case "name-asc":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => (a.nickname || '').localeCompare(b.nickname || ''));
         break;
       case "name-desc":
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        filtered.sort((a, b) => (b.nickname || '').localeCompare(a.nickname || ''));
         break;
       case "default":
       default:
         // Sort by role (staff first), then by most recent activity
         filtered.sort((a, b) => {
-          const roleOrder = { admin: 0, staff: 1, member: 2 };
-          if (roleOrder[a.role] !== roleOrder[b.role]) {
-            return roleOrder[a.role] - roleOrder[b.role];
+          const roleOrder: Record<string, number> = { administrator: 0, staff: 1, subscriber: 2, member: 3 };
+          const aRoleOrder = roleOrder[a.role || 'member'] ?? 3;
+          const bRoleOrder = roleOrder[b.role || 'member'] ?? 3;
+          
+          if (aRoleOrder !== bRoleOrder) {
+            return aRoleOrder - bRoleOrder;
           }
           // Most recent first (descending order)
-          return new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime();
+          const aTime = a.last_active_at ? new Date(a.last_active_at).getTime() : 0;
+          const bTime = b.last_active_at ? new Date(b.last_active_at).getTime() : 0;
+          return bTime - aTime;
         });
         break;
     }
 
     return filtered;
-  }, [searchQuery, sortBy, filterMemberType, filterSpecialty]);
+  }, [members, searchQuery, sortBy, filterMemberType, filterSpecialty]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 dark:bg-gray-950">
@@ -92,7 +96,7 @@ export default function MembersPage() {
             </h1>
           </div>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Connect with {mockUsers.length} talented creators, developers, and designers in our community
+            Connect with {members.length} talented creators, developers, and designers in our community
           </p>
         </motion.div>
 
@@ -199,13 +203,25 @@ export default function MembersPage() {
           )}
         </motion.div>
 
-        {/* Results Count */}
-        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-          Showing {filteredMembers.length} of {mockUsers.length} members
-        </div>
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <Loader2 size={48} className="mx-auto animate-spin text-purple-600" />
+              <p className="mt-4 text-gray-600 dark:text-gray-400">
+                Loading members...
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Results Count */}
+            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+              Showing {filteredMembers.length} of {members.length} members
+            </div>
 
-        {/* Members Table */}
-        {filteredMembers.length > 0 ? (
+            {/* Members Table */}
+            {filteredMembers.length > 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -243,14 +259,22 @@ export default function MembersPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           {/* Avatar */}
-                          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
-                            {member.avatar}
-                          </div>
+                          {member.avatar_url ? (
+                            <img
+                              src={member.avatar_url}
+                              alt={member.nickname}
+                              className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                              {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                            </div>
+                          )}
                           
                           {/* Member Details - Name centered vertically with avatar */}
                           <div className="flex items-center gap-2">
                             {/* Staff Badge - only for staff */}
-                            {member.role === "staff" && (
+                            {(member.role === "administrator" || member.role === "staff") && (
                               <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
                                 <Award size={10} />
                                 Staff
@@ -259,20 +283,20 @@ export default function MembersPage() {
                             
                             {/* Name */}
                             <span className="font-semibold text-gray-900 dark:text-white">
-                              {member.nickname || member.name}
+                              {member.nickname}
                             </span>
                             
                             {/* Email Icon Button - only if email exists */}
-                            {member.email && (
+                            {member.user_email && (
                               <a
-                                href={`mailto:${member.email}`}
-                                title={member.email}
+                                href={`mailto:${member.user_email}`}
+                                title={member.user_email}
                                 className="group relative inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
                               >
                                 <Mail size={13} />
                                 {/* Tooltip */}
                                 <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
-                                  {member.email}
+                                  {member.user_email}
                                 </span>
                               </a>
                             )}
@@ -391,6 +415,8 @@ export default function MembersPage() {
               Clear Filters
             </button>
           </motion.div>
+        )}
+          </>
         )}
       </div>
     </div>
