@@ -65,31 +65,40 @@ export interface Event {
 }
 
 /**
- * Convert UTC time to Pacific Time
+ * Format time range with PST/PDT label
  */
-function convertToPacificTime(date: string, time: string): Date {
-  // Combine date and time into ISO string
-  const dateTimeString = `${date}T${time}`;
-  const utcDate = new Date(dateTimeString + 'Z'); // Treat as UTC
+function formatLocalTime(date: string, startTime: string, endTime: string): string {
+  // Parse the times (stored as local time)
+  const [startHour, startMin] = startTime.split(':').map(Number);
+  const [endHour, endMin] = endTime.split(':').map(Number);
   
-  return utcDate;
-}
-
-/**
- * Format time range in Pacific Time
- */
-function formatPacificTime(startDate: Date, endDate: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-    timeZone: 'America/Los_Angeles'
+  // Format times in 12-hour format
+  const formatTime = (hour: number, min: number) => {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour}:${min.toString().padStart(2, '0')} ${period}`;
   };
 
-  const startFormatted = startDate.toLocaleString('en-US', options);
-  const endFormatted = endDate.toLocaleString('en-US', options);
+  const startFormatted = formatTime(startHour, startMin);
+  const endFormatted = formatTime(endHour, endMin);
 
-  return `${startFormatted} - ${endFormatted} PST`;
+  // Determine if we're in PST or PDT (daylight saving time)
+  const eventDate = new Date(date);
+  const year = eventDate.getFullYear();
+  
+  // Daylight saving time in Pacific timezone typically:
+  // Starts: Second Sunday in March
+  // Ends: First Sunday in November
+  const dstStart = new Date(year, 2, 1); // March
+  dstStart.setDate(dstStart.getDate() + (14 - dstStart.getDay()) % 7);
+  
+  const dstEnd = new Date(year, 10, 1); // November
+  dstEnd.setDate(dstEnd.getDate() + (7 - dstEnd.getDay()) % 7);
+  
+  const isDST = eventDate >= dstStart && eventDate < dstEnd;
+  const timezone = isDST ? 'PDT' : 'PST';
+
+  return `${startFormatted} - ${endFormatted} ${timezone}`;
 }
 
 /**
@@ -103,18 +112,19 @@ function getGoogleMapsUrl(address: string): string {
  * Transform WordPress API response to frontend Event format
  */
 function transformEventData(data: EventData): Event {
-  const eventDate = new Date(data.acf.event_date);
+  const eventDate = data.acf.event_date;
+  const [startHour, startMin] = data.acf.start_time.split(':').map(Number);
+  
+  // Create date object with event date and start time (local time)
+  const eventDateTime = new Date(eventDate);
+  eventDateTime.setHours(startHour, startMin, 0, 0);
+  
+  // Check if event is past (compare with current local time)
   const now = new Date();
+  const isPast = eventDateTime < now;
   
-  // Convert times to Pacific Time
-  const startDateTime = convertToPacificTime(data.acf.event_date, data.acf.start_time);
-  const endDateTime = convertToPacificTime(data.acf.event_date, data.acf.end_time);
-  
-  // Check if event is past (compare with current date/time in Pacific timezone)
-  const isPast = startDateTime < now;
-  
-  // Format time for display
-  const formattedTime = formatPacificTime(startDateTime, endDateTime);
+  // Format time for display with PST/PDT
+  const formattedTime = formatLocalTime(eventDate, data.acf.start_time, data.acf.end_time);
 
   // Extract categories and tags from embedded data
   const categories = data._embedded?.['wp:term']?.[0]?.map(term => term.name) || [];
@@ -193,6 +203,18 @@ export async function fetchEventBySlug(slug: string): Promise<Event | null> {
     console.error('Error fetching event:', error);
     return null;
   }
+}
+
+/**
+ * Fetch all events sorted by date (newest first)
+ */
+export async function fetchEventsSortedByDate(): Promise<Event[]> {
+  const events = await fetchEvents();
+  return events.sort((a, b) => {
+    const aDateTime = new Date(a.eventDate + 'T' + a.startTime);
+    const bDateTime = new Date(b.eventDate + 'T' + b.startTime);
+    return bDateTime.getTime() - aDateTime.getTime();
+  });
 }
 
 /**
