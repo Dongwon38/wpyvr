@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Save, Plus, X, Loader2, Eye, EyeOff } from "lucide-react"
+import { Save, Plus, X, Loader2, Lock, Unlock } from "lucide-react"
 import AvatarUploader from "./AvatarUploader"
+import Switch from "@/components/ui/Switch"
 import { useAuth } from "@/context/AuthContext"
 import { updateUserProfile, type SocialLink, type ProfileUpdatePayload, type PrivacySettings } from "@/lib/profileApi"
 
@@ -235,23 +236,27 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       </div>
 
       {/* Professional Info */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-6">
         {/* Position */}
         <div>
-          <label
-            htmlFor="position"
-            className="mb-2 flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-white"
-          >
-            <span>Position / Job Title</span>
-            <button
-              type="button"
-              onClick={() => togglePrivacy('show_position')}
-              className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-              title={privacySettings.show_position ? "Public" : "Private"}
+          <div className="mb-2 flex items-center justify-between">
+            <label
+              htmlFor="position"
+              className="text-sm font-semibold text-gray-900 dark:text-white"
             >
-              {privacySettings.show_position ? <Eye size={14} /> : <EyeOff size={14} />}
-            </button>
-          </label>
+              Position / Job Title
+            </label>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {privacySettings.show_position ? "Public" : "Private"}
+              </span>
+              <Switch
+                checked={privacySettings.show_position ?? true}
+                onCheckedChange={() => togglePrivacy('show_position')}
+                label="Toggle position visibility"
+              />
+            </div>
+          </div>
           <input
             id="position"
             type="text"
@@ -265,20 +270,24 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
 
         {/* Company */}
         <div>
-          <label
-            htmlFor="company"
-            className="mb-2 flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-white"
-          >
-            <span>Company</span>
-            <button
-              type="button"
-              onClick={() => togglePrivacy('show_company')}
-              className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-              title={privacySettings.show_company ? "Public" : "Private"}
+          <div className="mb-2 flex items-center justify-between">
+            <label
+              htmlFor="company"
+              className="text-sm font-semibold text-gray-900 dark:text-white"
             >
-              {privacySettings.show_company ? <Eye size={14} /> : <EyeOff size={14} />}
-            </button>
-          </label>
+              Company
+            </label>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {privacySettings.show_company ? "Public" : "Private"}
+              </span>
+              <Switch
+                checked={privacySettings.show_company ?? true}
+                onCheckedChange={() => togglePrivacy('show_company')}
+                label="Toggle company visibility"
+              />
+            </div>
+          </div>
           <input
             id="company"
             type="text"
@@ -293,19 +302,21 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
 
       {/* Specialties */}
       <div>
-        <label
-          className="mb-2 flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-white"
-        >
-          <span>Specialties / Skills</span>
-          <button
-            type="button"
-            onClick={() => togglePrivacy('show_specialties')}
-            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-            title={privacySettings.show_specialties ? "Public" : "Private"}
-          >
-            {privacySettings.show_specialties ? <Eye size={14} /> : <EyeOff size={14} />}
-          </button>
-        </label>
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-sm font-semibold text-gray-900 dark:text-white">
+            Specialties / Skills
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {privacySettings.show_specialties ? "Public" : "Private"}
+            </span>
+            <Switch
+              checked={privacySettings.show_specialties ?? true}
+              onCheckedChange={() => togglePrivacy('show_specialties')}
+              label="Toggle specialties visibility"
+            />
+          </div>
+        </div>
         <div className="flex gap-2">
           <input
             type="text"
@@ -351,20 +362,24 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
 
       {/* Website */}
       <div>
-        <label
-          htmlFor="website"
-          className="mb-2 flex items-center justify-between text-sm font-semibold text-gray-900 dark:text-white"
-        >
-          <span>Website</span>
-          <button
-            type="button"
-            onClick={() => togglePrivacy('show_website')}
-            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-            title={privacySettings.show_website ? "Public" : "Private"}
+        <div className="mb-2 flex items-center justify-between">
+          <label
+            htmlFor="website"
+            className="text-sm font-semibold text-gray-900 dark:text-white"
           >
-            {privacySettings.show_website ? <Eye size={14} /> : <EyeOff size={14} />}
-          </button>
-        </label>
+            Website
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {privacySettings.show_website ? "Public" : "Private"}
+            </span>
+            <Switch
+              checked={privacySettings.show_website ?? true}
+              onCheckedChange={() => togglePrivacy('show_website')}
+              label="Toggle website visibility"
+            />
+          </div>
+        </div>
         <input
           id="website"
           type="url"
@@ -442,14 +457,31 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       </div>
 
       {/* Privacy Info */}
-      <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-        <h3 className="mb-2 font-semibold text-blue-900 dark:text-blue-300">
-          🔒 Privacy Settings
-        </h3>
-        <p className="text-sm text-blue-800 dark:text-blue-400">
-          Use the eye icons next to each field to toggle visibility on your public profile.
-          Private fields will show "—" to other members.
-        </p>
+      <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
+        <div className="flex items-start gap-3">
+          <div className="rounded-full bg-purple-100 p-2 dark:bg-purple-900/50">
+            <Lock size={20} className="text-purple-600 dark:text-purple-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="mb-1 font-semibold text-purple-900 dark:text-purple-300">
+              Privacy Settings
+            </h3>
+            <p className="text-sm text-purple-800 dark:text-purple-400">
+              Use the toggle switches to control what information is visible on your public profile.
+              When switched off, fields will show "—" to other members.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2 text-xs">
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-purple-100 px-2 py-1 font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+                <Unlock size={12} />
+                Public = Visible to all
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-gray-100 px-2 py-1 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <Lock size={12} />
+                Private = Hidden (shows "—")
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Status Message */}
