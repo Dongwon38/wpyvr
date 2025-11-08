@@ -56,11 +56,24 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
 
-  // Debug log for avatar URL
+  // Debug log for avatar URL changes
   useEffect(() => {
-    console.log("📝 ProfileForm - Avatar URL state:", avatarUrl)
-    console.log("📝 ProfileForm - Initial avatar from props:", initialData?.avatar_url)
-  }, [avatarUrl, initialData?.avatar_url])
+    console.log("📝 ProfileForm - Avatar URL state changed:", {
+      avatarUrl,
+      hasValue: !!avatarUrl,
+      length: avatarUrl.length,
+      startsWithHttp: avatarUrl.startsWith('http')
+    })
+  }, [avatarUrl])
+  
+  // Debug log for initial data
+  useEffect(() => {
+    console.log("📝 ProfileForm - Initial data loaded:", {
+      hasInitialData: !!initialData,
+      avatar_url: initialData?.avatar_url,
+      hasAvatarUrl: !!initialData?.avatar_url
+    })
+  }, [initialData])
   const [profileVisibility, setProfileVisibility] = useState<'public' | 'private'>(
     initialData?.profile_visibility || 'private'
   )
@@ -166,6 +179,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         social_links: validSocialLinks,
         privacy_settings: privacySettings,
       }
+      
+      console.log("💾 ProfileForm - Submitting profile update:", {
+        user_id: payload.user_id,
+        avatar_url: payload.avatar_url,
+        has_avatar: !!payload.avatar_url
+      })
 
       await updateUserProfile(payload, wpUser.jwt)
 
@@ -198,7 +217,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       <div className="flex justify-center">
         <AvatarUploader
           currentAvatarUrl={avatarUrl}
-          onAvatarChange={setAvatarUrl}
+          onAvatarChange={(url) => {
+            console.log("🎨 ProfileForm - Avatar changed via callback:", url)
+            setAvatarUrl(url)
+          }}
         />
       </div>
 
