@@ -29,7 +29,7 @@ export default function CommunityPage() {
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
       <section className="border-b border-gray-200 px-4 py-12 dark:border-gray-800 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -47,7 +47,7 @@ export default function CommunityPage() {
 
       {/* Content */}
       <section className="px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-7xl">
           {/* Toolbar - Filters and Sort */}
           <div className="mb-6 flex flex-col gap-4 border-b border-gray-200 pb-6 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
             {/* Tag Filter */}
@@ -96,12 +96,12 @@ export default function CommunityPage() {
           </div>
 
           {/* Results Count */}
-          <p className="mb-4 text-sm font-normal text-gray-500 dark:text-gray-500">
+          <p className="mb-6 text-sm font-normal text-gray-500 dark:text-gray-500">
             {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
           </p>
 
-          {/* Posts List */}
-          <div>
+          {/* Posts Grid */}
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filteredPosts.map((post, index) => (
               <PostListItem key={post.slug} post={post} index={index} />
             ))}
