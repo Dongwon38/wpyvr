@@ -105,12 +105,12 @@ export default function ProfilePage() {
                     avatar_url: profile.avatar_url || "",
                     member_type: profile.member_type || 'member',
                     social_links: profile.social_links || [],
-                    privacy_settings: profile.privacy_settings || {
-                      show_email: true,
-                      show_position: true,
-                      show_company: true,
-                      show_website: true,
-                      show_specialties: true,
+                    privacy_settings: {
+                      show_email: profile.privacy_settings?.show_email ?? false,
+                      show_position: profile.privacy_settings?.show_position ?? false,
+                      show_company: profile.privacy_settings?.show_company ?? false,
+                      show_website: profile.privacy_settings?.show_website ?? false,
+                      show_specialties: profile.privacy_settings?.show_specialties ?? false,
                     },
                   }
                 : undefined

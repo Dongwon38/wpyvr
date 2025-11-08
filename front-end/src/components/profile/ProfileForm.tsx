@@ -29,6 +29,15 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
+  // Default privacy settings
+  const defaultPrivacySettings: PrivacySettings = {
+    show_email: false,
+    show_position: false,
+    show_company: false,
+    show_website: false,
+    show_specialties: false,
+  }
+
   // Form state
   const [nickname, setNickname] = useState(initialData?.nickname || "")
   const [bio, setBio] = useState(initialData?.bio || "")
@@ -41,15 +50,20 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
     initialData?.social_links || []
   )
-  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>(
-    initialData?.privacy_settings || {
-      show_email: true,
-      show_position: true,
-      show_company: true,
-      show_website: true,
-      show_specialties: true,
+  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>(() => {
+    // If initialData has privacy settings, use them
+    if (initialData?.privacy_settings) {
+      return {
+        show_email: initialData.privacy_settings.show_email ?? false,
+        show_position: initialData.privacy_settings.show_position ?? false,
+        show_company: initialData.privacy_settings.show_company ?? false,
+        show_website: initialData.privacy_settings.show_website ?? false,
+        show_specialties: initialData.privacy_settings.show_specialties ?? false,
+      }
     }
-  )
+    // Otherwise use default (all private)
+    return defaultPrivacySettings
+  })
 
   // Specialty input
   const [specialtyInput, setSpecialtyInput] = useState("")
@@ -251,7 +265,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 {privacySettings.show_position ? "Public" : "Private"}
               </span>
               <Switch
-                checked={privacySettings.show_position ?? true}
+                checked={privacySettings.show_position === true}
                 onCheckedChange={() => togglePrivacy('show_position')}
                 label="Toggle position visibility"
               />
@@ -282,7 +296,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 {privacySettings.show_company ? "Public" : "Private"}
               </span>
               <Switch
-                checked={privacySettings.show_company ?? true}
+                checked={privacySettings.show_company === true}
                 onCheckedChange={() => togglePrivacy('show_company')}
                 label="Toggle company visibility"
               />
@@ -311,7 +325,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               {privacySettings.show_specialties ? "Public" : "Private"}
             </span>
             <Switch
-              checked={privacySettings.show_specialties ?? true}
+              checked={privacySettings.show_specialties === true}
               onCheckedChange={() => togglePrivacy('show_specialties')}
               label="Toggle specialties visibility"
             />
@@ -374,7 +388,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               {privacySettings.show_website ? "Public" : "Private"}
             </span>
             <Switch
-              checked={privacySettings.show_website ?? true}
+              checked={privacySettings.show_website === true}
               onCheckedChange={() => togglePrivacy('show_website')}
               label="Toggle website visibility"
             />
