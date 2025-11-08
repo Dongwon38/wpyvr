@@ -19,22 +19,37 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
   const [currentTranslate, setCurrentTranslate] = useState(0);
   const [prevTranslate, setPrevTranslate] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Limit to 5 posts + 1 "View More" slide
   const slidePosts = posts.slice(0, 5);
   const totalSlides = slidePosts.length + 1; // +1 for "View More" slide
 
-  const getSlideWidth = () => {
-    if (!sliderRef.current) return 0;
-    return sliderRef.current.offsetWidth;
+  const getCardWidth = () => {
+    if (!containerRef.current) return 0;
+    const firstCard = containerRef.current.querySelector('div');
+    if (!firstCard) return 0;
+    return firstCard.offsetWidth + 16; // width + gap
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
+    setCurrentIndex((prev) => {
+      // Loop back to end
+      if (prev === 0) {
+        return totalSlides - 1;
+      }
+      return prev - 1;
+    });
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(totalSlides - 1, prev + 1));
+    setCurrentIndex((prev) => {
+      // Loop back to start
+      if (prev === totalSlides - 1) {
+        return 0;
+      }
+      return prev + 1;
+    });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -58,10 +73,10 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
     const movedBy = currentTranslate - prevTranslate;
     
     // Threshold: if moved more than 50px, go to next/prev slide
-    if (movedBy < -50 && currentIndex < totalSlides - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else if (movedBy > 50 && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+    if (movedBy < -50) {
+      handleNext();
+    } else if (movedBy > 50) {
+      handlePrev();
     }
   };
 
@@ -85,16 +100,16 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
     const movedBy = currentTranslate - prevTranslate;
     
     // Threshold: if moved more than 50px, go to next/prev slide
-    if (movedBy < -50 && currentIndex < totalSlides - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else if (movedBy > 50 && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+    if (movedBy < -50) {
+      handleNext();
+    } else if (movedBy > 50) {
+      handlePrev();
     }
   };
 
   useEffect(() => {
-    const slideWidth = getSlideWidth();
-    const targetTranslate = -currentIndex * slideWidth;
+    const cardWidth = getCardWidth();
+    const targetTranslate = -currentIndex * cardWidth;
     setCurrentTranslate(targetTranslate);
     setPrevTranslate(targetTranslate);
   }, [currentIndex]);
@@ -112,16 +127,14 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
             aria-label="Previous slide"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={handleNext}
-            disabled={currentIndex === totalSlides - 1}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
             aria-label="Next slide"
           >
             <ChevronRight size={20} />
@@ -142,6 +155,7 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
         onTouchEnd={handleTouchEnd}
       >
         <div
+          ref={containerRef}
           className="flex gap-4"
           style={{
             transform: `translateX(${currentTranslate}px)`,
