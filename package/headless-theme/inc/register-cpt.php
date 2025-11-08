@@ -183,6 +183,28 @@ add_action('rest_api_init', function() {
     'schema' => null,
   ]);
 
+  // Add event categories to REST API
+  register_rest_field('event', 'event_category', [
+    'get_callback' => function($object) {
+      $terms = get_the_terms($object['id'], 'event_category');
+      return $terms ? array_map(function($term) {
+        return $term->term_id;
+      }, $terms) : [];
+    },
+    'schema' => null,
+  ]);
+
+  // Add event tags to REST API
+  register_rest_field('event', 'event_tag', [
+    'get_callback' => function($object) {
+      $terms = get_the_terms($object['id'], 'event_tag');
+      return $terms ? array_map(function($term) {
+        return $term->term_id;
+      }, $terms) : [];
+    },
+    'schema' => null,
+  ]);
+
   // Add ACF fields to hero slides
   register_rest_field('hero_slide', 'acf', [
     'get_callback' => function($object) {

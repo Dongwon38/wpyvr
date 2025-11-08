@@ -21,12 +21,46 @@
             "first_day": 1
         },
         {
-            "key": "field_event_time",
-            "label": "Event Time",
-            "name": "time",
+            "key": "field_event_start_time",
+            "label": "Start Time",
+            "name": "start_time",
+            "aria-label": "",
+            "type": "time_picker",
+            "instructions": "Event start time (will be stored in UTC, displayed in Pacific Time)",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "display_format": "g:i a",
+            "return_format": "H:i:s"
+        },
+        {
+            "key": "field_event_end_time",
+            "label": "End Time",
+            "name": "end_time",
+            "aria-label": "",
+            "type": "time_picker",
+            "instructions": "Event end time (will be stored in UTC, displayed in Pacific Time)",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "display_format": "g:i a",
+            "return_format": "H:i:s"
+        },
+        {
+            "key": "field_event_location_title",
+            "label": "Location Title",
+            "name": "location_title",
             "aria-label": "",
             "type": "text",
-            "instructions": "Event time (e.g., \"2:00 PM - 5:00 PM EST\")",
+            "instructions": "Location name (e.g., \"Community Center\", \"Online - Zoom\")",
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
@@ -36,18 +70,18 @@
             },
             "default_value": "",
             "maxlength": "",
-            "placeholder": "2:00 PM - 5:00 PM EST",
+            "placeholder": "Community Center",
             "prepend": "",
             "append": ""
         },
         {
-            "key": "field_event_location",
-            "label": "Location",
-            "name": "location",
+            "key": "field_event_location_address",
+            "label": "Location Address",
+            "name": "location_address",
             "aria-label": "",
             "type": "text",
-            "instructions": "Event location (e.g., \"Online (Zoom)\", \"Community Center\")",
-            "required": 1,
+            "instructions": "Full address for Google Maps link (leave empty for online events)",
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -56,7 +90,7 @@
             },
             "default_value": "",
             "maxlength": "",
-            "placeholder": "",
+            "placeholder": "123 Main St, Vancouver, BC V6B 1A1",
             "prepend": "",
             "append": ""
         },

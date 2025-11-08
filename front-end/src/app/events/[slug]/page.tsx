@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, Clock, MapPin, ExternalLink, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, MapPin, ExternalLink, ArrowLeft, Tag } from "lucide-react";
 import { fetchEventBySlug } from "@/lib/eventsApi";
 import type { Event } from "@/lib/eventsApi";
 
@@ -89,8 +89,8 @@ export default function EventDetailPage() {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          {/* Status Badge */}
-          <div className="mb-4">
+          {/* Status Badge & Categories */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             <span
               className={`inline-block rounded-full px-4 py-2 text-sm font-bold uppercase tracking-wide shadow-md ${
                 event.isPast
@@ -100,6 +100,17 @@ export default function EventDetailPage() {
             >
               {event.isPast ? 'Past Event' : 'Upcoming Event'}
             </span>
+            
+            {event.categories && event.categories.length > 0 && (
+              event.categories.map(category => (
+                <span
+                  key={category}
+                  className="inline-block rounded-full bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+                >
+                  {category}
+                </span>
+              ))
+            )}
           </div>
 
           {/* Title */}
@@ -116,12 +127,16 @@ export default function EventDetailPage() {
                   Date
                 </p>
                 <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
-                  {new Date(event.eventDate).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
+                  {(() => {
+                    const [year, month, day] = event.eventDate.split('-').map(Number);
+                    const date = new Date(year, month - 1, day);
+                    return date.toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    });
+                  })()}
                 </p>
               </div>
             </div>
@@ -130,26 +145,52 @@ export default function EventDetailPage() {
               <Clock className="mt-1 h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400" />
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  Time
+                  Time (PST)
                 </p>
                 <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
-                  {event.time}
+                  {event.formattedTime}
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3 rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800">
               <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-orange-600 dark:text-orange-400" />
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                   Location
                 </p>
                 <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
-                  {event.location}
+                  {event.locationTitle}
                 </p>
+                {event.locationAddress && event.googleMapsUrl && (
+                  <a
+                    href={event.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    View on Google Maps
+                    <ExternalLink size={12} />
+                  </a>
+                )}
               </div>
             </div>
           </div>
+
+          {/* Tags */}
+          {event.tags && event.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <Tag size={16} className="text-gray-500" />
+              {event.tags.map(tag => (
+                <span
+                  key={tag}
+                  className="inline-block rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Featured Image */}
@@ -175,7 +216,7 @@ export default function EventDetailPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 rounded-2xl bg-white p-8 shadow-md dark:bg-gray-800"
+          className="mb-8"
         >
           <div
             className="prose prose-lg dark:prose-invert max-w-none"

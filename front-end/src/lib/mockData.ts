@@ -554,6 +554,182 @@ export const getAllTags = (): string[] => {
   return [...new Set(allTags)];
 };
 
+export interface User {
+  id: number;
+  name: string;
+  nickname: string;
+  email: string;
+  avatar?: string;
+  bio: string;
+  position: string;
+  specialties: string[];
+  company?: string;
+  website?: string;
+  memberType: "member" | "expert";
+  role: "admin" | "staff" | "member";
+  lastActive: string;
+}
+
+export const mockUsers: User[] = [
+  {
+    id: 1,
+    name: "Sarah Kim",
+    nickname: "sarahk",
+    email: "sarah.kim@example.com",
+    avatar: "SK",
+    bio: "Full-stack developer passionate about React and Node.js. Love building scalable web applications and teaching others.",
+    position: "Senior Full-Stack Developer",
+    specialties: ["React", "Node.js", "TypeScript", "MongoDB"],
+    company: "Tech Innovations Inc.",
+    website: "https://sarahkim.dev",
+    memberType: "expert",
+    role: "staff",
+    lastActive: "2025-11-07T10:30:00Z"
+  },
+  {
+    id: 2,
+    name: "John Doe",
+    nickname: "johnd",
+    email: "john.doe@example.com",
+    avatar: "JD",
+    bio: "UI/UX designer with a focus on creating beautiful and intuitive user experiences. Currently exploring design systems.",
+    position: "Lead UI/UX Designer",
+    specialties: ["UI Design", "UX Research", "Figma", "Design Systems"],
+    company: "Creative Studios",
+    website: "https://johndoe.design",
+    memberType: "expert",
+    role: "member",
+    lastActive: "2025-11-07T09:15:00Z"
+  },
+  {
+    id: 3,
+    name: "Emma Lee",
+    nickname: "emmal",
+    email: "emma.lee@example.com",
+    avatar: "EL",
+    bio: "Frontend developer specializing in modern JavaScript frameworks. Always learning something new!",
+    position: "Frontend Developer",
+    specialties: ["Vue.js", "React", "CSS", "Accessibility"],
+    company: "Web Solutions Co.",
+    memberType: "member",
+    role: "member",
+    lastActive: "2025-11-07T08:45:00Z"
+  },
+  {
+    id: 4,
+    name: "Mike Chen",
+    nickname: "mikec",
+    email: "mike.chen@example.com",
+    avatar: "MC",
+    bio: "DevOps engineer who loves automating everything. Docker, Kubernetes, and CI/CD are my daily tools.",
+    position: "DevOps Engineer",
+    specialties: ["Docker", "Kubernetes", "AWS", "CI/CD"],
+    company: "Cloud Systems Ltd.",
+    website: "https://mikechen.io",
+    memberType: "expert",
+    role: "member",
+    lastActive: "2025-11-07T07:20:00Z"
+  },
+  {
+    id: 5,
+    name: "Alex Martinez",
+    nickname: "alexm",
+    email: "alex.martinez@example.com",
+    avatar: "AM",
+    bio: "WordPress developer and theme creator. Building custom solutions for clients worldwide.",
+    position: "WordPress Developer",
+    specialties: ["WordPress", "PHP", "WooCommerce", "Custom Themes"],
+    company: "Freelance",
+    website: "https://alexmartinez.com",
+    memberType: "member",
+    role: "member",
+    lastActive: "2025-11-06T22:10:00Z"
+  },
+  {
+    id: 6,
+    name: "Jessica Wang",
+    nickname: "jessicaw",
+    email: "jessica.wang@example.com",
+    avatar: "JW",
+    bio: "Data scientist turning complex data into actionable insights. Python and machine learning enthusiast.",
+    position: "Data Scientist",
+    specialties: ["Python", "Machine Learning", "Data Visualization", "SQL"],
+    company: "Data Analytics Corp.",
+    memberType: "expert",
+    role: "member",
+    lastActive: "2025-11-06T20:30:00Z"
+  },
+  {
+    id: 7,
+    name: "David Park",
+    nickname: "davidp",
+    email: "david.park@example.com",
+    avatar: "DP",
+    bio: "Mobile app developer creating beautiful iOS and Android applications. Swift and Kotlin are my go-to languages.",
+    position: "Mobile Developer",
+    specialties: ["iOS", "Android", "Swift", "Kotlin"],
+    company: "Mobile First Studio",
+    website: "https://davidpark.app",
+    memberType: "member",
+    role: "member",
+    lastActive: "2025-11-06T18:45:00Z"
+  },
+  {
+    id: 8,
+    name: "Rachel Green",
+    nickname: "rachelg",
+    email: "rachel.green@example.com",
+    avatar: "RG",
+    bio: "Content strategist and technical writer. Making complex technical concepts easy to understand for everyone.",
+    position: "Technical Writer",
+    specialties: ["Technical Writing", "Content Strategy", "Documentation", "SEO"],
+    company: "Content Creators Inc.",
+    memberType: "member",
+    role: "member",
+    lastActive: "2025-11-06T16:20:00Z"
+  },
+  {
+    id: 9,
+    name: "Tom Wilson",
+    nickname: "tomw",
+    email: "tom.wilson@example.com",
+    avatar: "TW",
+    bio: "Backend engineer focused on building robust APIs and microservices. Always optimizing for performance.",
+    position: "Backend Engineer",
+    specialties: ["Node.js", "Python", "PostgreSQL", "Microservices"],
+    company: "API Solutions",
+    website: "https://tomwilson.dev",
+    memberType: "expert",
+    role: "member",
+    lastActive: "2025-11-06T14:00:00Z"
+  },
+  {
+    id: 10,
+    name: "Lisa Chen",
+    nickname: "lisac",
+    email: "lisa.chen@example.com",
+    avatar: "LC",
+    bio: "Product manager bridging the gap between tech and business. Passionate about creating products people love.",
+    position: "Product Manager",
+    specialties: ["Product Strategy", "Agile", "User Research", "Roadmapping"],
+    company: "Product Labs",
+    memberType: "member",
+    role: "member",
+    lastActive: "2025-11-06T12:30:00Z"
+  }
+];
+
+export const getRecentlyActiveUsers = (limit: number = 4): User[] => {
+  return mockUsers
+    .sort((a, b) => new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime())
+    .slice(0, limit);
+};
+
+export const getAllSpecialties = (): string[] => {
+  const allSpecialties = mockUsers.flatMap(user => user.specialties);
+  return [...new Set(allSpecialties)].sort();
+};
+
 export const mockEvents: Event[] = [
   {
     id: 1,
