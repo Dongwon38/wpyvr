@@ -43,8 +43,8 @@ export default function BlogListItem({ post, index = 0 }: BlogListItemProps) {
           </h2>
         </Link>
 
-        {/* Excerpt */}
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        {/* Excerpt - Limited to 2 lines with ellipsis */}
+        <p className="line-clamp-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           {post.excerpt}
         </p>
 
@@ -52,7 +52,6 @@ export default function BlogListItem({ post, index = 0 }: BlogListItemProps) {
         <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500">
           {/* Author */}
           <div className="flex items-center gap-1.5">
-            <span className="text-sm">{post.author.avatar || "✍️"}</span>
             <span className="font-normal">{post.author.name}</span>
           </div>
 
