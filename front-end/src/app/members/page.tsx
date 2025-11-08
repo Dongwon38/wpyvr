@@ -216,25 +216,13 @@ export default function MembersPage() {
           )}
         </motion.div>
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <Loader2 size={48} className="mx-auto animate-spin text-purple-600" />
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
-                Loading members...
-              </p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Results Count */}
-            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-              Showing {filteredMembers.length} of {members.length} members
-            </div>
+        {/* Results Count */}
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Showing {filteredMembers.length} of {members.length} members
+        </div>
 
-            {/* Members Table */}
-            {filteredMembers.length > 0 ? (
+        {/* Members Table */}
+        {filteredMembers.length > 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -427,8 +415,6 @@ export default function MembersPage() {
               Clear Filters
             </button>
           </motion.div>
-        )}
-          </>
         )}
       </div>
     </div>
