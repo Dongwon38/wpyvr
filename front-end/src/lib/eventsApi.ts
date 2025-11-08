@@ -21,16 +21,25 @@ export interface EventData {
   date: string;
   acf: {
     event_date: string;
-    time: string;
-    location: string;
+    start_time: string;
+    end_time: string;
+    location_title: string;
+    location_address?: string;
     event_link?: string;
     image?: string;
   };
+  event_category?: number[];
+  event_tag?: number[];
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;
       alt_text: string;
     }>;
+    'wp:term'?: Array<Array<{
+      id: number;
+      name: string;
+      slug: string;
+    }>>;
   };
 }
 
@@ -43,18 +52,84 @@ export interface Event {
   thumbnail?: string;
   date: string;
   eventDate: string;
-  time: string;
-  location: string;
+  startTime: string;
+  endTime: string;
+  formattedTime: string; // Formatted time in Pacific Time
+  locationTitle: string;
+  locationAddress?: string;
+  googleMapsUrl?: string;
   link?: string;
   isPast: boolean;
+  categories?: string[];
+  tags?: string[];
+}
+
+/**
+ * Format time range with PST/PDT label
+ */
+function formatLocalTime(date: string, startTime: string, endTime: string): string {
+  // Parse the times (stored as local time)
+  const [startHour, startMin] = startTime.split(':').map(Number);
+  const [endHour, endMin] = endTime.split(':').map(Number);
+  
+  // Format times in 12-hour format
+  const formatTime = (hour: number, min: number) => {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour}:${min.toString().padStart(2, '0')} ${period}`;
+  };
+
+  const startFormatted = formatTime(startHour, startMin);
+  const endFormatted = formatTime(endHour, endMin);
+
+  // Determine if we're in PST or PDT (daylight saving time)
+  const eventDate = new Date(date);
+  const year = eventDate.getFullYear();
+  
+  // Daylight saving time in Pacific timezone typically:
+  // Starts: Second Sunday in March
+  // Ends: First Sunday in November
+  const dstStart = new Date(year, 2, 1); // March
+  dstStart.setDate(dstStart.getDate() + (14 - dstStart.getDay()) % 7);
+  
+  const dstEnd = new Date(year, 10, 1); // November
+  dstEnd.setDate(dstEnd.getDate() + (7 - dstEnd.getDay()) % 7);
+  
+  const isDST = eventDate >= dstStart && eventDate < dstEnd;
+  const timezone = isDST ? 'PDT' : 'PST';
+
+  return `${startFormatted} - ${endFormatted} ${timezone}`;
+}
+
+/**
+ * Generate Google Maps URL from address
+ */
+function getGoogleMapsUrl(address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
 
 /**
  * Transform WordPress API response to frontend Event format
  */
 function transformEventData(data: EventData): Event {
-  const eventDate = new Date(data.acf.event_date);
-  const isPast = eventDate < new Date();
+  const eventDate = data.acf.event_date;
+  const [startHour, startMin] = data.acf.start_time.split(':').map(Number);
+  
+  // Parse date as local time (not UTC)
+  // Split "YYYY-MM-DD" and create local date
+  const [year, month, day] = eventDate.split('-').map(Number);
+  const eventDateTime = new Date(year, month - 1, day, startHour, startMin, 0, 0);
+  
+  // Check if event is past (compare with current local time)
+  const now = new Date();
+  const isPast = eventDateTime < now;
+  
+  // Format time for display with PST/PDT
+  const formattedTime = formatLocalTime(eventDate, data.acf.start_time, data.acf.end_time);
+
+  // Extract categories and tags from embedded data
+  const categories = data._embedded?.['wp:term']?.[0]?.map(term => term.name) || [];
+  const tags = data._embedded?.['wp:term']?.[1]?.map(term => term.name) || [];
 
   return {
     id: data.id,
@@ -65,10 +140,16 @@ function transformEventData(data: EventData): Event {
     thumbnail: data.acf.image || data._embedded?.['wp:featuredmedia']?.[0]?.source_url,
     date: data.date,
     eventDate: data.acf.event_date,
-    time: data.acf.time,
-    location: data.acf.location,
+    startTime: data.acf.start_time,
+    endTime: data.acf.end_time,
+    formattedTime,
+    locationTitle: data.acf.location_title,
+    locationAddress: data.acf.location_address,
+    googleMapsUrl: data.acf.location_address ? getGoogleMapsUrl(data.acf.location_address) : undefined,
     link: data.acf.event_link,
     isPast,
+    categories,
+    tags,
   };
 }
 
@@ -126,6 +207,18 @@ export async function fetchEventBySlug(slug: string): Promise<Event | null> {
 }
 
 /**
+ * Fetch all events sorted by date (newest first)
+ */
+export async function fetchEventsSortedByDate(): Promise<Event[]> {
+  const events = await fetchEvents();
+  return events.sort((a, b) => {
+    const aDateTime = new Date(a.eventDate + 'T' + a.startTime);
+    const bDateTime = new Date(b.eventDate + 'T' + b.startTime);
+    return bDateTime.getTime() - aDateTime.getTime();
+  });
+}
+
+/**
  * Fetch upcoming events only
  */
 export async function fetchUpcomingEvents(): Promise<Event[]> {
@@ -143,4 +236,28 @@ export async function fetchPastEvents(): Promise<Event[]> {
   return events
     .filter(event => event.isPast)
     .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime());
+}
+
+/**
+ * Get all event slugs for static generation
+ */
+export async function fetchEventSlugs(): Promise<string[]> {
+  try {
+    const response = await fetch(
+      `${WORDPRESS_API_URL}/wp-json/wp/v2/events?_fields=slug&per_page=100`,
+      {
+        next: { revalidate: 3600 }, // Revalidate every hour
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data: Array<{ slug: string }> = await response.json();
+    return data.map(event => event.slug);
+  } catch (error) {
+    console.error('Error fetching event slugs:', error);
+    return [];
+  }
 }

@@ -2,19 +2,24 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Save, Plus, X, Loader2 } from "lucide-react"
+import { Save, Plus, X, Loader2, Lock, Unlock } from "lucide-react"
 import AvatarUploader from "./AvatarUploader"
+import Switch from "@/components/ui/Switch"
 import { useAuth } from "@/context/AuthContext"
-import { updateUserProfile, type SocialLink, type ProfileUpdatePayload } from "@/lib/profileApi"
+import { updateUserProfile, type SocialLink, type ProfileUpdatePayload, type PrivacySettings } from "@/lib/profileApi"
 
 interface ProfileFormProps {
   initialData?: {
     nickname: string
-    greeting: string
-    job_title: string
+    bio: string
+    position: string
+    specialties: string[]
+    company: string
     website: string
     avatar_url: string
+    member_type: 'member' | 'expert'
     social_links: SocialLink[]
+    privacy_settings: PrivacySettings
   }
 }
 
@@ -24,18 +29,59 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
+  // Default privacy settings
+  const defaultPrivacySettings: PrivacySettings = {
+    show_email: false,
+    show_position: false,
+    show_company: false,
+    show_website: false,
+    show_specialties: false,
+  }
+
   // Form state
   const [nickname, setNickname] = useState(initialData?.nickname || "")
-  const [greeting, setGreeting] = useState(initialData?.greeting || "")
-  const [jobTitle, setJobTitle] = useState(initialData?.job_title || "")
+  const [bio, setBio] = useState(initialData?.bio || "")
+  const [position, setPosition] = useState(initialData?.position || "")
+  const [specialties, setSpecialties] = useState<string[]>(initialData?.specialties || [])
+  const [company, setCompany] = useState(initialData?.company || "")
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
+  const [memberType, setMemberType] = useState<'member' | 'expert'>(initialData?.member_type || 'member')
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
     initialData?.social_links || []
   )
+  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>(() => {
+    // If initialData has privacy settings, use them
+    if (initialData?.privacy_settings) {
+      return {
+        show_email: initialData.privacy_settings.show_email ?? false,
+        show_position: initialData.privacy_settings.show_position ?? false,
+        show_company: initialData.privacy_settings.show_company ?? false,
+        show_website: initialData.privacy_settings.show_website ?? false,
+        show_specialties: initialData.privacy_settings.show_specialties ?? false,
+      }
+    }
+    // Otherwise use default (all private)
+    return defaultPrivacySettings
+  })
+
+  // Specialty input
+  const [specialtyInput, setSpecialtyInput] = useState("")
 
   // Validation
-  const isValid = nickname.trim().length > 0 && greeting.trim().length > 0
+  const isValid = nickname.trim().length > 0
+
+  const handleAddSpecialty = () => {
+    const trimmed = specialtyInput.trim()
+    if (trimmed && !specialties.includes(trimmed)) {
+      setSpecialties([...specialties, trimmed])
+      setSpecialtyInput("")
+    }
+  }
+
+  const handleRemoveSpecialty = (index: number) => {
+    setSpecialties(specialties.filter((_, i) => i !== index))
+  }
 
   const handleAddSocialLink = () => {
     setSocialLinks([...socialLinks, { type: "", url: "" }])
@@ -55,13 +101,20 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
     setSocialLinks(updated)
   }
 
+  const togglePrivacy = (key: keyof PrivacySettings) => {
+    setPrivacySettings(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!isValid) {
       setMessage({
         type: "error",
-        text: "Please fill in at least your nickname and greeting.",
+        text: "Please fill in at least your nickname.",
       })
       return
     }
@@ -83,11 +136,15 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       const payload: ProfileUpdatePayload = {
         user_id: wpUser.wp_user_id,
         nickname: nickname.trim(),
-        greeting: greeting.trim(),
-        job_title: jobTitle.trim(),
+        bio: bio.trim(),
+        position: position.trim(),
+        specialties: specialties,
+        company: company.trim(),
         website: website.trim(),
         avatar_url: avatarUrl,
+        member_type: memberType,
         social_links: validSocialLinks,
+        privacy_settings: privacySettings,
       }
 
       await updateUserProfile(payload, wpUser.jwt)
@@ -125,7 +182,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         />
       </div>
 
-      {/* Two Column Layout on Desktop */}
+      {/* Basic Info */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Nickname */}
         <div>
@@ -147,57 +204,196 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           />
         </div>
 
-        {/* Job Title */}
+        {/* Member Type */}
         <div>
           <label
-            htmlFor="jobTitle"
+            htmlFor="memberType"
             className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
           >
-            Job Title
+            Member Type
           </label>
+          <select
+            id="memberType"
+            value={memberType}
+            onChange={(e) => setMemberType(e.target.value as 'member' | 'expert')}
+            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          >
+            <option value="member">Regular Member</option>
+            <option value="expert">Expert Member</option>
+          </select>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Expert members are highlighted in the community
+          </p>
+        </div>
+      </div>
+
+      {/* Bio */}
+      <div>
+        <label
+          htmlFor="bio"
+          className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+        >
+          Bio / About Me
+        </label>
+        <textarea
+          id="bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          placeholder="Tell the community about yourself..."
+          rows={4}
+          maxLength={500}
+          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+        />
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          {bio.length}/500 characters
+        </p>
+      </div>
+
+      {/* Professional Info */}
+      <div className="space-y-6">
+        {/* Position */}
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <label
+              htmlFor="position"
+              className="text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              Position / Job Title
+            </label>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {privacySettings.show_position ? "Public" : "Private"}
+              </span>
+              <Switch
+                checked={privacySettings.show_position === true}
+                onCheckedChange={() => togglePrivacy('show_position')}
+                label="Toggle position visibility"
+              />
+            </div>
+          </div>
           <input
-            id="jobTitle"
+            id="position"
             type="text"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
             placeholder="e.g., Full-stack Developer"
+            maxLength={255}
+            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+          />
+        </div>
+
+        {/* Company */}
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <label
+              htmlFor="company"
+              className="text-sm font-semibold text-gray-900 dark:text-white"
+            >
+              Company
+            </label>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {privacySettings.show_company ? "Public" : "Private"}
+              </span>
+              <Switch
+                checked={privacySettings.show_company === true}
+                onCheckedChange={() => togglePrivacy('show_company')}
+                label="Toggle company visibility"
+              />
+            </div>
+          </div>
+          <input
+            id="company"
+            type="text"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            placeholder="e.g., Tech Innovations Inc."
             maxLength={255}
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
           />
         </div>
       </div>
 
-      {/* Greeting / Bio */}
+      {/* Specialties */}
       <div>
-        <label
-          htmlFor="greeting"
-          className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
-        >
-          Greeting / Bio <span className="text-red-500">*</span>
-        </label>
-        <textarea
-          id="greeting"
-          value={greeting}
-          onChange={(e) => setGreeting(e.target.value)}
-          placeholder="Tell the community about yourself..."
-          rows={4}
-          maxLength={255}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-          required
-        />
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          {greeting.length}/255 characters
-        </p>
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-sm font-semibold text-gray-900 dark:text-white">
+            Specialties / Skills
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {privacySettings.show_specialties ? "Public" : "Private"}
+            </span>
+            <Switch
+              checked={privacySettings.show_specialties === true}
+              onCheckedChange={() => togglePrivacy('show_specialties')}
+              label="Toggle specialties visibility"
+            />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={specialtyInput}
+            onChange={(e) => setSpecialtyInput(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                handleAddSpecialty()
+              }
+            }}
+            placeholder="e.g., React, Node.js, TypeScript"
+            maxLength={50}
+            className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+          />
+          <button
+            type="button"
+            onClick={handleAddSpecialty}
+            className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            <Plus size={16} />
+            Add
+          </button>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {specialties.map((specialty, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center gap-2 rounded-md bg-purple-100 px-3 py-1 text-sm font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+            >
+              {specialty}
+              <button
+                type="button"
+                onClick={() => handleRemoveSpecialty(index)}
+                className="hover:text-purple-900 dark:hover:text-purple-100"
+              >
+                <X size={14} />
+              </button>
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Website */}
       <div>
-        <label
-          htmlFor="website"
-          className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
-        >
-          Website
-        </label>
+        <div className="mb-2 flex items-center justify-between">
+          <label
+            htmlFor="website"
+            className="text-sm font-semibold text-gray-900 dark:text-white"
+          >
+            Website
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {privacySettings.show_website ? "Public" : "Private"}
+            </span>
+            <Switch
+              checked={privacySettings.show_website === true}
+              onCheckedChange={() => togglePrivacy('show_website')}
+              label="Toggle website visibility"
+            />
+          </div>
+        </div>
         <input
           id="website"
           type="url"
@@ -271,6 +467,34 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               No social links yet. Click "Add Link" to get started.
             </p>
           )}
+        </div>
+      </div>
+
+      {/* Privacy Info */}
+      <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
+        <div className="flex items-start gap-3">
+          <div className="rounded-full bg-purple-100 p-2 dark:bg-purple-900/50">
+            <Lock size={20} className="text-purple-600 dark:text-purple-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="mb-1 font-semibold text-purple-900 dark:text-purple-300">
+              Privacy Settings
+            </h3>
+            <p className="text-sm text-purple-800 dark:text-purple-400">
+              Use the toggle switches to control what information is visible on your public profile.
+              When switched off, fields will show "—" to other members.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2 text-xs">
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-purple-100 px-2 py-1 font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+                <Unlock size={12} />
+                Public = Visible to all
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-gray-100 px-2 py-1 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <Lock size={12} />
+                Private = Hidden (shows "—")
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 

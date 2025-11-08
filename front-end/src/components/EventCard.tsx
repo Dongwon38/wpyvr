@@ -12,10 +12,13 @@ export interface EventCardData {
   excerpt: string;
   thumbnail?: string;
   eventDate: string;
-  time: string;
-  location: string;
+  formattedTime: string;
+  locationTitle: string;
+  locationAddress?: string;
+  googleMapsUrl?: string;
   link?: string;
   isPast: boolean;
+  tags?: string[];
 }
 
 interface EventCardProps {
@@ -96,25 +99,69 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
 
         {/* Event Details */}
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+          {/* Date and Time (combined) */}
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <Calendar size={16} className="text-blue-600 dark:text-blue-400" />
-            <span>{new Date(event.eventDate).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric"
-            })}</span>
+            <span>{(() => {
+              const [year, month, day] = event.eventDate.split('-').map(Number);
+              const [hour, min] = event.startTime.split(':').map(Number);
+              const date = new Date(year, month - 1, day);
+              const currentYear = new Date().getFullYear();
+              
+              // Format weekday and date
+              const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
+              const monthName = date.toLocaleDateString("en-US", { month: "short" });
+              
+              // Format start time
+              const period = hour >= 12 ? 'PM' : 'AM';
+              const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+              const timeStr = `${displayHour}:${min.toString().padStart(2, '0')} ${period}`;
+              
+              // Show year only if different from current year
+              if (year !== currentYear) {
+                return `${weekday}, ${monthName} ${day}, ${year}, ${timeStr}`;
+              }
+              
+              return `${weekday}, ${monthName} ${day}, ${timeStr}`;
+            })()}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <Clock size={16} className="text-purple-600 dark:text-purple-400" />
-            <span>{event.time}</span>
-          </div>
-
+          {/* Location */}
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <MapPin size={16} className="text-orange-600 dark:text-orange-400" />
-            <span className="line-clamp-1">{event.location}</span>
+            {event.googleMapsUrl ? (
+              <a
+                href={event.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="line-clamp-1 text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                {event.locationTitle}
+              </a>
+            ) : (
+              <span className="line-clamp-1">{event.locationTitle}</span>
+            )}
           </div>
         </div>
+
+        {/* Tags */}
+        {event.tags && event.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {event.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+              >
+                {tag}
+              </span>
+            ))}
+            {event.tags.length > 3 && (
+              <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                +{event.tags.length - 3}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="mt-4 flex gap-2">

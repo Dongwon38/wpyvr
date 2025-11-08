@@ -8,7 +8,7 @@ import ArticleCard from "@/components/ArticleCard";
 import PostCard from "@/components/PostCard";
 import EventCard, { EventCardData } from "@/components/EventCard";
 import { mockGuides, mockPosts } from "@/lib/mockData";
-import { fetchUpcomingEvents } from "@/lib/eventsApi";
+import { fetchEventsSortedByDate } from "@/lib/eventsApi";
 import { BookOpen, Users, ArrowRight, Calendar, Sparkles } from "lucide-react";
 
 export default function Home() {
@@ -22,8 +22,8 @@ export default function Home() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        const data = await fetchUpcomingEvents();
-        setEvents(data.slice(0, 3)); // Show only 3 events on home page
+        const data = await fetchEventsSortedByDate();
+        setEvents(data.slice(0, 3)); // Show latest 3 events on home page
       } catch (error) {
         console.error('Failed to load events:', error);
       } finally {
@@ -55,7 +55,7 @@ export default function Home() {
                 </h2>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
-                Join workshops, meetups, and learning sessions
+                Latest upcoming and past events
               </p>
             </motion.div>
             <Link
@@ -82,7 +82,7 @@ export default function Home() {
             <div className="rounded-2xl bg-gray-100 p-12 text-center dark:bg-gray-700">
               <Calendar className="mx-auto mb-4 h-12 w-12 text-gray-400" />
               <p className="text-gray-600 dark:text-gray-400">
-                No upcoming events at the moment. Check back soon!
+                No events yet. Check back soon!
               </p>
             </div>
           )}
