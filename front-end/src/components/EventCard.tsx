@@ -101,11 +101,15 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <Calendar size={16} className="text-blue-600 dark:text-blue-400" />
-            <span>{new Date(event.eventDate).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric"
-            })}</span>
+            <span>{(() => {
+              const [year, month, day] = event.eventDate.split('-').map(Number);
+              const date = new Date(year, month - 1, day);
+              return date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+              });
+            })()}</span>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">

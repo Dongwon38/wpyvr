@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Users, 
@@ -11,20 +11,45 @@ import {
   Briefcase, 
   Building2, 
   Globe, 
-  Award
+  Award,
+  Loader2
 } from "lucide-react";
-import { mockUsers, getAllSpecialties, type User } from "@/lib/mockData";
+import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
 
 type SortOption = "default" | "name-asc" | "name-desc";
 type FilterMemberType = "all" | "member" | "expert";
 
 export default function MembersPage() {
+  const [members, setMembers] = useState<UserProfile[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("default");
   const [filterMemberType, setFilterMemberType] = useState<FilterMemberType>("all");
   const [filterSpecialty, setFilterSpecialty] = useState<string>("all");
 
-  const allSpecialties = useMemo(() => getAllSpecialties(), []);
+  useEffect(() => {
+    async function loadMembers() {
+      try {
+        const data = await fetchAllMembers();
+        setMembers(data);
+      } catch (error) {
+        console.error('Failed to load members:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadMembers();
+  }, []);
+
+  const allSpecialties = useMemo(() => {
+    const specialtiesSet = new Set<string>();
+    members.forEach(member => {
+      if (member.specialties) {
+        member.specialties.forEach(specialty => specialtiesSet.add(specialty));
+      }
+    });
+    return Array.from(specialtiesSet).sort();
+  }, [members]);
 
   // Filter and sort members
   const filteredMembers = useMemo(() => {
@@ -78,6 +103,19 @@ export default function MembersPage() {
 
     return filtered;
   }, [members, searchQuery, sortBy, filterMemberType, filterSpecialty]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 dark:bg-gray-950">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-12 w-12 animate-spin text-purple-600" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 dark:bg-gray-950">

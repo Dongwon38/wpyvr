@@ -115,9 +115,10 @@ function transformEventData(data: EventData): Event {
   const eventDate = data.acf.event_date;
   const [startHour, startMin] = data.acf.start_time.split(':').map(Number);
   
-  // Create date object with event date and start time (local time)
-  const eventDateTime = new Date(eventDate);
-  eventDateTime.setHours(startHour, startMin, 0, 0);
+  // Parse date as local time (not UTC)
+  // Split "YYYY-MM-DD" and create local date
+  const [year, month, day] = eventDate.split('-').map(Number);
+  const eventDateTime = new Date(year, month - 1, day, startHour, startMin, 0, 0);
   
   // Check if event is past (compare with current local time)
   const now = new Date();
