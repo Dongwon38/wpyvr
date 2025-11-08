@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, LogIn, LogOut, User as UserIcon, Settings, ExternalLink } from "lucide-react";
+import { X, LogIn, LogOut, User as UserIcon, Settings, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/features/auth/AuthForm";
@@ -16,26 +16,6 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const router = useRouter();
   const { user, wpUser, userProfile, logout, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  
-  // Community links
-  const communityLinks = [
-    {
-      id: 1,
-      name: "Discord Community",
-      description: "Join our Discord server",
-      url: "https://discord.gg/4E2Awg9m2M",
-      icon: "💬",
-      color: "from-indigo-500 to-blue-500"
-    },
-    {
-      id: 2,
-      name: "Meetup Group",
-      description: "RSVP to our events",
-      url: "https://www.meetup.com/vancouver-wordpress-meetup-group/",
-      icon: "📅",
-      color: "from-red-500 to-pink-500"
-    },
-  ];
 
   const handleLogout = async () => {
     try {
@@ -174,62 +154,22 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             </>
           )}
 
-          {/* Community Links Section */}
-          <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-800">
-            <div className="mb-4">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                Join Our Community
-              </h3>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Connect with us on these platforms
-              </p>
+          {/* Need Help Section */}
+          <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
+            <div className="mb-3 flex items-center gap-2">
+              <HelpCircle size={20} />
+              <h3 className="text-lg font-bold">Need Help?</h3>
             </div>
-            
-            <div className="space-y-3">
-              {communityLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block rounded-xl bg-gradient-to-br p-4 transition-all hover:shadow-lg"
-                  style={{
-                    backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))`,
-                  }}
-                >
-                  <div className={`rounded-xl bg-gradient-to-br ${link.color} p-4 transition-transform group-hover:scale-105`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-3xl">{link.icon}</span>
-                        <div>
-                          <h4 className="font-bold text-white">
-                            {link.name}
-                          </h4>
-                          <p className="text-sm text-white/90">
-                            {link.description}
-                          </p>
-                        </div>
-                      </div>
-                      <ExternalLink 
-                        size={20} 
-                        className="flex-shrink-0 text-white/80 transition-transform group-hover:translate-x-1" 
-                      />
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-
-            {/* View Members Button */}
-            <button 
-              onClick={() => {
-                router.push("/members");
-                onClose();
-              }}
-              className="mt-4 w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-blue-700 hover:shadow-lg"
-            >
-              View Community Members
+            <p className="mb-4 text-sm opacity-90">
+              Get instant support from our community moderators and experts.
+            </p>
+            <button className="w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-orange-600 transition-all hover:bg-gray-100">
+              Get Support
             </button>
+            <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs">
+              <span className="opacity-75">Available 24/7</span>
+              <span className="font-semibold">⚡ Fast Response</span>
+            </div>
           </div>
         </div>
       </aside>

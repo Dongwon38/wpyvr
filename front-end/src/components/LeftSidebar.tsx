@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Users, X, FileText, Calendar, HelpCircle, UsersRound } from "lucide-react";
+import { Home, BookOpen, Users, X, FileText, Calendar, UsersRound, MessageCircle, CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LeftSidebarProps {
@@ -89,23 +89,53 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
             })}
           </nav>
 
-          {/* Bottom Section - Need Help */}
+          {/* Bottom Section - Community Links */}
           <div className="border-t border-gray-200 p-4 dark:border-gray-800">
-            <div className="rounded-lg bg-gradient-to-br from-orange-500 to-pink-500 p-4 text-white shadow-md">
-              <div className="mb-3 flex items-center gap-2">
-                <HelpCircle size={18} />
-                <h4 className="text-sm font-bold">Need Help?</h4>
-              </div>
-              <p className="mb-3 text-xs opacity-90">
-                Get instant support from our community moderators and experts.
-              </p>
-              <button className="w-full rounded-lg bg-white px-4 py-2 text-xs font-semibold text-orange-600 transition-all hover:bg-gray-100">
-                Get Support
-              </button>
-              <div className="mt-3 flex items-center justify-between border-t border-white/20 pt-3 text-xs">
-                <span className="opacity-75">Available 24/7</span>
-                <span className="font-semibold">⚡ Fast Response</span>
-              </div>
+            <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              Community
+            </h4>
+            <div className="space-y-2">
+              {/* Discord Link */}
+              <a
+                href="https://discord.gg/4E2Awg9m2M"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 p-3 text-white transition-all hover:shadow-lg hover:scale-[1.02]"
+              >
+                <img 
+                  src="/wpyvr-logo-cropped.png" 
+                  alt="Logo" 
+                  className="h-8 w-8 rounded-lg bg-white p-1"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle size={14} />
+                    <span className="text-sm font-semibold">Discord</span>
+                  </div>
+                  <p className="text-xs opacity-90">Quick chat</p>
+                </div>
+              </a>
+
+              {/* Meetup Link */}
+              <a
+                href="https://www.meetup.com/vancouver-wordpress-meetup-group/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 p-3 text-white transition-all hover:shadow-lg hover:scale-[1.02]"
+              >
+                <img 
+                  src="/wpyvr-logo-cropped.png" 
+                  alt="Logo" 
+                  className="h-8 w-8 rounded-lg bg-white p-1"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <CalendarDays size={14} />
+                    <span className="text-sm font-semibold">Meetup</span>
+                  </div>
+                  <p className="text-xs opacity-90">Events</p>
+                </div>
+              </a>
             </div>
           </div>
         </div>
