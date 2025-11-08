@@ -99,24 +99,24 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                   )}
 
                   {/* Action Buttons */}
-                  <div className="flex gap-2">
-                      <button 
-                      onClick={() => {
-                        router.push("/profile");
-                        onClose();
-                      }}
-                        className="flex-[2] rounded-lg bg-white px-3 py-2 text-xs font-bold text-green-600 transition-all hover:bg-gray-100 flex items-center justify-center gap-1.5"
-                    >
-                      <Settings size={14} />
-                      Manage Info
-                    </button>
-                      <button 
-                      onClick={handleLogout}
-                        className="flex-1 rounded-lg border border-white/30 px-3 py-2 text-xs font-medium text-white transition-all hover:bg-white/10 flex items-center justify-center gap-1.5"
-                    >
-                      <LogOut size={14} />
-                      Sign Out
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          router.push("/profile");
+                          onClose();
+                        }}
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-green-600 transition-all hover:bg-gray-100"
+                      >
+                        <Settings size={14} />
+                        Manage Info
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/30 px-3 py-2 text-xs font-medium text-white transition-all hover:bg-white/10"
+                      >
+                        <LogOut size={14} />
+                        Sign Out
+                      </button>
                   </div>
                 </div>
               ) : (
