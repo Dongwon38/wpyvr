@@ -120,10 +120,12 @@ function custom_profile_get(WP_REST_Request $request) {
     global $wpdb;
 
     $requested_user_id = intval($request->get_param('user_id'));
+    error_log("📡 [GET Profile] Fetching profile for user_id: $requested_user_id");
 
     // Check if WP user exists
     $user_data = get_userdata($requested_user_id);
     if (!$user_data) {
+        error_log("❌ [GET Profile] WordPress user not found: $requested_user_id");
         return new WP_Error('user_not_found', 'User not found', ['status' => 404]);
     }
 
@@ -135,8 +137,11 @@ function custom_profile_get(WP_REST_Request $request) {
     );
 
     if (!$profile) {
+        error_log("❌ [GET Profile] Profile not found in database for user_id: $requested_user_id");
         return new WP_Error('profile_not_found', 'Profile not found', ['status' => 404]);
     }
+    
+    error_log("✅ [GET Profile] Profile found. Avatar URL: " . ($profile['avatar_url'] ?: 'NULL'));
 
     // Parse JSON fields
     $profile['specialties'] = !empty($profile['specialties']) 
@@ -160,6 +165,8 @@ function custom_profile_get(WP_REST_Request $request) {
     
     // Convert user_id to integer
     $profile['user_id'] = intval($profile['user_id']);
+    
+    error_log("📤 [GET Profile] Returning profile with avatar_url: " . ($profile['avatar_url'] ?: 'NULL'));
 
     return new WP_REST_Response($profile, 200);
 }
@@ -175,6 +182,7 @@ function custom_profile_update(WP_REST_Request $request) {
     $authenticated_user_id = verify_jwt_token($auth_header);
 
     if (!$authenticated_user_id) {
+        error_log("❌ [UPDATE Profile] Unauthorized access attempt");
         return new WP_Error('unauthorized', 'Invalid or missing authentication token', ['status' => 401]);
     }
 
@@ -185,12 +193,22 @@ function custom_profile_update(WP_REST_Request $request) {
     $position = sanitize_text_field($request->get_param('position'));
     $specialties = $request->get_param('specialties') ?? [];
     $company = sanitize_text_field($request->get_param('company'));
-    $website = sanitize_text_field($request->get_param('website'));
-    $avatar_url = sanitize_text_field($request->get_param('avatar_url'));
+    // Use esc_url_raw() for URLs to preserve encoding
+    $website = !empty($request->get_param('website')) 
+        ? esc_url_raw($request->get_param('website')) 
+        : '';
+    // Use esc_url_raw() for URLs to preserve encoding (e.g., %2F in Firebase URLs)
+    $avatar_url = !empty($request->get_param('avatar_url')) 
+        ? esc_url_raw($request->get_param('avatar_url')) 
+        : '';
     $profile_visibility = sanitize_text_field($request->get_param('profile_visibility')) ?: 'private';
     $custom_email = sanitize_email($request->get_param('custom_email'));
     $social_links = $request->get_param('social_links') ?? [];
     $privacy_settings = $request->get_param('privacy_settings') ?? [];
+    
+    error_log("📥 [UPDATE Profile] Received update request for user_id: $user_id");
+    error_log("🖼️ [UPDATE Profile] Avatar URL received: " . ($avatar_url ?: 'EMPTY'));
+    error_log("🔍 [UPDATE Profile] Avatar URL length: " . strlen($avatar_url));
 
     // Users can only update their own profile
     if ($authenticated_user_id !== $user_id) {
@@ -224,11 +242,11 @@ function custom_profile_update(WP_REST_Request $request) {
         }
     }
 
-    // Sanitize social links
+    // Sanitize social links - use esc_url_raw() for URLs
     $sanitized_social_links = [];
     if (is_array($social_links)) {
         foreach ($social_links as $link) {
-            if (isset($link['type']) && isset($link['url'])) {
+            if (isset($link['type']) && isset($link['url']) && !empty($link['url'])) {
                 $sanitized_social_links[] = [
                     'type' => sanitize_text_field($link['type']),
                     'url' => esc_url_raw($link['url'])
@@ -283,6 +301,8 @@ function custom_profile_update(WP_REST_Request $request) {
 
     if ($existing) {
         // Update existing profile
+        error_log("🔄 [UPDATE Profile] Updating existing profile for user $user_id with avatar_url: " . ($avatar_url ?: 'NULL'));
+        
         $result = $wpdb->update(
             $table_name,
             $data,
@@ -292,24 +312,33 @@ function custom_profile_update(WP_REST_Request $request) {
         );
 
         if ($result === false) {
-            error_log("❌ Failed to update profile for user $user_id: " . $wpdb->last_error);
+            error_log("❌ [UPDATE Profile] Failed to update profile for user $user_id: " . $wpdb->last_error);
             return new WP_Error('update_failed', 'Failed to update profile', ['status' => 500]);
         }
 
-        error_log("✅ Updated profile for user $user_id");
+        error_log("✅ [UPDATE Profile] Successfully updated profile for user $user_id. Rows affected: " . $result);
+        
+        // Verify the update
+        $updated_profile = $wpdb->get_row(
+            $wpdb->prepare("SELECT avatar_url FROM $table_name WHERE user_id = %d", $user_id),
+            ARRAY_A
+        );
+        error_log("🔍 [UPDATE Profile] Verification - Avatar URL in DB: " . ($updated_profile['avatar_url'] ?: 'NULL'));
     } else {
         // Insert new profile
+        error_log("➕ [UPDATE Profile] Creating new profile for user $user_id with avatar_url: " . ($avatar_url ?: 'NULL'));
+        
         $data['created_at'] = $current_time;
         $format[] = '%s';
         
         $result = $wpdb->insert($table_name, $data, $format);
 
         if ($result === false) {
-            error_log("❌ Failed to create profile for user $user_id: " . $wpdb->last_error);
+            error_log("❌ [UPDATE Profile] Failed to create profile for user $user_id: " . $wpdb->last_error);
             return new WP_Error('create_failed', 'Failed to create profile', ['status' => 500]);
         }
 
-        error_log("✅ Created new profile for user $user_id");
+        error_log("✅ [UPDATE Profile] Successfully created new profile for user $user_id");
     }
 
     // Also update WordPress display_name if nickname is different

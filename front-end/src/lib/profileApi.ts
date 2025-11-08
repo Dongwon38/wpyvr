@@ -62,6 +62,7 @@ export async function fetchUserProfile(
   token: string
 ): Promise<UserProfile | null> {
   try {
+    console.log("📡 Fetching profile for user ID:", userId)
     const response = await fetch(`${PROFILE_API_URL}/get?user_id=${userId}`, {
       method: "GET",
       headers: {
@@ -72,6 +73,7 @@ export async function fetchUserProfile(
 
     if (!response.ok) {
       if (response.status === 404) {
+        console.log("⚠️ Profile not found for user", userId)
         // Profile doesn't exist yet, return null
         return null
       }
@@ -80,6 +82,12 @@ export async function fetchUserProfile(
     }
 
     const data = await response.json()
+    console.log("✅ Profile fetched successfully:", {
+      user_id: data.user_id,
+      nickname: data.nickname,
+      avatar_url: data.avatar_url,
+      has_avatar: !!data.avatar_url
+    })
     return data
   } catch (error) {
     console.error("❌ Error fetching user profile:", error)
@@ -95,6 +103,12 @@ export async function updateUserProfile(
   token: string
 ): Promise<UserProfile> {
   try {
+    console.log("📤 Updating profile:", {
+      user_id: payload.user_id,
+      nickname: payload.nickname,
+      avatar_url: payload.avatar_url,
+      has_avatar: !!payload.avatar_url
+    })
     const response = await fetch(`${PROFILE_API_URL}/update`, {
       method: "POST",
       headers: {
@@ -106,10 +120,16 @@ export async function updateUserProfile(
 
     if (!response.ok) {
       const error = await response.json()
+      console.error("❌ Update failed:", error)
       throw new Error(error.message || "Failed to update profile")
     }
 
     const data = await response.json()
+    console.log("✅ Profile updated successfully:", {
+      user_id: data.user_id,
+      avatar_url: data.data?.avatar_url,
+      response: data
+    })
     return data
   } catch (error) {
     console.error("❌ Error updating user profile:", error)

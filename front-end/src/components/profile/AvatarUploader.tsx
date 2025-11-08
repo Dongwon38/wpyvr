@@ -20,17 +20,21 @@ export default function AvatarUploader({
   const [previewUrl, setPreviewUrl] = useState(currentAvatarUrl || "")
   const [imageError, setImageError] = useState(false)
 
-  // Log current avatar URL on mount/update
+  // Sync previewUrl with currentAvatarUrl whenever it changes
   useEffect(() => {
+    console.log("🖼️ AvatarUploader - currentAvatarUrl changed:", currentAvatarUrl)
     if (currentAvatarUrl) {
-      console.log("🖼️ Current Avatar URL:", currentAvatarUrl)
       console.log("🔍 URL validation:", {
         hasProtocol: currentAvatarUrl.startsWith('http'),
         includesFirebase: currentAvatarUrl.includes('firebasestorage'),
         includesSlashEncoding: currentAvatarUrl.includes('%2F'),
         length: currentAvatarUrl.length
       })
+      setPreviewUrl(currentAvatarUrl)
       setImageError(false)
+    } else {
+      console.log("⚠️ No avatar URL provided")
+      setPreviewUrl("")
     }
   }, [currentAvatarUrl])
   const fileInputRef = useRef<HTMLInputElement>(null)

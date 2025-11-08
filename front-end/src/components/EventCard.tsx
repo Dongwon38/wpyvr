@@ -12,6 +12,7 @@ export interface EventCardData {
   excerpt: string;
   thumbnail?: string;
   eventDate: string;
+  startTime: string;
   formattedTime: string;
   locationTitle: string;
   locationAddress?: string;
@@ -54,7 +55,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       </div>
 
       {/* Event Image */}
-      <Link href={`/events/${event.slug}`} className="block">
+      <Link href={`/events/${event.slug}`} className="block relative">
         <div
           className={cn(
             "relative h-48 overflow-hidden bg-gradient-to-br",
@@ -81,21 +82,20 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
             </div>
           )}
         </div>
+        {/* Hover Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <span className="text-lg font-semibold text-white">View Details</span>
+        </div>
       </Link>
 
       {/* Content */}
       <div className="p-6">
         {/* Title */}
         <Link href={`/events/${event.slug}`} className="group/title">
-          <h3 className="mb-3 text-xl font-bold text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+          <h3 className="mb-3 text-lg font-bold text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
             {event.title}
           </h3>
         </Link>
-
-        {/* Description */}
-        <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
-          {event.excerpt}
-        </p>
 
         {/* Event Details */}
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
@@ -142,47 +142,6 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
               <span className="line-clamp-1">{event.locationTitle}</span>
             )}
           </div>
-        </div>
-
-        {/* Tags */}
-        {event.tags && event.tags.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {event.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300"
-              >
-                {tag}
-              </span>
-            ))}
-            {event.tags.length > 3 && (
-              <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400">
-                +{event.tags.length - 3}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="mt-4 flex gap-2">
-          <Link
-            href={`/events/${event.slug}`}
-            className="flex-1 rounded-lg border-2 border-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-blue-600 transition-all hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
-          >
-            {isPast ? "View Details" : "Learn More"}
-          </Link>
-          
-          {!isPast && event.link && (
-            <a
-              href={event.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-lg"
-            >
-              Register
-              <ExternalLink size={14} />
-            </a>
-          )}
         </div>
       </div>
     </motion.div>
