@@ -212,23 +212,23 @@ export default function MembersPage() {
                 Clear All
               </button>
             </div>
-          )}
-        </motion.div>
+            )}
+          </motion.div>
 
-        {/* Results Count */}
-        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-          Showing {filteredMembers.length} of {members.length} members
-        </div>
+          {/* Results Count */}
+          <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredMembers.length} of {members.length} members
+          </div>
 
-        {/* Members Table */}
-        {filteredMembers.length > 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="overflow-hidden rounded-2xl bg-white shadow-md dark:bg-gray-800"
-          >
-            <div className="overflow-x-auto">
+          {/* Members Table */}
+          {filteredMembers.length > 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="relative rounded-2xl bg-white shadow-md dark:bg-gray-800"
+            >
+              <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900">
                   <tr>
@@ -246,80 +246,100 @@ export default function MembersPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {filteredMembers.map((member, index) => (
-                    <motion.tr
-                      key={member.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.03 }}
-                      className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                    >
-                      {/* Member Info */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          {/* Avatar */}
-                          <div className="relative h-14 w-14 flex-shrink-0">
-                            {member.avatar_url ? (
-                              <>
-                                <img
-                                  src={member.avatar_url}
-                                  alt={member.nickname}
-                                  className="h-14 w-14 rounded-full object-cover"
-                                  onError={(e) => {
-                                    console.error(`❌ Avatar failed to load for ${member.nickname}:`, member.avatar_url)
-                                    // Hide the broken image and show placeholder
-                                    e.currentTarget.style.display = 'none'
-                                    const placeholder = e.currentTarget.nextElementSibling as HTMLElement
-                                    if (placeholder) placeholder.style.display = 'flex'
-                                  }}
-                                  onLoad={() => {
-                                    console.log(`✅ Avatar loaded for ${member.nickname}`)
-                                  }}
-                                />
-                                <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
-                                  {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {filteredMembers.map((member, index) => {
+                      const trimmedBio =
+                        typeof member.bio === "string" ? member.bio.trim() : "";
+                      const hasBio = trimmedBio.length > 0;
+
+                      return (
+                        <motion.tr
+                          key={member.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.03 }}
+                          className="group transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                        >
+                          {/* Member Info */}
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-4">
+                              {/* Avatar & Bio Tooltip */}
+                              <div className="relative flex-shrink-0">
+                                {hasBio && (
+                                  <div className="pointer-events-none absolute top-1/2 right-full z-20 mr-4 flex -translate-y-1/2 scale-95 opacity-0 transition-all duration-200 ease-out group-hover:scale-100 group-hover:opacity-100 group-focus-within:scale-100 group-focus-within:opacity-100">
+                                    <div className="relative max-w-xs space-y-2 rounded-2xl bg-white/95 p-4 text-sm leading-5 text-gray-700 shadow-xl ring-1 ring-black/5 backdrop-blur-sm dark:bg-gray-900/95 dark:text-gray-200 md:max-w-sm">
+                                      <span className="text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-300">
+                                        Bio
+                                      </span>
+                                      <p className="max-h-48 overflow-y-auto pr-1 text-sm text-gray-600 dark:text-gray-200">
+                                        {trimmedBio}
+                                      </p>
+                                      <div className="pointer-events-none absolute -right-3 top-1/2 h-5 w-5 -translate-y-1/2 rotate-45 rounded-sm bg-white/95 ring-1 ring-black/5 dark:bg-gray-900/95" />
+                                    </div>
+                                  </div>
+                                )}
+                                <div className="relative h-14 w-14">
+                                  {member.avatar_url ? (
+                                    <>
+                                      <img
+                                        src={member.avatar_url}
+                                        alt={member.nickname}
+                                        className="h-14 w-14 rounded-full object-cover"
+                                        onError={(e) => {
+                                          console.error(`❌ Avatar failed to load for ${member.nickname}:`, member.avatar_url)
+                                          // Hide the broken image and show placeholder
+                                          e.currentTarget.style.display = 'none'
+                                          const placeholder = e.currentTarget.nextElementSibling as HTMLElement
+                                          if (placeholder) placeholder.style.display = 'flex'
+                                        }}
+                                        onLoad={() => {
+                                          console.log(`✅ Avatar loaded for ${member.nickname}`)
+                                        }}
+                                      />
+                                      <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                                        {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
+                                      {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
+                                    </div>
+                                  )}
                                 </div>
-                              </>
-                            ) : (
-                              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-base font-bold text-white">
-                                {member.nickname?.substring(0, 2).toUpperCase() || 'UN'}
                               </div>
-                            )}
-                          </div>
-                          
-                          {/* Member Details - Name centered vertically with avatar */}
-                          <div className="flex items-center gap-2">
-                            {/* Staff Badge - only for staff */}
-                            {(member.role === "administrator" || member.role === "staff") && (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
-                                <Award size={10} />
-                                Staff
-                              </span>
-                            )}
-                            
-                            {/* Name */}
-                            <span className="font-semibold text-gray-900 dark:text-white">
-                              {member.nickname}
-                            </span>
-                            
-                            {/* Email Icon Button - show custom email if available, otherwise user_email */}
-                            {(member.custom_email || member.user_email) && (
-                              <a
-                                href={`mailto:${member.custom_email || member.user_email}`}
-                                title={member.custom_email || member.user_email}
-                                className="group relative inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
-                              >
-                                <Mail size={13} />
-                                {/* Tooltip */}
-                                <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
-                                  {member.custom_email || member.user_email}
+                              
+                              {/* Member Details - Name centered vertically with avatar */}
+                              <div className="flex items-center gap-2">
+                                {/* Staff Badge - only for staff */}
+                                {(member.role === "administrator" || member.role === "staff") && (
+                                  <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
+                                    <Award size={10} />
+                                    Staff
+                                  </span>
+                                )}
+                                
+                                {/* Name */}
+                                <span className="font-semibold text-gray-900 dark:text-white">
+                                  {member.nickname}
                                 </span>
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      </td>
+                                
+                                {/* Email Icon Button - show custom email if available, otherwise user_email */}
+                                {(member.custom_email || member.user_email) && (
+                                  <a
+                                    href={`mailto:${member.custom_email || member.user_email}`}
+                                    title={member.custom_email || member.user_email}
+                                    className="group relative inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-gray-600 transition-all hover:bg-purple-100 hover:text-purple-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400"
+                                  >
+                                    <Mail size={13} />
+                                    {/* Tooltip */}
+                                    <span className="pointer-events-none absolute -top-10 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700">
+                                      {member.custom_email || member.user_email}
+                                    </span>
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </td>
 
                       {/* Specialties */}
                       <td className="px-6 py-4">
@@ -393,8 +413,9 @@ export default function MembersPage() {
                           )}
                         </div>
                       </td>
-                    </motion.tr>
-                  ))}
+                        </motion.tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
