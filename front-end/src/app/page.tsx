@@ -326,8 +326,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        {/* Contact Form Section */}
+        <section id="contact" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
