@@ -51,37 +51,31 @@ const heroSlides: HeroSlide[] = [
 
 const backgroundVariants = {
   enter: (direction: number) => ({
-    opacity: 0,
-    scale: 1.05,
-    x: direction > 0 ? 40 : -40
+    x: direction > 0 ? "100%" : "-100%",
+    opacity: 1
   }),
   center: {
-    opacity: 1,
-    scale: 1,
-    x: 0
+    x: 0,
+    opacity: 1
   },
   exit: (direction: number) => ({
-    opacity: 0,
-    scale: 1,
-    x: direction > 0 ? -40 : 40
+    x: direction > 0 ? "-100%" : "100%",
+    opacity: 1
   })
 };
 
 const contentVariants = {
-  enter: (direction: number) => ({
+  enter: () => ({
     opacity: 0,
-    y: 24,
-    x: direction > 0 ? 24 : -24
+    y: 30
   }),
   center: {
     opacity: 1,
-    y: 0,
-    x: 0
+    y: 0
   },
-  exit: (direction: number) => ({
+  exit: () => ({
     opacity: 0,
-    y: -12,
-    x: direction > 0 ? -24 : 24
+    y: -20
   })
 };
 
@@ -127,8 +121,8 @@ export default function HeroSection() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="absolute inset-0"
+            transition={{ duration: 0.65, ease: [0.45, 0.05, 0.2, 1] }}
+            className="absolute inset-0 will-change-transform"
           >
             <Image
               src={slide.imageSrc}
