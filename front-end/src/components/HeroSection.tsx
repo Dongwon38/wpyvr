@@ -155,7 +155,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="max-w-3xl text-white"
           >
-            <h1 className="text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="text-[2rem] font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
               {slide.title}
             </h1>
             <p className="mt-4 hidden max-w-2xl text-base leading-relaxed text-white/85 md:block md:text-lg lg:text-xl">
@@ -179,16 +179,16 @@ export default function HeroSection() {
         </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-6 right-6 z-20 flex items-center gap-3">
+      <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10 sm:gap-3">
         <button
           onClick={prevSlide}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
           aria-label="Previous slide"
         >
           <ChevronLeft size={22} />
         </button>
 
-        <div className="flex items-center gap-2 rounded-full bg-white/85 px-4 py-2 text-sm font-medium text-gray-900 shadow-lg backdrop-blur">
+        <div className="flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 text-xs font-medium text-gray-900 shadow-lg backdrop-blur sm:px-4 sm:py-2 sm:text-sm">
           <span>{currentSlide + 1}</span>
           <span className="text-gray-400">/</span>
           <span>{totalSlides}</span>
@@ -210,7 +210,7 @@ export default function HeroSection() {
 
         <button
           onClick={nextSlide}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
           aria-label="Next slide"
         >
           <ChevronRight size={22} />
