@@ -35,8 +35,8 @@ export default function Home() {
   const [blogLoading, setBlogLoading] = useState(true);
   
   // Get trending posts and recent posts
-  const trendingPosts = [...mockPosts].sort((a, b) => b.upvotes - a.upvotes);
-  const recentPosts = [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const trendingPosts = [...mockPosts].sort((a, b) => b.upvotes - a.upvotes);
+    const recentPosts = [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
   useEffect(() => {
     async function loadEvents() {
@@ -80,12 +80,12 @@ export default function Home() {
     return (
       <div className="min-h-screen overflow-x-hidden bg-gray-50 dark:bg-gray-950">
       {/* Hero Section */}
-      <HeroSection />
+        <HeroSection />
 
       {/* Events Section */}
-      <section className="px-4 py-12 sm:px-6 lg:px-8">
+        <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -143,7 +143,7 @@ export default function Home() {
       </section>
 
       {/* Community Highlights Section */}
-      <section className="px-4 py-12 sm:px-6 lg:px-8">
+        <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -183,9 +183,9 @@ export default function Home() {
       </section>
 
       {/* Latest Blog Posts Section */}
-      <section className="px-4 py-12 sm:px-6 lg:px-8">
+        <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -243,7 +243,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="px-4 py-12 sm:px-6 lg:px-8">
+        <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -301,7 +301,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 px-4 py-20 sm:px-6 lg:px-8">
+        <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -327,7 +327,7 @@ export default function Home() {
       </section>
 
         {/* Contact Form Section */}
-        <section id="contact" className="px-4 py-16 sm:px-6 lg:px-8">
+          <section id="contact" className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -341,9 +341,9 @@ export default function Home() {
                 Contact Us
               </h2>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
-              Have a question or suggestion? We'd love to hear from you.
-            </p>
+              <p className="mx-auto max-w-2xl text-sm text-gray-600 dark:text-gray-400">
+                Reach our volunteer organizers if you’d like a referral to a local freelancer, need quick WordPress guidance, or just have a question about the community. We typically respond within 24 hours.
+              </p>
           </motion.div>
           
           <motion.div

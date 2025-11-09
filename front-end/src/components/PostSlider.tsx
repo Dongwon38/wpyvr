@@ -18,6 +18,7 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
   const [startX, setStartX] = useState(0);
   const [currentTranslate, setCurrentTranslate] = useState(0);
   const [prevTranslate, setPrevTranslate] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -108,11 +109,65 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth < 640);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
     const cardWidth = getCardWidth();
     const targetTranslate = -currentIndex * cardWidth;
     setCurrentTranslate(targetTranslate);
     setPrevTranslate(targetTranslate);
-  }, [currentIndex]);
+  }, [currentIndex, isMobile]);
+
+  if (isMobile) {
+    const mobilePosts = slidePosts.slice(0, 3);
+
+    return (
+      <div className="space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            {icon}
+            <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {title}
+            </h3>
+          </div>
+          <Link
+            href="/community"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            View All
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        <div className="space-y-4">
+          {mobilePosts.map((post, index) => (
+            <PostListItem key={post.slug} post={post} index={index} />
+          ))}
+        </div>
+
+        <Link
+          href="/community"
+          className="group flex items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+        >
+          Browse More Posts
+          <ArrowRight
+            size={16}
+            className="transition-transform group-hover:translate-x-1"
+          />
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">

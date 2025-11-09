@@ -11,12 +11,11 @@ import {
   HelpCircle,
   UsersRound,
   ArrowRight,
-  MessageCircle,
-  CalendarDays,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/features/auth/AuthForm";
+import StayConnectedCard from "./StayConnectedCard";
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -116,15 +115,6 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                     </div>
                   </div>
 
-                  {/* Profile Bio (optional) */}
-                  {userProfile?.bio && (
-                    <div className="mb-3 rounded-lg bg-white/10 p-2.5">
-                      <p className="text-xs opacity-95 italic line-clamp-2">
-                        "{userProfile.bio}"
-                      </p>
-                    </div>
-                  )}
-
                   {/* Action Buttons */}
                     <div className="flex gap-2">
                       <button
@@ -193,70 +183,25 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               </button>
             </div>
 
-            {/* Community Links Section */}
-            <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-900 dark:shadow-lg lg:hidden">
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Stay Connected
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Join our channels to keep up with announcements and events.
-                </p>
-              </div>
-              <div className="space-y-3">
-                <a
-                  href="https://discord.gg/4E2Awg9m2M"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 p-4 text-white transition-all hover:scale-[1.02] hover:shadow-lg"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                    <MessageCircle size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold tracking-tight">Discord</p>
-                    <p className="text-xs opacity-90">Join the conversation</p>
-                  </div>
-                  <ArrowRight size={16} />
-                </a>
-                <a
-                  href="https://www.meetup.com/vancouver-wordpress-meetup-group/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 p-4 text-white transition-all hover:scale-[1.02] hover:shadow-lg"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                    <CalendarDays size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold tracking-tight">Meetup</p>
-                    <p className="text-xs opacity-90">RSVP for events</p>
-                  </div>
-                  <ArrowRight size={16} />
-                </a>
-              </div>
-            </div>
+              {/* Community Links Section */}
+              <StayConnectedCard className="lg:hidden" />
 
-            {/* Need Help Section */}
-            <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
-              <div className="mb-3 flex items-center gap-2">
-                <HelpCircle size={20} />
-                <h3 className="text-lg font-black tracking-tight">Need Help?</h3>
+              {/* Need Help Section */}
+              <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
+                <div className="mb-3 flex items-center gap-2">
+                  <HelpCircle size={20} />
+                  <h3 className="text-lg font-black tracking-tight">Need a Hand?</h3>
+                </div>
+                <p className="mb-4 text-sm font-light opacity-90">
+                  Send a note to our volunteer organizers for quick WordPress tips, freelancer leads, or community questions. We typically reply within 24 hours.
+                </p>
+                <button
+                  onClick={handleSupportClick}
+                  className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100"
+                >
+                  Ask the Team
+                </button>
               </div>
-              <p className="mb-4 text-sm font-light opacity-90">
-                Get instant support from our community moderators and experts.
-              </p>
-              <button
-                onClick={handleSupportClick}
-                className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100"
-              >
-                Get Support
-              </button>
-              <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs">
-                <span className="opacity-75">Available 24/7</span>
-                <span className="font-medium">⚡ Fast Response</span>
-              </div>
-            </div>
         </div>
       </aside>
 
