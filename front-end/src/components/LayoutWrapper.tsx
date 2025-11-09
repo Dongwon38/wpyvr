@@ -82,10 +82,11 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
               const Icon = item.icon;
               const isActive =
                 item.key === "more"
-                  ? rightSidebarOpen
-                  : item.href
-                  ? isLinkActive(item.href)
-                  : false;
+                  ? rightSidebarOpen : item.key === "home"
+                  ? isLinkActive("/") : item.key === "events"
+                  ? isLinkActive("/events") : item.key === "blog"
+                  ? isLinkActive("/blog") : item.key === "community"
+                  ? isLinkActive("/community") : false;
 
               return (
                 <li key={item.key} className="flex-1">
@@ -109,8 +110,14 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
                     <button
                       type="button"
                       onClick={() => {
-                        if (item.href && !isLinkActive(item.href)) {
-                          router.push(item.href);
+                        if (item.key === "home" && !isLinkActive("/")) {
+                          router.push("/");
+                        } else if (item.key === "events" && !isLinkActive("/events")) {
+                          router.push("/events");
+                        } else if (item.key === "blog" && !isLinkActive("/blog")) {
+                          router.push("/blog");
+                        } else if (item.key === "community" && !isLinkActive("/community")) {
+                          router.push("/community");
                         }
                       }}
                       className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
