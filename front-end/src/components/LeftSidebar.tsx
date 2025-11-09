@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, BookOpen, Users, X, FileText, Calendar, UsersRound, MessageCircle, CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface LeftSidebarProps {
   isOpen: boolean;
@@ -51,17 +52,15 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
 
         <div className="flex h-full flex-col">
           {/* Logo Section */}
-            <div className="border-b border-gray-200 px-6 py-8 dark:border-gray-800">
+            <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
               <Link 
                 href="/" 
-                className="block text-xl font-black tracking-tight text-gray-900 transition-colors hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
-              onClick={onClose}
-            >
-              Community Hub
+                className="flex gap-2 text-sm font-bold tracking-tight text-[#21759B] transition-colors dark:text-white dark:hover:text-blue-400"
+                onClick={onClose}
+                >
+              <Image src="/logo-1.png" alt="WordPress Vancouver" width={36} height={36} className="w-10 h-10" />
+              Vancouver <br /> WordPress Community
             </Link>
-              <p className="mt-2 text-xs font-light text-gray-600 dark:text-gray-400">
-              Where Ideas Meet
-            </p>
           </div>
 
           {/* Navigation Links */}
