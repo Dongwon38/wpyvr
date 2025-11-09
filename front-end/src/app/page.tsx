@@ -77,8 +77,8 @@ export default function Home() {
     loadBlogPosts();
   }, []);
 
-  return (
-    <div className="bg-gray-50 dark:bg-gray-950">
+    return (
+      <div className="min-h-screen overflow-x-hidden bg-gray-50 dark:bg-gray-950">
       {/* Hero Section */}
       <HeroSection />
 

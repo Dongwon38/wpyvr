@@ -176,7 +176,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           )}
 
             {/* Members Link Section */}
-            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 p-6 text-white shadow-md">
+            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 p-6 text-white shadow-md lg:hidden">
               <div className="mb-3 flex items-center gap-2">
                 <UsersRound size={20} />
                 <h3 className="text-lg font-black tracking-tight">Meet the Members</h3>
@@ -194,7 +194,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             </div>
 
             {/* Community Links Section */}
-            <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-900 dark:shadow-lg">
+            <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-900 dark:shadow-lg lg:hidden">
               <div className="mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Stay Connected

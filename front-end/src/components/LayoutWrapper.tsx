@@ -59,8 +59,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       {/* Main Content Wrapper - Unified scroll container */}
       <div className="flex flex-1 flex-col">
         <div className="flex flex-1 flex-col lg:flex-row">
-          {/* Main Content - Takes remaining space */}
-            <main className="w-full flex-1 pb-20 lg:w-0 lg:pb-0">
+            {/* Main Content - Takes remaining space */}
+            <main className="w-full flex-1 overflow-x-hidden pb-20 lg:w-0 lg:pb-0">
               {children}
             </main>
 
