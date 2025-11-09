@@ -341,9 +341,9 @@ export default function Home() {
                 Contact Us
               </h2>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
-              Have a question or suggestion? We'd love to hear from you.
-            </p>
+              <p className="mx-auto max-w-2xl text-sm text-gray-600 dark:text-gray-400">
+                Reach our volunteer organizers if you’d like a referral to a local freelancer, need quick WordPress guidance, or just have a question about the community. We typically respond within 24 hours.
+              </p>
           </motion.div>
           
           <motion.div

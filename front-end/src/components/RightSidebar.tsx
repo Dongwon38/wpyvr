@@ -243,14 +243,9 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                   <HelpCircle size={20} />
                   <h3 className="text-lg font-black tracking-tight">Need a Hand?</h3>
                 </div>
-                <p className="mb-3 text-sm font-light opacity-90">
-                  Whether you’re searching for a freelancer, need a quick WordPress sanity check, or just have a question about the community, our volunteer team is here to connect.
+                <p className="mb-4 text-sm font-light opacity-90">
+                  Send a note to our volunteer organizers for quick WordPress tips, freelancer leads, or community questions. We typically reply within 24 hours.
                 </p>
-                <ul className="mb-4 space-y-1 text-xs font-medium opacity-90">
-                  <li>• Requests go straight to the local organizers</li>
-                  <li>• We usually reply within 24 hours</li>
-                  <li>• Expect a friendly follow-up email from a real person</li>
-                </ul>
                 <button
                   onClick={handleSupportClick}
                   className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100"

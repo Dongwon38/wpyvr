@@ -107,15 +107,15 @@ export default function ContactForm() {
 
   return (
     <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800 sm:p-8">
-      {/* Header */}
-      <div className="mb-6 text-center">
-        <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-          Get in Touch
-        </h3>
+        {/* Header */}
+        <div className="mb-6 text-center">
+          <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+            How can we help?
+          </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Share a few details below and our team will follow up with you shortly.
+            Add a few details and one of our organizers will reach out within 24 hours.
           </p>
-      </div>
+        </div>
 
       {/* Error Message */}
       {status.type === "error" && (
@@ -296,9 +296,9 @@ export default function ContactForm() {
             className="flex items-center gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-900/20"
           >
             <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-            <p className="text-sm font-medium text-green-800 dark:text-green-300">
-              Thank you for contacting us! We'll get back to you soon.
-            </p>
+              <p className="text-sm font-medium text-green-800 dark:text-green-300">
+                Thanks for reaching out! A volunteer organizer will reply within about 24 hours.
+              </p>
           </motion.div>
         )}
       </form>
