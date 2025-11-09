@@ -76,7 +76,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       </div>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/95 lg:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-[60] border-t border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/95 lg:hidden">
           <ul className="flex justify-around">
             {bottomNavItems.map((item) => {
               const Icon = item.icon;
@@ -101,9 +101,9 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
                           : "text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
                       }`}
                       aria-label="Open more options"
-                    >
-                      <Icon size={22} />
-                      <span>More</span>
+                      >
+                        <Icon size={22} />
+                        <span>{item.label}</span>
                     </button>
                   ) : (
                     <button
