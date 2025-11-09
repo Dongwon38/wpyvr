@@ -44,7 +44,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         <div className="absolute right-4 top-4 z-10">
           <span
           className={cn(
-              "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.3em] shadow-lg",
+              "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[1px] shadow-lg",
             isPast
               ? "bg-gray-500 text-white"
               : "bg-gradient-to-r from-blue-600 to-purple-600 text-white"

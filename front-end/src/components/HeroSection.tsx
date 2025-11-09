@@ -23,7 +23,7 @@ const heroSlides: HeroSlide[] = [
     title: "Vancouver WordPress Community: Connect, Learn, Build",
     tagline:
       "Join our vibrant community of WordPress enthusiasts. Explore events, share ideas, and grow together.",
-    imageSrc: "/images/img1.jpg"
+    imageSrc: "/images/img1.jpg",
   },
   {
     id: 2,
@@ -33,8 +33,8 @@ const heroSlides: HeroSlide[] = [
     imageSrc: "/images/img2.jpg",
     cta: {
       text: "View Upcoming Events",
-      href: "/events"
-    }
+      href: "/events",
+    },
   },
   {
     id: 3,
@@ -44,45 +44,25 @@ const heroSlides: HeroSlide[] = [
     imageSrc: "/images/img3.jpg",
     cta: {
       text: "Join The Community",
-      href: "/community"
-    }
-  }
+      href: "/community",
+    },
+  },
 ];
 
 const backgroundVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? "100%" : "-100%",
-    opacity: 1
-  }),
-  center: {
-    x: 0,
-    opacity: 1
-  },
-  exit: (direction: number) => ({
-    x: direction > 0 ? "-100%" : "100%",
-    opacity: 1
-  })
+  enter: { opacity: 0, scale: 1.05 },
+  center: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.98 },
 };
 
 const contentVariants = {
-  enter: () => ({
-    opacity: 0,
-    y: 30
-  }),
-  center: {
-    opacity: 1,
-    y: 0
-  },
-  exit: () => ({
-    opacity: 0,
-    y: -20
-  })
+  enter: { opacity: 0, y: 20 },
+  center: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -15 },
 };
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [direction, setDirection] = useState(0);
-
   const totalSlides = heroSlides.length;
   const slide = heroSlides[currentSlide];
 
@@ -90,38 +70,34 @@ export default function HeroSection() {
     const timer = setInterval(() => {
       nextSlide();
     }, 7000);
-
     return () => clearInterval(timer);
   }, [currentSlide]);
 
-  const nextSlide = () => {
-    setDirection(1);
+  const nextSlide = () =>
     setCurrentSlide((prev) => (prev + 1) % totalSlides);
-  };
 
-  const prevSlide = () => {
-    setDirection(-1);
+  const prevSlide = () =>
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
 
   const goToSlide = (index: number) => {
-    if (index === currentSlide) return;
-    setDirection(index > currentSlide ? 1 : -1);
-    setCurrentSlide(index);
+    if (index !== currentSlide) setCurrentSlide(index);
   };
 
   return (
     <section className="relative min-h-[26rem] overflow-hidden sm:min-h-[30rem] md:min-h-[34rem]">
+      {/* Background Image */}
       <div className="absolute inset-0">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
+        <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={slide.id}
-            custom={direction}
             variants={backgroundVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.65, ease: [0.45, 0.05, 0.2, 1] }}
+            transition={{
+              duration: 0.5,
+              ease: [0.1, 0.25, 0.1, 0.8],
+            }}
             className="absolute inset-0 will-change-transform"
           >
             <Image
@@ -137,24 +113,29 @@ export default function HeroSection() {
         </AnimatePresence>
       </div>
 
+      {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[26rem] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[30rem] sm:px-6 sm:py-20 md:min-h-[34rem] lg:px-8">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
+        <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
-            custom={direction}
             variants={contentVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{
+              duration: 0.3,
+              delay: 0.2,
+              ease: [0.1, 0.25, 0.1, 0.8],
+            }}
             className="max-w-3xl text-white"
           >
-            <h1 className="text-[2rem] font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="text-[2rem] font-bold leading-tight sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-md">
               {slide.title}
             </h1>
             <p className="mt-4 hidden max-w-2xl text-base leading-relaxed text-white/85 md:block md:text-lg lg:text-xl">
               {slide.tagline}
             </p>
+
             {slide.cta && (
               <div className="mt-8 hidden md:flex">
                 <Link
@@ -173,6 +154,7 @@ export default function HeroSection() {
         </AnimatePresence>
       </div>
 
+      {/* Controls */}
       <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10 sm:gap-3">
         <button
           onClick={prevSlide}

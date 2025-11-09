@@ -86,7 +86,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           <X size={24} />
         </button>
 
-          <div className="space-y-6 p-4 pt-16 lg:px-6 lg:py-8">
+          <div className="space-y-6 p-4 pt-16 lg:px-4 lg:py-4">
           {/* Login/User Section */}
           {!loading && (
             <>
