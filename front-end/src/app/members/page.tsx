@@ -285,17 +285,14 @@ export default function MembersPage() {
                         const hasBio = trimmedBio.length > 0;
                         const memberId = member.user_id ?? member.id ?? index;
                         const rowIsActive = activeBioId === memberId;
-                        const showTooltip =
+                        const inlineOpen =
                           hasBio &&
                           (rowIsActive || (!isMobile && hoveredBioId === memberId));
-                        const tooltipVisibility = showTooltip
-                          ? "opacity-100 scale-100 pointer-events-auto"
-                          : "opacity-0 scale-95 pointer-events-none";
                         const rowClassName = `group transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50${
                           hasBio
                             ? " cursor-pointer focus-within:bg-gray-50 dark:focus-within:bg-gray-700/50"
                             : ""
-                        }${rowIsActive ? " bg-purple-50/40 dark:bg-purple-900/10" : ""}`;
+                        }${inlineOpen ? " bg-purple-50/40 dark:bg-purple-900/10" : ""}`;
 
                         return (
                           <Fragment key={memberId}>
@@ -304,18 +301,25 @@ export default function MembersPage() {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.3, delay: index * 0.03 }}
                               className={rowClassName}
+                              data-member-bio={memberId}
                               tabIndex={hasBio ? 0 : undefined}
-                              aria-expanded={hasBio ? rowIsActive : undefined}
+                              aria-expanded={hasBio ? inlineOpen : undefined}
                               onMouseEnter={() => {
                                 if (!isMobile && hasBio) {
                                   setHoveredBioId(memberId);
                                 }
                               }}
-                              onMouseLeave={() => {
+                              onMouseLeave={(event) => {
                                 if (!isMobile) {
-                                  setHoveredBioId((current) =>
-                                    current === memberId ? null : current,
+                                  const nextTarget = event.relatedTarget as HTMLElement | null;
+                                  const stillWithin = nextTarget?.closest(
+                                    `[data-member-bio="${memberId}"]`
                                   );
+                                  if (!stillWithin) {
+                                    setHoveredBioId((current) =>
+                                      current === memberId ? null : current,
+                                    );
+                                  }
                                 }
                               }}
                               onClick={() => handleMemberToggle(memberId, hasBio)}
@@ -332,27 +336,12 @@ export default function MembersPage() {
                                   handleMemberToggle(memberId, hasBio);
                                 }
                               }}
-                              >
+                            >
                                 {/* Member Info */}
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-4">
-                                    {/* Avatar & Bio Tooltip */}
+                                    {/* Avatar */}
                                     <div className="relative flex-shrink-0">
-                                      {hasBio && (
-                                        <div
-                                          className={`pointer-events-none absolute top-1/2 right-full z-30 mr-4 hidden -translate-y-1/2 transform-gpu rounded-2xl transition-all duration-200 ease-out md:flex ${tooltipVisibility}`}
-                                        >
-                                          <div className="relative max-w-xs space-y-2 rounded-2xl bg-white/95 p-4 text-sm leading-5 text-gray-700 shadow-xl ring-1 ring-black/5 backdrop-blur-sm dark:bg-gray-900/95 dark:text-gray-200 md:max-w-sm">
-                                            <span className="text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-300">
-                                              Bio
-                                            </span>
-                                            <p className="max-h-48 overflow-y-auto pr-1 text-sm text-gray-600 dark:text-gray-200">
-                                              {trimmedBio}
-                                            </p>
-                                            <div className="pointer-events-none absolute -right-3 top-1/2 h-5 w-5 -translate-y-1/2 rotate-45 rounded-sm bg-white/95 ring-1 ring-black/5 dark:bg-gray-900/95" />
-                                          </div>
-                                        </div>
-                                      )}
                                       <div className="relative h-14 w-14">
                                         {member.avatar_url ? (
                                           <>
@@ -492,13 +481,33 @@ export default function MembersPage() {
                                 </td>
                               </motion.tr>
 
-                              {/* Mobile Bio Panel */}
+                              {/* Inline Bio Panel */}
                               {hasBio && (
-                                <tr className="md:hidden">
+                                <tr
+                                  data-member-bio={memberId}
+                                  onMouseEnter={() => {
+                                    if (!isMobile) {
+                                      setHoveredBioId(memberId);
+                                    }
+                                  }}
+                                  onMouseLeave={(event) => {
+                                    if (!isMobile) {
+                                      const nextTarget = event.relatedTarget as HTMLElement | null;
+                                      const stillWithin = nextTarget?.closest(
+                                        `[data-member-bio="${memberId}"]`
+                                      );
+                                      if (!stillWithin) {
+                                        setHoveredBioId((current) =>
+                                          current === memberId ? null : current,
+                                        );
+                                      }
+                                    }
+                                  }}
+                                >
                                   <td colSpan={4} className="px-6 pb-4 pt-0">
                                     <div
                                       className={`overflow-hidden rounded-2xl border border-purple-200 bg-white/95 text-sm text-gray-700 shadow-lg transition-all duration-200 dark:border-purple-900/40 dark:bg-gray-900/90 dark:text-gray-200 ${
-                                        rowIsActive
+                                        inlineOpen
                                           ? "mt-2 max-h-80 scale-100 opacity-100"
                                           : "mt-0 max-h-0 scale-95 opacity-0 pointer-events-none"
                                       }`}
@@ -507,7 +516,7 @@ export default function MembersPage() {
                                       <div className="flex items-center justify-between gap-3 border-b border-purple-100 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-purple-600 dark:border-purple-900/40 dark:text-purple-300">
                                         <span>Bio</span>
                                         <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500">
-                                          탭하면 닫혀요
+                                          클릭하거나 탭하면 닫혀요
                                         </span>
                                       </div>
                                       <div className="max-h-64 overflow-y-auto px-4 py-3 text-sm leading-6">
