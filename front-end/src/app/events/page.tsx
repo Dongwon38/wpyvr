@@ -16,7 +16,7 @@ export default function EventsPage() {
         const data = await fetchEventsSortedByDate();
         setEvents(data);
       } catch (error) {
-        console.error('Failed to load events:', error);
+        console.error("Failed to load events:", error);
       } finally {
         setLoading(false);
       }
@@ -27,69 +27,69 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
-        >
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <Calendar className="h-12 w-12 text-blue-600 dark:text-blue-400" />
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
+      <section className="border-b border-gray-200 px-4 py-8 dark:border-gray-800 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <h1 className="mb-3 text-3xl font-normal text-gray-900 dark:text-white">
               Events
             </h1>
-          </div>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-            Join our community events, workshops, and meetups. Connect with fellow creators and learn together.
-          </p>
-        </motion.div>
-
-        {/* Loading State */}
-        {loading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!loading && events.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="rounded-2xl bg-white p-12 text-center shadow-md dark:bg-gray-800"
-          >
-            <div className="mb-4 flex justify-center">
-              <div className="rounded-full bg-gray-100 p-6 dark:bg-gray-700">
-                <Calendar className="h-12 w-12 text-gray-400" />
-              </div>
-            </div>
-            <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-              No Events Yet
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Check back soon for new events and workshops!
+            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
+              Join our community events, workshops, and meetups. Connect with fellow creators and learn together.
             </p>
           </motion.div>
-        )}
+        </div>
+      </section>
 
-        {/* Events Grid */}
-        {!loading && events.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {events.map((event, index) => (
-              <EventCard key={event.id} event={event} index={index} />
-            ))}
-          </motion.div>
-        )}
+      <section className="px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+            </div>
+          )}
 
-      </div>
+          {/* Empty State */}
+          {!loading && events.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="rounded-2xl bg-white p-12 text-center shadow-md dark:bg-gray-800"
+            >
+              <div className="mb-4 flex justify-center">
+                <div className="rounded-full bg-gray-100 p-6 dark:bg-gray-700">
+                  <Calendar className="h-12 w-12 text-gray-400" />
+                </div>
+              </div>
+              <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+                No Events Yet
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Check back soon for new events and workshops!
+              </p>
+            </motion.div>
+          )}
+
+          {/* Events Grid */}
+          {!loading && events.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {events.map((event, index) => (
+                <EventCard key={event.id} event={event} index={index} />
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
