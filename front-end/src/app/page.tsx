@@ -77,8 +77,8 @@ export default function Home() {
     loadBlogPosts();
   }, []);
 
-  return (
-    <div className="bg-gray-50 dark:bg-gray-950">
+    return (
+      <div className="min-h-screen overflow-x-hidden bg-gray-50 dark:bg-gray-950">
       {/* Hero Section */}
       <HeroSection />
 
@@ -326,8 +326,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        {/* Contact Form Section */}
+        <section id="contact" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -1,8 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { X, LogIn, LogOut, User as UserIcon, Settings, HelpCircle } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  X,
+  LogIn,
+  LogOut,
+  User as UserIcon,
+  Settings,
+  HelpCircle,
+  UsersRound,
+  ArrowRight,
+  MessageCircle,
+  CalendarDays,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/features/auth/AuthForm";
@@ -14,6 +25,7 @@ interface RightSidebarProps {
 
 export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, wpUser, userProfile, logout, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -31,6 +43,21 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
 
   const closeAuthModal = () => {
     setShowAuthModal(false);
+  };
+
+  const handleNavigate = (href: string) => {
+    router.push(href);
+    onClose();
+  };
+
+  const handleSupportClick = () => {
+    if (pathname === "/") {
+      const contactElement = document.getElementById("contact");
+      contactElement?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push("/#contact");
+    }
+    onClose();
   };
 
   return (
@@ -60,7 +87,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           <X size={24} />
         </button>
 
-        <div className="space-y-6 p-4 pt-16 lg:px-6 lg:py-8">
+          <div className="space-y-6 p-4 pt-16 lg:px-6 lg:py-8">
           {/* Login/User Section */}
           {!loading && (
             <>
@@ -148,26 +175,88 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             </>
           )}
 
-          {/* Divider */}
-          <div className="border-t border-gray-200 dark:border-gray-800"></div>
+            {/* Members Link Section */}
+            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 p-6 text-white shadow-md lg:hidden">
+              <div className="mb-3 flex items-center gap-2">
+                <UsersRound size={20} />
+                <h3 className="text-lg font-black tracking-tight">Meet the Members</h3>
+              </div>
+              <p className="mb-4 text-sm font-light opacity-90">
+                Explore profiles and connect with WordPress enthusiasts in Vancouver.
+              </p>
+              <button
+                onClick={() => handleNavigate("/members")}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-bold text-blue-600 transition-all hover:bg-gray-100"
+              >
+                Visit Members Page
+                <ArrowRight size={16} />
+              </button>
+            </div>
 
-          {/* Need Help Section */}
-          <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
+            {/* Community Links Section */}
+            <div className="rounded-2xl bg-white p-6 shadow-md dark:bg-gray-900 dark:shadow-lg lg:hidden">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Stay Connected
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Join our channels to keep up with announcements and events.
+                </p>
+              </div>
+              <div className="space-y-3">
+                <a
+                  href="https://discord.gg/4E2Awg9m2M"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 p-4 text-white transition-all hover:scale-[1.02] hover:shadow-lg"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
+                    <MessageCircle size={20} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold tracking-tight">Discord</p>
+                    <p className="text-xs opacity-90">Join the conversation</p>
+                  </div>
+                  <ArrowRight size={16} />
+                </a>
+                <a
+                  href="https://www.meetup.com/vancouver-wordpress-meetup-group/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 p-4 text-white transition-all hover:scale-[1.02] hover:shadow-lg"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
+                    <CalendarDays size={20} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold tracking-tight">Meetup</p>
+                    <p className="text-xs opacity-90">RSVP for events</p>
+                  </div>
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+            </div>
+
+            {/* Need Help Section */}
+            <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
               <div className="mb-3 flex items-center gap-2">
                 <HelpCircle size={20} />
                 <h3 className="text-lg font-black tracking-tight">Need Help?</h3>
-            </div>
+              </div>
               <p className="mb-4 text-sm font-light opacity-90">
-              Get instant support from our community moderators and experts.
-            </p>
-              <button className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100">
-              Get Support
-            </button>
+                Get instant support from our community moderators and experts.
+              </p>
+              <button
+                onClick={handleSupportClick}
+                className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100"
+              >
+                Get Support
+              </button>
               <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs">
-              <span className="opacity-75">Available 24/7</span>
+                <span className="opacity-75">Available 24/7</span>
                 <span className="font-medium">⚡ Fast Response</span>
+              </div>
             </div>
-          </div>
         </div>
       </aside>
 
