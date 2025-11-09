@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Users, X, FileText, Calendar, UsersRound, MessageCircle, CalendarDays } from "lucide-react";
+import { Home, Users, X, FileText, Calendar, UsersRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import StayConnectedCard from "./StayConnectedCard";
 
 interface LeftSidebarProps {
   isOpen: boolean;
@@ -88,55 +89,10 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
             })}
           </nav>
 
-          {/* Bottom Section - Community Links */}
+            {/* Bottom Section - Community Links */}
             <div className="border-t border-gray-200 p-4 dark:border-gray-800">
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-gray-500 dark:text-gray-400">
-              Community
-            </h4>
-            <div className="space-y-2">
-              {/* Discord Link */}
-              <a
-                href="https://discord.gg/4E2Awg9m2M"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 p-3 text-white transition-all hover:shadow-lg hover:scale-[1.02]"
-              >
-                <img 
-                  src="/wpyvr-logo-cropped.png" 
-                  alt="Logo" 
-                  className="h-8 w-8 rounded-lg bg-white p-1"
-                />
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <MessageCircle size={14} />
-                      <span className="text-sm font-bold">Discord</span>
-                  </div>
-                  <p className="text-xs opacity-90">Quick chat</p>
-                </div>
-              </a>
-
-              {/* Meetup Link */}
-              <a
-                href="https://www.meetup.com/vancouver-wordpress-meetup-group/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 p-3 text-white transition-all hover:shadow-lg hover:scale-[1.02]"
-              >
-                <img 
-                  src="/wpyvr-logo-cropped.png" 
-                  alt="Logo" 
-                  className="h-8 w-8 rounded-lg bg-white p-1"
-                />
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <CalendarDays size={14} />
-                      <span className="text-sm font-bold">Meetup</span>
-                  </div>
-                  <p className="text-xs opacity-90">Events</p>
-                </div>
-              </a>
+              <StayConnectedCard />
             </div>
-          </div>
         </div>
       </aside>
     </>
