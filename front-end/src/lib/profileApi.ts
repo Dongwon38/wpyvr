@@ -20,6 +20,7 @@ export type PrivacySettings = {
 }
 
 export type UserProfile = {
+  id?: number
   user_id: number
   nickname: string
   bio: string
