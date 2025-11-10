@@ -1,10 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export", // ✅ 정적 빌드 활성화
+  output: "export", // ✅ Next.js 16 방식의 정적 export
 
   images: {
-    unoptimized: true,
+    unoptimized: true, // ✅ 외부 이미지 사용 시 필요
     remotePatterns: [
       {
         protocol: "http",
