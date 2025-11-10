@@ -116,7 +116,7 @@ export default function Home() {
               <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-purple-600"></div>
             </div>
           ) : events.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
               {events.map((event, index) => (
                 <EventCard key={event.id} event={event} index={index} />
               ))}

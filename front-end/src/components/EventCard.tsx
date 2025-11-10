@@ -55,7 +55,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       </div>
 
       {/* Event Image */}
-      <Link href={`/events/${event.slug}`} className="block relative">
+      <a href= {event.link} target="_blank" rel="noopener noreferrer" className="block relative">
         <div
           className={cn(
             "relative h-48 overflow-hidden bg-gradient-to-br",
@@ -86,16 +86,16 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <span className="text-lg font-bold text-white">View Details</span>
         </div>
-      </Link>
+      </a>
 
       {/* Content */}
       <div className="p-6">
         {/* Title */}
-          <Link href={`/events/${event.slug}`} className="group/title">
+          <a href={event.link} target="_blank" rel="noopener noreferrer" className="group/title">
             <h3 className="mb-3 text-lg font-bold tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
             {event.title}
           </h3>
-        </Link>
+        </a>
 
         {/* Event Details */}
         <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
