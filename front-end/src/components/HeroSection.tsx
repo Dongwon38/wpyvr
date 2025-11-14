@@ -1,196 +1,133 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowUpRight, Layers, Palette, Sparkles } from "lucide-react";
 
-interface HeroSlide {
-  id: number;
-  title: string;
-  tagline: string;
-  imageSrc: string;
-  cta?: {
-    text: string;
-    href: string;
-  };
-}
-
-const heroSlides: HeroSlide[] = [
+const palette = [
   {
-    id: 1,
-    title: "Vancouver WordPress Community: Connect, Learn, Build",
-    tagline:
-      "Join our vibrant community of WordPress enthusiasts. Explore events, share ideas, and grow together.",
-    imageSrc: "/images/img1.jpg",
+    name: "Core WordPress Teal",
+    hex: "#00749C",
+    description: "Anchor color for hero surfaces, CTAs, and accents.",
   },
   {
-    id: 2,
-    title: "Monthly Meetups & Workshops",
-    tagline:
-      "Stay inspired with hands-on sessions led by local WordPress experts and community leaders.",
-    imageSrc: "/images/img2.jpg",
-    cta: {
-      text: "View Upcoming Events",
-      href: "/events",
-    },
+    name: "Inkstone",
+    hex: "#444140",
+    description: "Primary text color paired with white canvas layouts.",
   },
   {
-    id: 3,
-    title: "Collaborate On Your Next Project",
-    tagline:
-      "Showcase your WordPress work, get feedback, and build meaningful collaborations.",
-    imageSrc: "/images/img3.jpg",
-    cta: {
-      text: "Join The Community",
-      href: "/community",
-    },
+    name: "White Canvas",
+    hex: "#FFFFFF",
+    description: "Keeps the experience breathable and editorial.",
   },
 ];
 
-const backgroundVariants = {
-  enter: { opacity: 0, scale: 1.05 },
-  center: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.98 },
-};
+const heroGradient = `
+  radial-gradient(circle at 18% 22%, rgba(0, 180, 216, 0.55), transparent 45%),
+  radial-gradient(circle at 80% 0%, rgba(0, 116, 156, 0.9), rgba(3, 25, 38, 0.95)),
+  linear-gradient(120deg, #03121C, #063549 55%, #0097C2)
+`;
 
-const contentVariants = {
-  enter: { opacity: 0, y: 20 },
-  center: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -15 },
-};
+const heroStats = [
+  { label: "Meetups / year", value: "24+", meta: "Workshops & showcases" },
+  { label: "Active creators", value: "3.4k", meta: "Designers & devs" },
+  { label: "Collab threads", value: "180+", meta: "Monthly community asks" },
+];
 
 export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = heroSlides.length;
-  const slide = heroSlides[currentSlide];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [currentSlide]);
-
-  const nextSlide = () =>
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
-
-  const prevSlide = () =>
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-
-  const goToSlide = (index: number) => {
-    if (index !== currentSlide) setCurrentSlide(index);
-  };
-
   return (
-    <section className="relative min-h-[26rem] overflow-hidden sm:min-h-[30rem] md:min-h-[34rem]">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={slide.id}
-            variants={backgroundVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.5,
-              ease: [0.1, 0.25, 0.1, 0.8],
-            }}
-            className="absolute inset-0 will-change-transform"
-          >
-            <Image
-              src={slide.imageSrc}
-              alt={slide.title}
-              fill
-              priority={slide.id === 1}
-              className="object-cover"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-black/50 to-black/30" />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+    <section className="px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#041523] text-white shadow-[0_40px_120px_rgba(3,23,37,0.55)]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: heroGradient,
+          }}
+        />
+        <div className="absolute -left-16 top-16 h-64 w-64 rounded-full bg-[#00B4D8]/30 blur-[140px]" />
+        <div className="absolute right-4 top-10 h-72 w-72 rounded-full bg-[#0D6D92]/40 blur-[160px]" />
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-[26rem] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[30rem] sm:px-6 sm:py-20 md:min-h-[34rem] lg:px-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.id}
-            variants={contentVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.3,
-              delay: 0.2,
-              ease: [0.1, 0.25, 0.1, 0.8],
-            }}
-            className="max-w-3xl text-white"
-          >
-            <h1 className="text-[2rem] font-bold leading-tight sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-md">
-              {slide.title}
-            </h1>
-            <p className="mt-4 hidden max-w-2xl text-base leading-relaxed text-white/85 md:block md:text-lg lg:text-xl">
-              {slide.tagline}
-            </p>
-
-            {slide.cta && (
-              <div className="mt-8 hidden md:flex">
-                <Link
-                  href={slide.cta.href}
-                  className="group inline-flex items-center gap-3 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20 md:text-base"
+        <div className="relative z-10 flex flex-col gap-12 px-6 py-14 sm:px-10 lg:flex-row lg:items-center lg:gap-16 lg:px-16">
+          <div className="flex-1 space-y-8">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.45em] text-white/80">
+              <Sparkles className="h-4 w-4" />
+              WP palette refresh
+            </span>
+            <div>
+              <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                White-canvas WordPress experience with teal-forward energy
+              </h1>
+              <p className="mt-4 max-w-2xl text-lg text-white/85">
+                We elevate #00749C with glass layers, aqua glows, and inkstone
+                typography so the community hub feels premium yet warm.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Link
+                href="/showcase-1"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#00749C] shadow-xl shadow-black/25 transition hover:-translate-y-0.5 hover:bg-white/95"
+              >
+                Explore the theme kit
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/events"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+              >
+                Join the next meetup
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {heroStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-white/25 bg-white/5 p-4 shadow-inner backdrop-blur-lg"
                 >
-                  {slide.cta.text}
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform group-hover:translate-x-1.5"
-                  />
-                </Link>
+                  <p className="text-3xl font-black">{stat.value}</p>
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/60">
+                    {stat.label}
+                  </p>
+                  <p className="mt-2 text-sm text-white/80">{stat.meta}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex w-full max-w-md flex-col gap-6 rounded-[2rem] border border-white/20 bg-white/10 p-6 backdrop-blur-3xl">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-5">
+              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.4em] text-white/60">
+                <Palette className="h-4 w-4" />
+                Palette compass
               </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+              <p className="mt-4 text-lg font-semibold leading-relaxed">
+                Keep the teal saturated at 60–70% opacity, then fade into soft
+                aqua so it feels cinematic, not corporate.
+              </p>
+            </div>
 
-      {/* Controls */}
-      <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10 sm:gap-3">
-        <button
-          onClick={prevSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={22} />
-        </button>
-
-        <div className="flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 text-xs font-medium text-gray-900 shadow-lg backdrop-blur sm:px-4 sm:py-2 sm:text-sm">
-          <span>{currentSlide + 1}</span>
-          <span className="text-gray-400">/</span>
-          <span>{totalSlides}</span>
-          <div className="hidden gap-1 sm:flex">
-            {heroSlides.map((heroSlide, index) => (
-              <button
-                key={heroSlide.id}
-                onClick={() => goToSlide(index)}
-                className={`h-1.5 rounded-full transition-all ${
-                  index === currentSlide
-                    ? "w-4 bg-gray-900"
-                    : "w-1.5 bg-gray-300 hover:bg-gray-400"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+            <div className="rounded-2xl border border-white/25 bg-white/5 p-5">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.45em] text-white/60">
+                <Layers className="h-4 w-4" />
+                Color pillars
+              </div>
+              <div className="mt-5 space-y-4">
+                {palette.map((swatch) => (
+                  <div
+                    key={swatch.hex}
+                    className="flex items-center justify-between rounded-xl border border-white/20 bg-white/5 px-4 py-3"
+                  >
+                    <div className="space-y-1">
+                      <p className="text-sm uppercase tracking-[0.35em] text-white/60">
+                        {swatch.name}
+                      </p>
+                      <p className="text-base font-semibold">{swatch.hex}</p>
+                    </div>
+                    <span className="text-xs text-white/75">{swatch.description}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-
-        <button
-          onClick={nextSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={22} />
-        </button>
       </div>
     </section>
   );

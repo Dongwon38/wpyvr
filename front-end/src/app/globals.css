@@ -37,6 +37,8 @@
 /* Apply Merriweather as the default font */
 body {
   font-family: var(--font-merriweather), serif;
+  background-color: #ffffff;
+  color: #444140;
 }
 
 @layer base {

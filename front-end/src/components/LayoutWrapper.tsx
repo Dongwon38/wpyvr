@@ -48,8 +48,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     return pathname.startsWith(href);
   };
 
-  return (
-    <div className="flex w-full">
+    return (
+      <div className="relative flex min-h-screen w-full bg-[#FFFFFF] text-[#444140]">
       {/* Left Sidebar - Fixed on desktop */}
       <LeftSidebar 
         isOpen={leftSidebarOpen} 
@@ -57,10 +57,10 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       />
 
       {/* Main Content Wrapper - Unified scroll container */}
-      <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col bg-white">
         <div className="flex flex-1 flex-col lg:flex-row">
             {/* Main Content - Takes remaining space */}
-            <main className="w-full flex-1 overflow-x-hidden pb-20 lg:w-0 lg:pb-0">
+              <main className="w-full flex-1 overflow-x-hidden bg-white pb-32 lg:w-0 lg:pb-0">
               {children}
             </main>
 
@@ -76,8 +76,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       </div>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 z-[60] border-t border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/95 lg:hidden">
-          <ul className="flex justify-around">
+          <nav className="fixed bottom-4 left-0 right-0 z-[60] flex items-center justify-center lg:hidden">
+            <ul className="flex w-[92%] max-w-lg justify-between rounded-2xl border border-[#E3EEF5] bg-white/95 px-3 py-2 shadow-[0_20px_60px_rgba(10,54,72,0.12)] backdrop-blur-xl">
             {bottomNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -89,21 +89,29 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
                   ? isLinkActive("/community") : false;
 
               return (
-                <li key={item.key} className="flex-1">
+                  <li key={item.key} className="flex-1">
                   {item.key === "more" ? (
                     <button
                       type="button"
                       onClick={() =>
                         setRightSidebarOpen((previous) => !previous)
                       }
-                      className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
-                        isActive
-                          ? "text-blue-600 dark:text-blue-400"
-                          : "text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
-                      }`}
+                        className={`flex w-full flex-col items-center gap-1 rounded-xl px-2 py-2 text-[11px] font-semibold transition-colors ${
+                          isActive
+                            ? "text-[#00749C]"
+                            : "text-[#7A7774] hover:text-[#0F3A4F]"
+                        }`}
                       aria-label="Open more options"
                       >
-                        <Icon size={22} />
+                          <span
+                            className={`flex h-11 w-11 items-center justify-center rounded-full border text-sm ${
+                              isActive
+                                ? "border-[#79D4E7]/70 bg-[#E8F7FB] text-[#00749C]"
+                                : "border-transparent bg-[#F7F8F9]"
+                            }`}
+                          >
+                            <Icon size={20} />
+                          </span>
                         <span>{item.label}</span>
                     </button>
                   ) : (
@@ -120,15 +128,26 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
                           router.push("/community");
                         }
                       }}
-                      className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
-                        isActive
-                          ? "text-blue-600 dark:text-blue-400"
-                          : "text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
-                      }`}
+                        className={`flex w-full flex-col items-center gap-1 rounded-xl px-2 py-2 text-[11px] font-semibold transition-colors ${
+                          isActive
+                            ? "text-[#00749C]"
+                            : "text-[#7A7774] hover:text-[#0F3A4F]"
+                        }`}
                       aria-current={isActive ? "page" : undefined}
                     >
-                      <Icon size={22} />
+                        <span
+                          className={`flex h-11 w-11 items-center justify-center rounded-full border text-sm ${
+                            isActive
+                              ? "border-[#79D4E7]/70 bg-[#E8F7FB] text-[#00749C]"
+                              : "border-transparent bg-[#F7F8F9]"
+                          }`}
+                        >
+                          <Icon size={20} />
+                        </span>
                       <span>{item.label}</span>
+                        {isActive && (
+                          <span className="mt-0.5 h-1 w-6 rounded-full bg-[#00749C]" />
+                        )}
                     </button>
                   )}
                 </li>
