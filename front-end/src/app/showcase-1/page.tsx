@@ -1,3 +1,4 @@
+// 9c2c, GPT-5.1-high
 import type { Metadata } from "next";
 import { ArrowUpRight, Layers, LineChart, Palette, Sparkles, Wand2 } from "lucide-react";
 
