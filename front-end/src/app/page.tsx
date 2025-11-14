@@ -242,106 +242,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-        <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center"
-          >
-            <div className="mb-4 flex items-center justify-center gap-2">
-              <Sparkles className="text-[#00749C]" size={28} />
-              <h2 className="text-2xl font-black text-[#444140]">
-                Why Join Our Community?
-              </h2>
-            </div>
-            <p className="mb-10 text-sm text-[#444140]/70">
-              Everything you need to learn, grow, and connect
-            </p>
-          </motion.div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            {[
-              {
-                icon: "📚",
-                title: "Expert Content",
-                description: "Access high-quality guides and tutorials written by industry experts."
-              },
-              {
-                icon: "🤝",
-                title: "Active Community",
-                description: "Connect with thousands of creators, developers, and designers."
-              },
-              {
-                icon: "🚀",
-                title: "Share & Learn",
-                description: "Share your knowledge and learn from others' experiences."
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="rounded-3xl border border-[#00749C]/10 bg-white p-8 text-center shadow-md"
-              >
-                <div className="mb-4 text-5xl">{feature.icon}</div>
-                <h3 className="mb-2 text-xl font-black text-[#444140]">
-                  {feature.title}
-                </h3>
-                <p className="text-[#444140]/70">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-        <section className="relative isolate overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8" style={{backgroundImage: "linear-gradient(130deg, #031926 0%, #00749C 48%, #00B7D3 100%)"}}>
-        <div className="mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="mb-4 text-4xl font-black text-white sm:text-5xl">
-              Ready to Get Started?
-            </h2>
-            <p className="mb-8 text-xl font-light text-white/90">
-              Join our community today and start your journey with fellow creators
-            </p>
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <button className="w-full rounded-full bg-white px-8 py-4 text-base font-semibold text-[#00749C] shadow-xl shadow-black/25 transition-all hover:-translate-y-0.5 hover:bg-white/95 sm:w-auto">
-                Create Free Account
-              </button>
-              <button className="w-full rounded-full border-2 border-white/40 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-white/10 sm:w-auto">
-                Learn More
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
         {/* Contact Form Section */}
-          <section id="contact" className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto max-w-7xl">
+      <section id="contact" className="bg-[#FFFDF9] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-10 text-center"
+            className="mb-12 text-center"
           >
-            <div className="mb-4 flex items-center justify-center gap-2">
-              <Mail className="text-blue-600" size={28} />
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Contact Us
-              </h2>
+            <div className="mb-4 inline-flex items-center justify-center gap-2 rounded-full border border-[#00749C]/20 bg-white px-4 py-2">
+              <Mail className="text-[#00749C]" size={20} />
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-[#00749C]">
+                Get in Touch
+              </span>
             </div>
-              <p className="mx-auto max-w-2xl text-sm text-gray-600 dark:text-gray-400">
+            <h2 className="mb-4 text-3xl font-black text-[#444140] sm:text-4xl">
+              Contact Our Team
+            </h2>
+            <p className="mx-auto max-w-2xl text-base text-[#444140]/70">
                 Reach our volunteer organizers if you’d like a referral to a local freelancer, need quick WordPress guidance, or just have a question about the community. We typically respond within 24 hours.
               </p>
           </motion.div>

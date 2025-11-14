@@ -106,13 +106,13 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800 sm:p-8">
+    <div className="mx-auto w-full max-w-2xl rounded-3xl border border-[#00749C]/10 bg-white p-6 shadow-md sm:p-8">
         {/* Header */}
         <div className="mb-6 text-center">
-          <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+          <h3 className="mb-2 text-2xl font-black text-[#444140]">
             How can we help?
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-[#444140]/70">
             Add a few details and one of our organizers will reach out within 24 hours.
           </p>
         </div>
@@ -122,10 +122,10 @@ export default function ContactForm() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 flex items-center gap-3 rounded-lg bg-red-50 p-4 dark:bg-red-900/20"
+          className="mb-6 flex items-center gap-3 rounded-lg bg-red-50 border border-red-200 p-4"
         >
           <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" />
-          <p className="text-sm text-red-800 dark:text-red-300">
+          <p className="text-sm text-red-800">
             {status.message}
           </p>
         </motion.div>
@@ -137,7 +137,7 @@ export default function ContactForm() {
         <div>
             <label
               htmlFor="name"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="mb-1 block text-sm font-semibold text-[#444140]"
             >
               Name <span className="text-red-500">*</span>
             </label>
@@ -148,7 +148,7 @@ export default function ContactForm() {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+            className="w-full rounded-lg border border-[#00749C]/20 bg-white px-4 py-2.5 text-sm text-[#444140] transition-colors focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
             placeholder="Your name"
           />
         </div>
@@ -157,7 +157,7 @@ export default function ContactForm() {
         <div>
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="mb-1 block text-sm font-semibold text-[#444140]"
             >
               Email <span className="text-red-500">*</span>
             </label>
@@ -168,7 +168,7 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+            className="w-full rounded-lg border border-[#00749C]/20 bg-white px-4 py-2.5 text-sm text-[#444140] transition-colors focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
             placeholder="your.email@example.com"
           />
         </div>
@@ -177,7 +177,7 @@ export default function ContactForm() {
         <div>
             <label
               htmlFor="phone"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="mb-1 block text-sm font-semibold text-[#444140]"
             >
               Phone Number
             </label>
@@ -187,7 +187,7 @@ export default function ContactForm() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+            className="w-full rounded-lg border border-[#00749C]/20 bg-white px-4 py-2.5 text-sm text-[#444140] transition-colors focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
               placeholder="(555) 123-4567"
           />
         </div>
@@ -196,7 +196,7 @@ export default function ContactForm() {
         <div>
             <label
               htmlFor="preferred_contact"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="mb-1 block text-sm font-semibold text-[#444140]"
             >
               Preferred Contact Method
             </label>
@@ -208,9 +208,9 @@ export default function ContactForm() {
                 value="email"
                 checked={formData.preferred_contact === "email"}
                 onChange={handleChange}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700"
+                className="h-4 w-4 border-[#00749C]/20 text-[#00749C] focus:ring-2 focus:ring-[#00749C]/20"
               />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <span className="ml-2 text-sm text-[#444140]">
                   Email
                 </span>
             </label>
@@ -221,9 +221,9 @@ export default function ContactForm() {
                 value="phone"
                 checked={formData.preferred_contact === "phone"}
                 onChange={handleChange}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700"
+                className="h-4 w-4 border-[#00749C]/20 text-[#00749C] focus:ring-2 focus:ring-[#00749C]/20"
               />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <span className="ml-2 text-sm text-[#444140]">
                   Phone
                 </span>
             </label>
@@ -234,7 +234,7 @@ export default function ContactForm() {
         <div>
             <label
               htmlFor="subject"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="mb-1 block text-sm font-semibold text-[#444140]"
             >
               Subject
             </label>
@@ -244,7 +244,7 @@ export default function ContactForm() {
             name="subject"
             value={formData.subject}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+            className="w-full rounded-lg border border-[#00749C]/20 bg-white px-4 py-2.5 text-sm text-[#444140] transition-colors focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
             placeholder="What is this about?"
           />
         </div>
@@ -253,7 +253,7 @@ export default function ContactForm() {
         <div>
             <label
               htmlFor="message"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="mb-1 block text-sm font-semibold text-[#444140]"
             >
               Message <span className="text-red-500">*</span>
             </label>
@@ -264,7 +264,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             rows={5}
-            className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+            className="w-full resize-none rounded-lg border border-[#00749C]/20 bg-white px-4 py-2.5 text-sm text-[#444140] transition-colors focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
             placeholder="Your message..."
           />
         </div>
@@ -273,7 +273,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={status.type === "loading" || status.type === "success"}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00749C] px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#005A7A] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
           {status.type === "loading" ? (
             <>
@@ -293,10 +293,10 @@ export default function ContactForm() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-900/20"
+            className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4"
           >
             <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-              <p className="text-sm font-medium text-green-800 dark:text-green-300">
+              <p className="text-sm font-medium text-green-800">
                 Thanks for reaching out! A volunteer organizer will reply within about 24 hours.
               </p>
           </motion.div>
