@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, X, FileText, Calendar, UsersRound } from "lucide-react";
+import {
+  Home,
+  Users,
+  X,
+  FileText,
+  Calendar,
+  UsersRound,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import StayConnectedCard from "./StayConnectedCard";
@@ -20,6 +28,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
     { href: "/events", label: "Events", icon: Calendar },
     { href: "/members", label: "Members", icon: UsersRound },
     { href: "/blog", label: "Blog", icon: FileText },
+      { href: "/showcase", label: "WP Showcase", icon: Sparkles },
     // { href: "/guides", label: "Guides", icon: BookOpen }, // Commented out - will be used later
     { href: "/community", label: "Community", icon: Users },
   ];
