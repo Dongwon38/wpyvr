@@ -4,6 +4,34 @@
 @theme {
   /* Custom font family */
   --font-family-merriweather: var(--font-merriweather);
+  
+  /* WordPress Brand Colors */
+  --color-wp-blue: #00749C;
+  --color-wp-blue-light: #0091c4;
+  --color-wp-blue-dark: #005a7a;
+  --color-wp-dark: #444140;
+  
+  /* Custom animations */
+  --animate-gradient-x: gradient-x 3s ease infinite;
+  --animate-shimmer: shimmer 3s infinite;
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Apply Merriweather as the default font */
