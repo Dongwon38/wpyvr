@@ -29,11 +29,11 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const cardBaseClass =
-    "rounded-2xl border border-[#444140]/12 bg-white p-5 text-[#444140] shadow-lg";
+    "rounded-sm border border-[#444140]/12 bg-white p-4 text-[#444140] shadow-lg";
   const primaryButtonClass =
-    "inline-flex items-center justify-center gap-2 rounded-full bg-[#00749C] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#006282]";
+    "inline-flex items-center justify-center gap-2 rounded-sm bg-[#00749C] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#006282]";
   const secondaryButtonClass =
-    "inline-flex items-center justify-center gap-2 rounded-full border border-[#444140]/20 px-4 py-2.5 text-sm font-semibold text-[#444140] transition-colors hover:bg-[#444140]/5";
+    "inline-flex items-center justify-center gap-2 rounded-sm border border-[#444140]/20 px-4 py-2.5 text-sm font-semibold text-[#444140] transition-colors hover:bg-[#444140]/5";
   const labelClass =
     "text-[11px] font-semibold uppercase tracking-[0.3em] text-[#444140]/60";
   const bodyCopyClass = "text-sm leading-relaxed text-[#444140]/70";
@@ -90,13 +90,13 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
         {/* Mobile Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-2 text-[#444140] transition-colors hover:bg-[#00749C]/5 lg:hidden"
+          className="absolute right-4 top-4 rounded-sm p-2 text-[#444140] transition-colors hover:bg-[#00749C]/5 lg:hidden"
           aria-label="Close sidebar"
         >
           <X size={24} />
         </button>
 
-        <div className="space-y-7 px-5 pb-10 pt-16 lg:px-6 lg:py-6">
+        <div className="space-y-4 px-2 pb-10 pt-12 lg:px-4 lg:py-4">
           {/* Login/User Section */}
           {!loading && (
             <>
@@ -133,14 +133,12 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                       }}
                       className={cn(primaryButtonClass, "w-full")}
                     >
-                      <Settings size={14} />
                       Manage Info
                     </button>
                     <button
                       onClick={handleLogout}
                       className={cn(secondaryButtonClass, "w-full")}
                     >
-                      <LogOut size={14} />
                       Sign Out
                     </button>
                   </div>
@@ -213,9 +211,6 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           {/* Need Help Section */}
           <div className={cn(cardBaseClass, "space-y-4")}>
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/20 bg-[#00749C]/10 text-[#00749C]">
-                <HelpCircle size={18} />
-              </span>
               <div>
                 <p className={labelClass}>Support</p>
                 <h3 className="text-lg font-black tracking-tight">
