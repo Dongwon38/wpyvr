@@ -38,7 +38,6 @@ export default function StayConnectedCard({ className }: { className?: string })
 
       <div className="space-y-2">
         {socialLinks.map((link) => {
-          const Icon = link.icon;
           return (
             <a
               key={link.name}
@@ -54,7 +53,7 @@ export default function StayConnectedCard({ className }: { className?: string })
                   <Image src='/logo-discord.png' alt={link.name} width={24} height={24} />
                 ) : link.name === "Meetup" ? (
                   <Image src='/logo-meetup.png' alt={link.name} width={24} height={24} />
-                ) : <Icon size={24} />}
+                ) : null}
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold leading-tight text-[#444140] group-hover:text-[#00749C]">
