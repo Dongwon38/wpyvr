@@ -154,7 +154,13 @@ export default function MembersPage() {
         <div className="mx-auto max-w-7xl">
           {loading ? (
             <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-12 w-12 animate-spin text-purple-600" />
+              <div className="relative h-12 w-12">
+                <div className="absolute inset-0 rounded-full border-4 border-[#00749C]/20" />
+                <div 
+                  className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#00749C] border-r-[#00B7D3] animate-spin"
+                  style={{ animationDuration: "0.8s" }}
+                />
+              </div>
             </div>
           ) : (
             <>

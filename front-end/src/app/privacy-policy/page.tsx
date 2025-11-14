@@ -29,7 +29,13 @@ export default function PrivacyPolicyPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+        <div className="relative h-12 w-12">
+          <div className="absolute inset-0 rounded-full border-4 border-[#00749C]/20" />
+          <div 
+            className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#00749C] border-r-[#00B7D3] animate-spin"
+            style={{ animationDuration: "0.8s" }}
+          />
+        </div>
       </div>
     );
   }

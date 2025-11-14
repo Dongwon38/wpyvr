@@ -15,7 +15,7 @@ export default function StayConnectedCard({ className }: { className?: string })
     {
       name: "Slack",
       description: "Team workspace",
-      href: "https://wpyvr.slack.com",
+      href: "https://join.slack.com/t/wpyvr/shared_invite/zt-y08rh8tt-7d5KOxgkbLfh6abzDN6Mvg",
       icon: Slack,
       label: "Join",
     },

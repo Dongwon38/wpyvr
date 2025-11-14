@@ -277,7 +277,13 @@ export default function ContactForm() {
         >
           {status.type === "loading" ? (
             <>
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+              <div className="relative h-4 w-4">
+                <div className="absolute inset-0 rounded-full border-2 border-white/30" />
+                <div 
+                  className="absolute inset-0 rounded-full border-2 border-transparent border-t-white animate-spin"
+                  style={{ animationDuration: "0.6s" }}
+                />
+              </div>
               Sending...
             </>
           ) : (

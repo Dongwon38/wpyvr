@@ -12,6 +12,7 @@ import { fetchEventsSortedByDate } from "@/lib/eventsApi";
 import { fetchLatestBlogPosts, type BlogPost as ApiBlogPost } from "@/lib/blogApi";
 import { FileText, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock, Mail } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 // Blog post format for component
 interface BlogPost {
@@ -112,9 +113,7 @@ export default function Home() {
 
           {/* Events Grid */}
           {eventsLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#00749C]/20 border-t-[#00749C]"></div>
-            </div>
+            <LoadingSpinner />
           ) : events.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
               {events.map((event, index) => (
@@ -212,9 +211,7 @@ export default function Home() {
 
           {/* Loading State */}
           {blogLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#00749C]/20 border-t-[#00749C]"></div>
-            </div>
+            <LoadingSpinner />
           ) : blogPosts.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {blogPosts.map((post, index) => (
@@ -244,7 +241,7 @@ export default function Home() {
 
 
         {/* Contact Form Section */}
-      <section id="contact" className="bg-[#FFFDF9] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      <section id="contact" className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -716,7 +716,13 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         >
           {saving ? (
             <>
-              <Loader2 size={18} className="animate-spin" />
+              <div className="relative h-4 w-4">
+                <div className="absolute inset-0 rounded-full border-2 border-white/30" />
+                <div 
+                  className="absolute inset-0 rounded-full border-2 border-transparent border-t-white animate-spin"
+                  style={{ animationDuration: "0.6s" }}
+                />
+              </div>
               Saving...
             </>
           ) : (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaDiscord, FaMeetup } from "react-icons/fa";
+import { FaDiscord, FaMeetup, FaSlack } from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -17,12 +17,13 @@ export default function Footer() {
     ],
     social: [
       { icon: FaDiscord, href: "https://discord.gg/4E2Awg9m2M", label: "Discord" }, 
-      { icon: FaMeetup, href: "https://www.meetup.com/your-meetup-group", label: "Meetup" },
+      { icon: FaSlack, href: "https://join.slack.com/t/wpyvr/shared_invite/zt-y08rh8tt-7d5KOxgkbLfh6abzDN6Mvg", label: "Slack" },
+      { icon: FaMeetup, href: "https://www.meetup.com/vancouver-wordpress-meetup-group/", label: "Meetup" },
     ],
   };
 
   return (
-    <footer className="w-full border-t border-[#00749C]/15 bg-[#FFFDF9]">
+    <footer className="w-full border-t border-[#00749C]/15 bg-gray-50">
       <div className="mx-auto w-full px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
