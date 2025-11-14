@@ -127,27 +127,38 @@ export default function MembersPage() {
         break;
     }
 
-    return filtered;
-  }, [members, searchQuery, sortBy, filterSpecialty]);
+  return filtered;
+}, [members, searchQuery, sortBy, filterSpecialty]);
+
+  const isTargetInsideBioSection = (
+    target: EventTarget | null,
+    memberId: number
+  ) => {
+    if (!target) return false;
+    if (target instanceof Element) {
+      return Boolean(target.closest(`[data-member-bio="${memberId}"]`));
+    }
+    return false;
+  };
 
     return (
       <div className="min-h-screen bg-white text-[#111111]">
         <section className="border-b border-neutral-200 bg-white">
-          <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="space-y-4"
+              className="space-y-3"
             >
-              <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-neutral-600">
-                <Users className="h-3.5 w-3.5 text-[#00749C]" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-0.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-600">
+                <Users className="h-3 w-3 text-[#00749C]" />
                 Members
               </span>
-              <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+              <h1 className="text-3xl font-semibold leading-snug sm:text-4xl">
                 Community Members
               </h1>
-              <p className="max-w-2xl text-base leading-relaxed text-neutral-600">
+              <p className="max-w-2xl text-sm leading-relaxed text-neutral-500">
                 {loading
                   ? "Discovering who's active in the community..."
                   : `Connect with ${members.length} creators, developers, and designers in our chapter.`}
@@ -251,7 +262,7 @@ export default function MembersPage() {
 
               {/* Results Count */}
                 <div className="mb-4 flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-[#00749C]" />
+                  <Sparkles className="h-4 w-4 text-neutral-400" />
                   <span className="text-sm text-neutral-600">
                   {filteredMembers.length} of {members.length} members
                 </span>
@@ -431,12 +442,10 @@ export default function MembersPage() {
                                     if (!isMobile && hasBio) setHoveredBioId(memberId);
                                   }}
                                   onMouseLeave={(event) => {
-                                    if (!isMobile) {
-                                      const nextTarget = event.relatedTarget as HTMLElement | null;
-                                      const stillWithin = nextTarget?.closest(`[data-member-bio="${memberId}"]`);
-                                      if (!stillWithin) {
-                                        setHoveredBioId((current) => (current === memberId ? null : current));
-                                      }
+                                    if (isMobile || !hasBio) return;
+                                    const stillWithin = isTargetInsideBioSection(event.relatedTarget, memberId);
+                                    if (!stillWithin) {
+                                      setHoveredBioId((current) => (current === memberId ? null : current));
                                     }
                                   }}
                                   onClick={() => handleMemberToggle(memberId, hasBio)}
@@ -570,12 +579,10 @@ export default function MembersPage() {
                                       if (!isMobile) setHoveredBioId(memberId);
                                     }}
                                     onMouseLeave={(event) => {
-                                      if (!isMobile) {
-                                        const nextTarget = event.relatedTarget as HTMLElement | null;
-                                        const stillWithin = nextTarget?.closest(`[data-member-bio="${memberId}"]`);
-                                        if (!stillWithin) {
-                                          setHoveredBioId((current) => (current === memberId ? null : current));
-                                        }
+                                      if (isMobile) return;
+                                      const stillWithin = isTargetInsideBioSection(event.relatedTarget, memberId);
+                                      if (!stillWithin) {
+                                        setHoveredBioId((current) => (current === memberId ? null : current));
                                       }
                                     }}
                                   >
