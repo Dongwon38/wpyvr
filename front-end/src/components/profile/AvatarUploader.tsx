@@ -164,7 +164,13 @@ export default function AvatarUploader({
           {uploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">
               <div className="text-center text-white">
-                <Loader2 size={32} className="mx-auto animate-spin" />
+                <div className="relative mx-auto h-8 w-8">
+                  <div className="absolute inset-0 rounded-full border-3 border-[#00749C]/20" />
+                  <div 
+                    className="absolute inset-0 rounded-full border-3 border-transparent border-t-[#00749C] border-r-[#00B7D3] animate-spin"
+                    style={{ animationDuration: "0.8s" }}
+                  />
+                </div>
                 <p className="mt-2 text-sm font-semibold">{uploadProgress}%</p>
               </div>
             </div>

@@ -76,7 +76,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       </div>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 z-[60] border-t border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/95 lg:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 z-[60] border-t border-[#00749C]/15 bg-white/98 backdrop-blur-md shadow-lg lg:hidden">
           <ul className="flex justify-around">
             {bottomNavItems.map((item) => {
               const Icon = item.icon;
@@ -96,10 +96,10 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
                       onClick={() =>
                         setRightSidebarOpen((previous) => !previous)
                       }
-                      className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
+                      className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-semibold transition-colors ${
                         isActive
-                          ? "text-blue-600 dark:text-blue-400"
-                          : "text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+                          ? "text-[#00749C]"
+                          : "text-[#444140]/60 hover:text-[#00749C]"
                       }`}
                       aria-label="Open more options"
                       >
@@ -120,10 +120,10 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
                           router.push("/community");
                         }
                       }}
-                      className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
+                      className={`flex w-full flex-col items-center gap-1 py-3 text-xs font-semibold transition-colors ${
                         isActive
-                          ? "text-blue-600 dark:text-blue-400"
-                          : "text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+                          ? "text-[#00749C]"
+                          : "text-[#444140]/60 hover:text-[#00749C]"
                       }`}
                       aria-current={isActive ? "page" : undefined}
                     >

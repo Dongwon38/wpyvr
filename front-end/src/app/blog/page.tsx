@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import BlogListItem from "@/components/BlogListItem";
 import { fetchBlogPosts, fetchCategories, type BlogPost as ApiBlogPost, type Category } from "@/lib/blogApi";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 // Transform API BlogPost to component BlogPost format
 interface BlogPost {
@@ -203,11 +204,7 @@ export default function BlogPage() {
           </p>
 
           {/* Loading State */}
-          {loading && (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-            </div>
-          )}
+          {loading && <LoadingSpinner />}
 
           {/* Blog Posts Grid */}
           {!loading && (

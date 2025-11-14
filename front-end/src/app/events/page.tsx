@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import EventCard, { EventCardData } from "@/components/EventCard";
 import { fetchEventsSortedByDate } from "@/lib/eventsApi";
 import { Calendar } from "lucide-react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<EventCardData[]>([]);
@@ -47,11 +48,7 @@ export default function EventsPage() {
       <section className="px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           {/* Loading State */}
-          {loading && (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-            </div>
-          )}
+          {loading && <LoadingSpinner />}
 
           {/* Empty State */}
           {!loading && events.length === 0 && (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaDiscord, FaMeetup } from "react-icons/fa";
+import { FaDiscord, FaMeetup, FaSlack } from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -17,20 +17,21 @@ export default function Footer() {
     ],
     social: [
       { icon: FaDiscord, href: "https://discord.gg/4E2Awg9m2M", label: "Discord" }, 
-      { icon: FaMeetup, href: "https://www.meetup.com/your-meetup-group", label: "Meetup" },
+      { icon: FaSlack, href: "https://join.slack.com/t/wpyvr/shared_invite/zt-y08rh8tt-7d5KOxgkbLfh6abzDN6Mvg", label: "Slack" },
+      { icon: FaMeetup, href: "https://www.meetup.com/vancouver-wordpress-meetup-group/", label: "Meetup" },
     ],
   };
 
   return (
-    <footer className="w-full border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
+    <footer className="w-full border-t border-[#00749C]/15 bg-gray-50">
       <div className="mx-auto w-full px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
             <div className="space-y-4">
-              <h3 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">
+              <h3 className="text-2xl font-black tracking-tight text-[#00749C]">
               Vancouver WordPress Community
             </h3>
-              <p className="text-sm font-light text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-[#444140]/70">
                 The Vancouver WordPress Group is a community of WordPress enthusiasts and professionals in the Vancouver area. We are a group of WordPress users and developers who are interested in learning and sharing about WordPress.
 
             </p>
@@ -38,7 +39,7 @@ export default function Footer() {
 
           {/* Navigation Links */}
           <div className="space-y-4">
-              <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 dark:text-white">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#00749C]">
               Navigation
             </h4>
             <ul className="space-y-2">
@@ -46,7 +47,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                      className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      className="text-sm font-medium text-[#444140]/70 transition-colors hover:text-[#00749C]"
                   >
                     {link.label}
                   </Link>
@@ -57,7 +58,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="space-y-4">
-              <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 dark:text-white">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#00749C]">
               Legal
             </h4>
             <ul className="space-y-2">
@@ -65,7 +66,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                      className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      className="text-sm font-medium text-[#444140]/70 transition-colors hover:text-[#00749C]"
                   >
                     {link.label}
                   </Link>
@@ -76,7 +77,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 dark:text-white">
+            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#00749C]">
               Connect
             </h4>
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
@@ -88,13 +89,13 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-all hover:-translate-y-[1px] hover:border-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-700"
+                    className="group flex items-center gap-2 rounded-lg border border-[#00749C]/20 bg-white px-3 py-2 text-sm font-medium text-[#444140] transition-all hover:-translate-y-[1px] hover:border-[#00749C]/40 hover:bg-[#00749C]/5"
                   >
                     <Icon
                       size={18}
-                      className="text-gray-500 transition-colors group-hover:text-indigo-500 dark:text-gray-400 dark:group-hover:text-indigo-400"
+                      className="text-[#00749C]/60 transition-colors group-hover:text-[#00749C]"
                     />
-                    <span className="group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <span className="group-hover:text-[#00749C]">
                       {social.label}
                     </span>
                   </a>
@@ -105,8 +106,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 border-t border-gray-200 pt-8 dark:border-gray-800">
-            <p className="text-center text-sm font-light text-gray-600 dark:text-gray-400">
+        <div className="mt-8 border-t border-[#00749C]/15 pt-8">
+            <p className="text-center text-sm text-[#444140]/70">
             © {currentYear} The Vancouver WordPress Group. All rights reserved.
           </p>
         </div>
