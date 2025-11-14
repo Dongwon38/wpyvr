@@ -92,24 +92,24 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             <>
               {user && wpUser ? (
                 // Logged in state
-                <div className="rounded-sm p-5 text-black shadow-md bg-[#fff]">
+                <div className="rounded-lg border border-[#00749C]/10 bg-white p-5 text-[#444140] shadow-sm">
                   <div className="mb-3 flex items-center gap-3">
                     {userProfile?.avatar_url || user.photoURL ? (
                       <img 
                         src={userProfile?.avatar_url || user.photoURL || ""} 
                         alt={userProfile?.nickname || wpUser.display_name}
-                        className="h-10 w-10 rounded-full border-2 border-white object-cover"
+                        className="h-10 w-10 rounded-full border-2 border-[#00749C]/20 object-cover"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#444140] text-black font-bold">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#00749C]/10 text-[#00749C]">
                         <UserIcon size={20} />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-bold tracking-tight truncate">
+                        <h3 className="text-base font-bold tracking-tight truncate text-[#444140]">
                         Hi, {userProfile?.nickname || wpUser.display_name}! 👋
                       </h3>
-                        <p className="text-xs font-light opacity-90 truncate">
+                        <p className="text-xs font-light text-[#444140]/70 truncate">
                         {userProfile?.position || wpUser.email}
                       </p>
                     </div>
@@ -122,14 +122,14 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                           router.push("/profile");
                           onClose();
                         }}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-white px-3 py-2 text-xs font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-[#00749C] px-3 py-2 text-xs font-bold text-white transition-all hover:bg-[#005a7a]"
                       >
                         <Settings size={14} />
                         Manage Info
                       </button>
                       <button
                         onClick={handleLogout}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border border-white/30 px-3 py-2 text-xs font-medium text-black transition-all hover:bg-white/10"
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-[#444140]/20 px-3 py-2 text-xs font-medium text-[#444140] transition-all hover:bg-[#444140]/5"
                       >
                         <LogOut size={14} />
                         Sign Out
@@ -138,24 +138,24 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                 </div>
               ) : (
                 // Not logged in state
-                <div className="rounded-sm p-5 text-black shadow-md bg-[#fff]">
+                <div className="rounded-lg border border-[#00749C]/10 bg-white p-5 text-[#444140] shadow-sm">
                     <div className="mb-4 flex items-center gap-2">
-                      <LogIn size={20} />
-                      <h3 className="text-lg font-black tracking-tight">Join Our Community</h3>
+                      <LogIn size={20} className="text-[#00749C]" />
+                      <h3 className="text-lg font-black tracking-tight text-[#444140]">Join Our Community</h3>
                   </div>
-                    <p className="mb-4 text-sm font-light opacity-90">
+                    <p className="mb-4 text-sm font-light text-[#444140]/70">
                     Sign in to unlock all features and connect with fellow creators.
                   </p>
                   <div className="space-y-2">
                       <button 
                       onClick={openAuthModal}
-                        className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                        className="w-full rounded-lg bg-[#00749C] px-4 py-2.5 text-sm font-bold text-white transition-all hover:bg-[#005a7a]"
                     >
                       Sign In
                     </button>
                       <button 
                       onClick={openAuthModal}
-                        className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-medium text-black transition-all hover:bg-white/10"
+                        className="w-full rounded-lg border border-[#444140]/20 px-4 py-2.5 text-sm font-medium text-[#444140] transition-all hover:bg-[#444140]/5"
                     >
                       Create Account
                     </button>
@@ -166,17 +166,17 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           )}
 
             {/* Members Link Section */}
-            <div className="rounded-3xl p-6 text-black shadow-md lg:hidden" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #003B52 100%)"}}>
+            <div className="rounded-lg border border-[#00749C]/10 bg-white p-6 text-[#444140] shadow-sm lg:hidden">
               <div className="mb-3 flex items-center gap-2">
-                <UsersRound size={20} />
-                <h3 className="text-lg font-black tracking-tight">Meet the Members</h3>
+                <UsersRound size={20} className="text-[#00749C]" />
+                <h3 className="text-lg font-black tracking-tight text-[#444140]">Meet the Members</h3>
               </div>
-              <p className="mb-4 text-sm font-light opacity-90">
+              <p className="mb-4 text-sm font-light text-[#444140]/70">
                 Explore profiles and connect with WordPress enthusiasts in Vancouver.
               </p>
               <button
                 onClick={() => handleNavigate("/members")}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00749C] px-4 py-3 text-sm font-bold text-white transition-all hover:bg-[#005a7a]"
               >
                 Visit Members Page
                 <ArrowRight size={16} />
@@ -187,17 +187,17 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               <StayConnectedCard className="lg:hidden" />
 
               {/* Need Help Section */}
-              <div className="rounded-sm p-6 text-black shadow-md" style={{backgroundImage: "linear-gradient(135deg, #444140 0%,rgb(178, 178, 178) 100%)"}}>
+              <div className="rounded-lg border border-[#444140]/10 bg-white p-6 text-[#444140] shadow-sm">
                 <div className="mb-3 flex items-center gap-2">
-                  <HelpCircle size={20} />
-                  <h3 className="text-lg font-black tracking-tight">Need a Hand?</h3>
+                  <HelpCircle size={20} className="text-[#00749C]" />
+                  <h3 className="text-lg font-black tracking-tight text-[#444140]">Need a Hand?</h3>
                 </div>
-                <p className="mb-4 text-sm font-light opacity-90">
+                <p className="mb-4 text-sm font-light text-[#444140]/70">
                   Send a note to our volunteer organizers for quick WordPress tips, freelancer leads, or community questions. We typically reply within 24 hours.
                 </p>
                 <button
                   onClick={handleSupportClick}
-                  className="w-full rounded-sm bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                  className="w-full rounded-lg bg-[#00749C] px-4 py-3 text-sm font-bold text-white transition-all hover:bg-[#005a7a]"
                 >
                   Ask the Team
                 </button>
