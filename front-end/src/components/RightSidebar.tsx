@@ -28,6 +28,16 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const { user, wpUser, userProfile, logout, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  const cardBaseClass =
+    "rounded-2xl border border-[#444140]/12 bg-white p-5 text-[#444140] shadow-lg";
+  const primaryButtonClass =
+    "inline-flex items-center justify-center gap-2 rounded-full bg-[#00749C] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#006282]";
+  const secondaryButtonClass =
+    "inline-flex items-center justify-center gap-2 rounded-full border border-[#444140]/20 px-4 py-2.5 text-sm font-semibold text-[#444140] transition-colors hover:bg-[#444140]/5";
+  const labelClass =
+    "text-[11px] font-semibold uppercase tracking-[0.3em] text-[#444140]/60";
+  const bodyCopyClass = "text-sm leading-relaxed text-[#444140]/70";
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -86,76 +96,82 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           <X size={24} />
         </button>
 
-          <div className="space-y-6 p-4 pt-16 lg:px-4 lg:py-4">
+        <div className="space-y-7 px-5 pb-10 pt-16 lg:px-6 lg:py-6">
           {/* Login/User Section */}
           {!loading && (
             <>
               {user && wpUser ? (
-                // Logged in state
-                <div className="rounded-sm p-5 text-black shadow-md bg-[#fff]">
-                  <div className="mb-3 flex items-center gap-3">
+                <div className={cn(cardBaseClass, "space-y-5")}>
+                  <div className="flex items-center gap-3">
                     {userProfile?.avatar_url || user.photoURL ? (
-                      <img 
-                        src={userProfile?.avatar_url || user.photoURL || ""} 
+                      <img
+                        src={userProfile?.avatar_url || user.photoURL || ""}
                         alt={userProfile?.nickname || wpUser.display_name}
-                        className="h-10 w-10 rounded-full border-2 border-white object-cover"
+                        className="h-11 w-11 rounded-full border border-[#444140]/15 object-cover shadow-sm"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#444140] text-black font-bold">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/30 bg-[#00749C]/10 text-[#00749C]">
                         <UserIcon size={20} />
                       </div>
                     )}
-                    <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-bold tracking-tight truncate">
+                    <div className="min-w-0 flex-1">
+                      <p className={labelClass}>Profile</p>
+                      <h3 className="text-base font-semibold tracking-tight">
                         Hi, {userProfile?.nickname || wpUser.display_name}! 👋
                       </h3>
-                        <p className="text-xs font-light opacity-90 truncate">
+                      <p className="text-sm text-[#444140]/70">
                         {userProfile?.position || wpUser.email}
                       </p>
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          router.push("/profile");
-                          onClose();
-                        }}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-white px-3 py-2 text-xs font-bold text-[#00749C] transition-all hover:bg-gray-100"
-                      >
-                        <Settings size={14} />
-                        Manage Info
-                      </button>
-                      <button
-                        onClick={handleLogout}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border border-white/30 px-3 py-2 text-xs font-medium text-black transition-all hover:bg-white/10"
-                      >
-                        <LogOut size={14} />
-                        Sign Out
-                      </button>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <button
+                      onClick={() => {
+                        router.push("/profile");
+                        onClose();
+                      }}
+                      className={cn(primaryButtonClass, "w-full")}
+                    >
+                      <Settings size={14} />
+                      Manage Info
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className={cn(secondaryButtonClass, "w-full")}
+                    >
+                      <LogOut size={14} />
+                      Sign Out
+                    </button>
                   </div>
                 </div>
               ) : (
-                // Not logged in state
-                <div className="rounded-sm p-5 text-black shadow-md bg-[#fff]">
-                    <div className="mb-4 flex items-center gap-2">
-                      <LogIn size={20} />
-                      <h3 className="text-lg font-black tracking-tight">Join Our Community</h3>
+                <div className={cn(cardBaseClass, "space-y-4")}>
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/20 bg-[#00749C]/10 text-[#00749C]">
+                      <LogIn size={18} />
+                    </span>
+                    <div>
+                      <p className={labelClass}>Community access</p>
+                      <h3 className="text-lg font-black tracking-tight">
+                        Join our community
+                      </h3>
+                    </div>
                   </div>
-                    <p className="mb-4 text-sm font-light opacity-90">
-                    Sign in to unlock all features and connect with fellow creators.
+                  <p className={bodyCopyClass}>
+                    Sign in to unlock all features and connect with fellow
+                    creators.
                   </p>
                   <div className="space-y-2">
-                      <button 
+                    <button
                       onClick={openAuthModal}
-                        className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                      className={cn(primaryButtonClass, "w-full")}
                     >
                       Sign In
                     </button>
-                      <button 
+                    <button
                       onClick={openAuthModal}
-                        className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-medium text-black transition-all hover:bg-white/10"
+                      className={cn(secondaryButtonClass, "w-full")}
                     >
                       Create Account
                     </button>
@@ -165,49 +181,66 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             </>
           )}
 
-            {/* Members Link Section */}
-            <div className="rounded-3xl p-6 text-black shadow-md lg:hidden" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #003B52 100%)"}}>
-              <div className="mb-3 flex items-center gap-2">
+          {/* Members Link Section */}
+          <div className={cn(cardBaseClass, "lg:hidden space-y-4")}>
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/20 bg-[#00749C]/10 text-[#00749C]">
                 <UsersRound size={20} />
-                <h3 className="text-lg font-black tracking-tight">Meet the Members</h3>
+              </span>
+              <div>
+                <p className={labelClass}>Member spotlight</p>
+                <h3 className="text-lg font-black tracking-tight">
+                  Meet the members
+                </h3>
               </div>
-              <p className="mb-4 text-sm font-light opacity-90">
-                Explore profiles and connect with WordPress enthusiasts in Vancouver.
-              </p>
-              <button
-                onClick={() => handleNavigate("/members")}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
-              >
-                Visit Members Page
-                <ArrowRight size={16} />
-              </button>
             </div>
+            <p className={bodyCopyClass}>
+              Explore profiles and connect with WordPress enthusiasts in
+              Vancouver.
+            </p>
+            <button
+              onClick={() => handleNavigate("/members")}
+              className={cn(primaryButtonClass, "w-full")}
+            >
+              Visit Members Page
+              <ArrowRight size={16} />
+            </button>
+          </div>
 
-              {/* Community Links Section */}
-              <StayConnectedCard className="lg:hidden" />
+          {/* Community Links Section */}
+          <StayConnectedCard className={cn(cardBaseClass, "lg:hidden")} />
 
-              {/* Need Help Section */}
-              <div className="rounded-sm p-6 text-black shadow-md" style={{backgroundImage: "linear-gradient(135deg, #444140 0%,rgb(178, 178, 178) 100%)"}}>
-                <div className="mb-3 flex items-center gap-2">
-                  <HelpCircle size={20} />
-                  <h3 className="text-lg font-black tracking-tight">Need a Hand?</h3>
-                </div>
-                <p className="mb-4 text-sm font-light opacity-90">
-                  Send a note to our volunteer organizers for quick WordPress tips, freelancer leads, or community questions. We typically reply within 24 hours.
-                </p>
-                <button
-                  onClick={handleSupportClick}
-                  className="w-full rounded-sm bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
-                >
-                  Ask the Team
-                </button>
+          {/* Need Help Section */}
+          <div className={cn(cardBaseClass, "space-y-4")}>
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/20 bg-[#00749C]/10 text-[#00749C]">
+                <HelpCircle size={18} />
+              </span>
+              <div>
+                <p className={labelClass}>Support</p>
+                <h3 className="text-lg font-black tracking-tight">
+                  Need a hand?
+                </h3>
               </div>
+            </div>
+            <p className={bodyCopyClass}>
+              Send a note to our volunteer organizers for quick WordPress tips,
+              freelancer leads, or community questions. We typically reply within
+              24 hours.
+            </p>
+            <button
+              onClick={handleSupportClick}
+              className={cn(primaryButtonClass, "w-full")}
+            >
+              Ask the Team
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Auth Modal */}
       {showAuthModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="relative w-full max-w-md">
             <button
               onClick={closeAuthModal}
