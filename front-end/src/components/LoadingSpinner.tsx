@@ -18,16 +18,6 @@ export default function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "
             animationDuration: "0.8s"
           }}
         />
-        
-        {/* Inner dot */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div 
-            className="h-2 w-2 rounded-full bg-[#00749C] animate-pulse"
-            style={{
-              animationDuration: "1.5s"
-            }}
-          />
-        </div>
       </div>
     </div>
   );

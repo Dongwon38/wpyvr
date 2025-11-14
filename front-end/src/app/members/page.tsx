@@ -11,10 +11,10 @@ import {
   Briefcase, 
   Building2, 
   Globe, 
-  Award,
-  Loader2
+  Award
 } from "lucide-react";
 import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type SortOption = "default" | "name-asc" | "name-desc";
 
@@ -153,15 +153,7 @@ export default function MembersPage() {
       <section className="px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <div className="relative h-12 w-12">
-                <div className="absolute inset-0 rounded-full border-4 border-[#00749C]/20" />
-                <div 
-                  className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#00749C] border-r-[#00B7D3] animate-spin"
-                  style={{ animationDuration: "0.8s" }}
-                />
-              </div>
-            </div>
+            <LoadingSpinner />
           ) : (
             <>
               {/* Search and Filter Bar */}

@@ -57,12 +57,12 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       {/* Event Image */}
       <a href= {event.link} target="_blank" rel="noopener noreferrer" className="block relative">
         <div
+          className="relative h-48 overflow-hidden"
           style={{
             backgroundImage: isPast
-              ? "linear-gradient(135deg, #444140 0%, #5C5856 100%)"
-              : "linear-gradient(135deg, #00749C 0%, #00B7D3 100%)"
+              ? "linear-gradient(135deg, rgba(68, 65, 64, 0.9) 0%, rgba(92, 88, 86, 0.9) 100%)"
+              : "linear-gradient(135deg, rgba(0, 116, 156, 0.9) 0%, rgba(0, 183, 211, 0.9) 100%)"
           }}
-          className="relative h-48 overflow-hidden"
         >
           {event.thumbnail ? (
             <img

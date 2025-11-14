@@ -160,41 +160,36 @@ export default function HeroSection() {
       </div>
 
       {/* Controls */}
-      <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10 sm:gap-3">
+      <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10">
         <button
           onClick={prevSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#00749C] shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-[#00749C] backdrop-blur transition hover:bg-white"
           aria-label="Previous slide"
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft size={16} />
         </button>
 
-        <div className="flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#444140] shadow-lg backdrop-blur sm:px-4 sm:py-2 sm:text-sm">
-          <span>{currentSlide + 1}</span>
-          <span className="text-[#00749C]/40">/</span>
-          <span>{totalSlides}</span>
-          <div className="hidden gap-1 sm:flex">
-            {heroSlides.map((heroSlide, index) => (
-              <button
-                key={heroSlide.id}
-                onClick={() => goToSlide(index)}
-                className={`h-1.5 rounded-full transition-all ${
-                  index === currentSlide
-                    ? "w-4 bg-[#00749C]"
-                    : "w-1.5 bg-[#00749C]/30 hover:bg-[#00749C]/50"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+        <div className="flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 backdrop-blur">
+          {heroSlides.map((heroSlide, index) => (
+            <button
+              key={heroSlide.id}
+              onClick={() => goToSlide(index)}
+              className={`h-1 rounded-full transition-all ${
+                index === currentSlide
+                  ? "w-4 bg-[#00749C]"
+                  : "w-1 bg-[#00749C]/30 hover:bg-[#00749C]/50"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
 
         <button
           onClick={nextSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#00749C] shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-[#00749C] backdrop-blur transition hover:bg-white"
           aria-label="Next slide"
         >
-          <ChevronRight size={22} />
+          <ChevronRight size={16} />
         </button>
       </div>
     </section>
