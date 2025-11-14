@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Loader2 } from "lucide-react"
+import { ArrowLeft, User } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import ProfileForm from "@/components/profile/ProfileForm"
 import { fetchUserProfile, type UserProfile } from "@/lib/profileApi"
@@ -41,16 +41,16 @@ export default function ProfilePage() {
   // Show loading state
   if (authLoading || loadingProfile) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="text-center">
-          <div className="relative mx-auto h-12 w-12">
-            <div className="absolute inset-0 rounded-full border-4 border-[#00749C]/20" />
+          <div className="relative mx-auto h-16 w-16">
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200" />
             <div 
-              className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#00749C] border-r-[#00B7D3] animate-spin"
+              className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#00749C] animate-spin"
               style={{ animationDuration: "0.8s" }}
             />
           </div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">
+          <p className="mt-6 text-sm font-medium text-[#444140]">
             Loading your profile...
           </p>
         </div>
@@ -61,13 +61,18 @@ export default function ProfilePage() {
   // Show error state
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="max-w-md text-center">
-          <h1 className="text-2xl font-bold text-red-600">Error</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">{error}</p>
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+            <svg className="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-bold text-[#444140]">Error</h1>
+          <p className="mt-2 text-sm text-gray-600">{error}</p>
           <button
             onClick={() => router.push("/")}
-            className="mt-4 rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+            className="mt-6 rounded-lg bg-[#00749C] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#005a7a]"
           >
             Go Back
           </button>
@@ -77,27 +82,37 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
+    <div className="min-h-screen bg-white">
+      {/* Simple Header */}
+      <div className="border-b border-gray-100">
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
           <button
             onClick={() => router.push("/")}
-            className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+            className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-[#444140]"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
             Back to Home
           </button>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            My Profile
-          </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Manage your profile information and connect with the community
-          </p>
+          
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
+              <User className="h-5 w-5 text-[#444140]" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-[#444140]">
+                My Profile
+              </h1>
+              <p className="mt-1 text-sm text-gray-600">
+                Manage your profile information and connect with the community
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Profile Form Card */}
-        <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800 md:p-8">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
           <ProfileForm
             initialData={
               profile
@@ -126,16 +141,31 @@ export default function ProfilePage() {
         </div>
 
         {/* Help Text */}
-        <div className="mt-6 rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
-          <h3 className="font-semibold text-purple-900 dark:text-purple-300">
+        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <h3 className="text-sm font-semibold text-[#444140]">
             💡 Profile Tips
           </h3>
-          <ul className="mt-2 space-y-1 text-sm text-purple-800 dark:text-purple-400">
-            <li>• Your nickname is required and visible to all members</li>
-            <li>• Add specialties to showcase your skills and expertise</li>
-            <li>• Upload a profile photo to make your profile more personal</li>
-            <li>• Use privacy settings to control what information is public</li>
-            <li>• Set your profile to Private to hide from the members list</li>
+          <ul className="mt-3 space-y-2 text-sm text-gray-600">
+            <li className="flex items-start gap-2">
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
+              <span>Your nickname is required and visible to all members</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
+              <span>Add specialties to showcase your skills and expertise</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
+              <span>Upload a profile photo to make your profile more personal</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
+              <span>Use privacy settings to control what information is public</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-gray-400"></span>
+              <span>Set your profile to Private to hide from the members list</span>
+            </li>
           </ul>
         </div>
       </div>
