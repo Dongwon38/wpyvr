@@ -28,7 +28,7 @@ export default function StayConnectedCard({ className }: { className?: string })
   return (
     <div className={cn("space-y-3", className)}>
       <div>
-        <h3 className="text-base font-black text-[#444140]">
+        <h3 className="text-base font-semibold text-[#1f1c16]">
           Stay Connected
         </h3>
         <p className="text-xs text-[#444140]/70">
@@ -36,7 +36,7 @@ export default function StayConnectedCard({ className }: { className?: string })
         </p>
       </div>
 
-      <div className="space-y-2">
+      <div className="divide-y divide-[#444140]/10">
         {socialLinks.map((link) => {
           return (
             <a
@@ -44,26 +44,26 @@ export default function StayConnectedCard({ className }: { className?: string })
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3  bg-white px-2 py-3 transition-all hover:border-[#00749C]/40 hover:bg-[#00749C]/5 hover:shadow-sm"
+              className="group flex items-center gap-3 py-3 text-[#444140] transition-colors hover:text-[#00749C]"
             >
-              <div className="flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#444140]/15 bg-white">
                 {link.name === "Slack" ? (
-                  <Image src='/logo-slack.png' alt={link.name} width={24} height={24} />
+                  <Image src="/logo-slack.png" alt={link.name} width={20} height={20} />
                 ) : link.name === "Discord" ? (
-                  <Image src='/logo-discord.png' alt={link.name} width={24} height={24} />
+                  <Image src="/logo-discord.png" alt={link.name} width={20} height={20} />
                 ) : link.name === "Meetup" ? (
-                  <Image src='/logo-meetup.png' alt={link.name} width={24} height={24} />
+                  <Image src="/logo-meetup.png" alt={link.name} width={20} height={20} />
                 ) : null}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold leading-tight text-[#444140] group-hover:text-[#00749C]">
+                <p className="text-sm font-semibold leading-tight group-hover:text-[#00749C]">
                   {link.name}
                 </p>
                 <p className="text-[11px] text-[#444140]/60">
                   {link.description}
                 </p>
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#00749C]/70 group-hover:text-[#00749C]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#00749C]/70 group-hover:text-[#00749C]">
                 {link.label}
               </span>
             </a>
