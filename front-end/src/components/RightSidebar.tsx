@@ -28,15 +28,15 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const { user, wpUser, userProfile, logout, loading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  const cardBaseClass =
-    "rounded-sm border border-[#444140]/12 bg-white p-4 text-[#444140] shadow-lg";
+  const sectionClass =
+    "relative px-5 py-6 text-[#444140] transition-colors hover:bg-[#00749C]/[0.02]";
   const primaryButtonClass =
-    "inline-flex items-center justify-center gap-2 rounded-sm bg-[#00749C] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#006282]";
+    "group inline-flex items-center justify-center gap-2 rounded-full bg-[#00749C] px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:bg-[#006282] hover:scale-[1.02] active:scale-[0.98]";
   const secondaryButtonClass =
-    "inline-flex items-center justify-center gap-2 rounded-sm border border-[#444140]/20 px-4 py-2.5 text-sm font-semibold text-[#444140] transition-colors hover:bg-[#444140]/5";
+    "inline-flex items-center justify-center gap-2 rounded-full bg-[#444140]/5 px-6 py-3 text-sm font-bold text-[#444140] transition-all duration-200 hover:bg-[#444140]/10 hover:scale-[1.02] active:scale-[0.98]";
   const labelClass =
-    "text-[11px] font-semibold uppercase tracking-[0.3em] text-[#444140]/60";
-  const bodyCopyClass = "text-sm leading-relaxed text-[#444140]/70";
+    "mb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#00749C]";
+  const bodyCopyClass = "text-[15px] leading-relaxed text-[#444140]/80";
 
   const handleLogout = async () => {
     try {
@@ -83,49 +83,49 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto border-l border-[#00749C]/10 bg-white shadow-2xl transition-transform duration-300 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:shadow-none",
+          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto border-l border-[#00749C]/8 bg-gradient-to-b from-white to-[#00749C]/[0.02] shadow-2xl transition-transform duration-300 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:shadow-none lg:border-l-0",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Mobile Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-sm p-2 text-[#444140] transition-colors hover:bg-[#00749C]/5 lg:hidden"
+          className="absolute right-4 top-4 rounded-full p-2 text-[#444140] transition-all hover:bg-[#00749C]/10 hover:text-[#00749C] hover:rotate-90 lg:hidden"
           aria-label="Close sidebar"
         >
           <X size={24} />
         </button>
 
-        <div className="space-y-4 px-2 pb-10 pt-12 lg:px-4 lg:py-4">
+        <div className="divide-y divide-[#444140]/8 pb-10 pt-16 lg:pt-0">
           {/* Login/User Section */}
           {!loading && (
             <>
               {user && wpUser ? (
-                <div className={cn(cardBaseClass, "space-y-5")}>
-                  <div className="flex items-center gap-3">
+                <div className={cn(sectionClass, "space-y-5 border-l-4 border-l-[#00749C]")}>
+                  <div className="flex items-start gap-4">
                     {userProfile?.avatar_url || user.photoURL ? (
                       <img
                         src={userProfile?.avatar_url || user.photoURL || ""}
                         alt={userProfile?.nickname || wpUser.display_name}
-                        className="h-11 w-11 rounded-full border border-[#444140]/15 object-cover shadow-sm"
+                        className="h-14 w-14 rounded-full border-2 border-[#00749C]/20 object-cover ring-2 ring-[#00749C]/10 ring-offset-2"
                       />
                     ) : (
-                      <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/30 bg-[#00749C]/10 text-[#00749C]">
-                        <UserIcon size={20} />
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00749C] to-[#006282] text-white shadow-md">
+                        <UserIcon size={24} />
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className={labelClass}>Profile</p>
-                      <h3 className="text-base font-semibold tracking-tight">
-                        Hi, {userProfile?.nickname || wpUser.display_name}! 👋
+                      <p className={labelClass}>Your Profile</p>
+                      <h3 className="text-lg font-black tracking-tight text-[#444140]">
+                        {userProfile?.nickname || wpUser.display_name}
                       </h3>
-                      <p className="text-sm text-[#444140]/70">
+                      <p className="text-sm text-[#444140]/60">
                         {userProfile?.position || wpUser.email}
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="flex flex-col gap-2">
                     <button
                       onClick={() => {
                         router.push("/profile");
@@ -133,38 +133,39 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                       }}
                       className={cn(primaryButtonClass, "w-full")}
                     >
-                      Manage Info
+                      Manage Profile
                     </button>
                     <button
                       onClick={handleLogout}
                       className={cn(secondaryButtonClass, "w-full")}
                     >
+                      <LogOut size={16} />
                       Sign Out
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className={cn(cardBaseClass, "space-y-4")}>
-                  <div className="flex items-start gap-3">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/20 bg-[#00749C]/10 text-[#00749C]">
-                      <LogIn size={18} />
-                    </span>
-                    <div>
-                      <p className={labelClass}>Community access</p>
-                      <h3 className="text-lg font-black tracking-tight">
+                <div className={cn(sectionClass, "space-y-5")}>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00749C] to-[#006282] text-white shadow-md">
+                      <LogIn size={24} />
+                    </div>
+                    <div className="flex-1">
+                      <p className={labelClass}>Get Started</p>
+                      <h3 className="text-xl font-black tracking-tight text-[#444140]">
                         Join our community
                       </h3>
                     </div>
                   </div>
                   <p className={bodyCopyClass}>
-                    Sign in to unlock all features and connect with fellow
-                    creators.
+                    Sign in to unlock all features and connect with fellow WordPress creators in Vancouver.
                   </p>
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2.5">
                     <button
                       onClick={openAuthModal}
                       className={cn(primaryButtonClass, "w-full")}
                     >
+                      <LogIn size={16} />
                       Sign In
                     </button>
                     <button
@@ -180,54 +181,55 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           )}
 
           {/* Members Link Section */}
-          <div className={cn(cardBaseClass, "lg:hidden space-y-4")}>
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#00749C]/20 bg-[#00749C]/10 text-[#00749C]">
-                <UsersRound size={20} />
-              </span>
-              <div>
-                <p className={labelClass}>Member spotlight</p>
-                <h3 className="text-lg font-black tracking-tight">
+          <div className={cn(sectionClass, "lg:hidden space-y-5")}>
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#444140] text-white shadow-md">
+                <UsersRound size={24} />
+              </div>
+              <div className="flex-1">
+                <p className={labelClass}>Community</p>
+                <h3 className="text-xl font-black tracking-tight text-[#444140]">
                   Meet the members
                 </h3>
               </div>
             </div>
             <p className={bodyCopyClass}>
-              Explore profiles and connect with WordPress enthusiasts in
-              Vancouver.
+              Explore profiles and connect with WordPress enthusiasts in Vancouver.
             </p>
             <button
               onClick={() => handleNavigate("/members")}
               className={cn(primaryButtonClass, "w-full")}
             >
-              Visit Members Page
-              <ArrowRight size={16} />
+              Browse Members
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
           </div>
 
           {/* Community Links Section */}
-          <StayConnectedCard className={cn(cardBaseClass, "lg:hidden")} />
+          <StayConnectedCard className={cn(sectionClass, "lg:hidden")} />
 
           {/* Need Help Section */}
-          <div className={cn(cardBaseClass, "space-y-4")}>
-            <div className="flex items-center gap-3">
-              <div>
+          <div className={cn(sectionClass, "space-y-5")}>
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00749C] to-[#006282] text-white shadow-md">
+                <HelpCircle size={24} />
+              </div>
+              <div className="flex-1">
                 <p className={labelClass}>Support</p>
-                <h3 className="text-lg font-black tracking-tight">
+                <h3 className="text-xl font-black tracking-tight text-[#444140]">
                   Need a hand?
                 </h3>
               </div>
             </div>
             <p className={bodyCopyClass}>
-              Send a note to our volunteer organizers for quick WordPress tips,
-              freelancer leads, or community questions. We typically reply within
-              24 hours.
+              Send a note to our volunteer organizers for quick WordPress tips, freelancer leads, or community questions. We typically reply within 24 hours.
             </p>
             <button
               onClick={handleSupportClick}
               className={cn(primaryButtonClass, "w-full")}
             >
-              Ask the Team
+              <HelpCircle size={16} />
+              Contact Support
             </button>
           </div>
         </div>

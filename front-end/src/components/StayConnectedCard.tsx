@@ -26,12 +26,15 @@ export default function StayConnectedCard({ className }: { className?: string })
   ];
 
   return (
-    <div className={cn("space-y-3", className)}>
+    <div className={cn("space-y-5", className)}>
       <div>
-        <h3 className="text-base font-black text-[#444140]">
+        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#00749C]">
+          Connect
+        </p>
+        <h3 className="text-xl font-black tracking-tight text-[#444140]">
           Stay Connected
         </h3>
-        <p className="text-xs text-[#444140]/70">
+        <p className="mt-1 text-[15px] leading-relaxed text-[#444140]/80">
           Join us across our main channels
         </p>
       </div>
@@ -44,9 +47,9 @@ export default function StayConnectedCard({ className }: { className?: string })
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3  bg-white px-2 py-3 transition-all hover:border-[#00749C]/40 hover:bg-[#00749C]/5 hover:shadow-sm"
+              className="group flex items-center gap-4 rounded-full bg-[#444140]/5 px-4 py-3 transition-all duration-200 hover:bg-[#00749C]/10 hover:scale-[1.02] active:scale-[0.98]"
             >
-              <div className="flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
                 {link.name === "Slack" ? (
                   <Image src='/logo-slack.png' alt={link.name} width={24} height={24} />
                 ) : link.name === "Discord" ? (
@@ -55,16 +58,16 @@ export default function StayConnectedCard({ className }: { className?: string })
                   <Image src='/logo-meetup.png' alt={link.name} width={24} height={24} />
                 ) : null}
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold leading-tight text-[#444140] group-hover:text-[#00749C]">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold leading-tight text-[#444140] group-hover:text-[#00749C]">
                   {link.name}
                 </p>
-                <p className="text-[11px] text-[#444140]/60">
+                <p className="text-xs text-[#444140]/60">
                   {link.description}
                 </p>
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#00749C]/70 group-hover:text-[#00749C]">
-                {link.label}
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#00749C] opacity-70 group-hover:opacity-100">
+                {link.label} →
               </span>
             </a>
           );
