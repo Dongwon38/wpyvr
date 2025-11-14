@@ -1,7 +1,8 @@
+// 9e8e, Opus 4.1
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Layers, Palette, Zap, Gradient, Droplet, Sun, Moon } from "lucide-react";
+import { Sparkles, Layers, Palette, Zap, Droplet } from "lucide-react";
 import Link from "next/link";
 
 export default function ColorShowcase() {
@@ -221,7 +222,7 @@ export default function ColorShowcase() {
               { icon: Layers, title: "Layered Effects", desc: "Multiple depth levels for visual interest" },
               { icon: Palette, title: "Color Harmony", desc: "Perfect color combinations" },
               { icon: Zap, title: "Lightning Fast", desc: "Optimized performance" },
-              { icon: Gradient, title: "Smooth Transitions", desc: "Fluid animations and effects" },
+              { icon: Palette, title: "Smooth Transitions", desc: "Fluid animations and effects" },
               { icon: Droplet, title: "Fluid Design", desc: "Organic and flowing interfaces" },
             ].map((item, index) => {
               const Icon = item.icon;
