@@ -36,7 +36,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={cn(
-        "group relative overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-xl dark:bg-gray-800",
+        "group relative overflow-hidden rounded-3xl border border-[#00749C]/10 bg-white shadow-md transition-all hover:shadow-xl",
         isPast && "opacity-75"
       )}
     >
@@ -44,10 +44,10 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         <div className="absolute right-4 top-4 z-10">
           <span
           className={cn(
-              "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[1px] shadow-lg",
+              "rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.05em] shadow-lg",
             isPast
-              ? "bg-gray-500 text-white"
-              : "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+              ? "bg-[#444140] text-white"
+              : "bg-[#00749C] text-white"
           )}
         >
           {isPast ? "Past" : "Upcoming"}
@@ -57,12 +57,12 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       {/* Event Image */}
       <a href= {event.link} target="_blank" rel="noopener noreferrer" className="block relative">
         <div
-          className={cn(
-            "relative h-48 overflow-hidden bg-gradient-to-br",
-            isPast
-              ? "from-gray-400 to-gray-500"
-              : "from-blue-500 via-purple-500 to-pink-500"
-          )}
+          style={{
+            backgroundImage: isPast
+              ? "linear-gradient(135deg, #444140 0%, #5C5856 100%)"
+              : "linear-gradient(135deg, #00749C 0%, #00B7D3 100%)"
+          }}
+          className="relative h-48 overflow-hidden"
         >
           {event.thumbnail ? (
             <img
@@ -92,16 +92,16 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       <div className="p-6">
         {/* Title */}
           <a href={event.link} target="_blank" rel="noopener noreferrer" className="group/title">
-            <h3 className="mb-3 text-lg font-bold tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+            <h3 className="mb-3 text-lg font-black tracking-tight text-[#444140] transition-colors group-hover/title:text-[#00749C]">
             {event.title}
           </h3>
         </a>
 
         {/* Event Details */}
-        <div className="space-y-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+        <div className="space-y-2 border-t border-[#00749C]/10 pt-4">
           {/* Date and Time (combined) */}
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <Calendar size={16} className="text-blue-600 dark:text-blue-400" />
+            <div className="flex items-center gap-2 text-sm font-medium text-[#444140]">
+            <Calendar size={16} className="text-[#00749C]" />
             <span>{(() => {
               const [year, month, day] = event.eventDate.split('-').map(Number);
               const [hour, min] = event.startTime.split(':').map(Number);
@@ -127,14 +127,14 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
           </div>
 
           {/* Location */}
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <MapPin size={16} className="text-orange-600 dark:text-orange-400" />
+            <div className="flex items-center gap-2 text-sm font-medium text-[#444140]">
+            <MapPin size={16} className="text-[#00749C]" />
             {event.googleMapsUrl ? (
               <a
                 href={event.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="line-clamp-1 text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                className="line-clamp-1 text-[#00749C] hover:text-[#005A7A] hover:underline"
               >
                 {event.locationTitle}
               </a>

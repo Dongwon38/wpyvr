@@ -78,7 +78,7 @@ export default function Home() {
   }, []);
 
     return (
-      <div className="min-h-screen overflow-x-hidden bg-gray-50 dark:bg-gray-950">
+      <div className="min-h-screen overflow-x-hidden bg-white">
       {/* Hero Section */}
         <HeroSection />
 
@@ -92,18 +92,18 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
                 <div className="mb-2 flex items-center gap-2">
-                  <Calendar className="text-purple-600" size={24} />
-                  <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  <Calendar className="text-[#00749C]" size={24} />
+                  <h2 className="text-2xl font-black tracking-tight text-[#444140]">
                   Events
                 </h2>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-[#444140]/70">
                 Latest upcoming and past events
               </p>
             </motion.div>
             <Link
               href="/events"
-                className="hidden items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+                className="hidden items-center gap-2 text-sm font-semibold text-[#00749C] transition-colors hover:text-[#005A7A] sm:flex"
             >
               View All Events
               <ArrowRight size={16} />
@@ -113,7 +113,7 @@ export default function Home() {
           {/* Events Grid */}
           {eventsLoading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-purple-600"></div>
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#00749C]/20 border-t-[#00749C]"></div>
             </div>
           ) : events.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
@@ -122,9 +122,9 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl bg-gray-100 p-12 text-center dark:bg-gray-700">
-              <Calendar className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-400">
+            <div className="rounded-3xl border border-[#00749C]/15 bg-[#FFFDF9] p-12 text-center shadow-md">
+              <Calendar className="mx-auto mb-4 h-12 w-12 text-[#00749C]/40" />
+              <p className="text-[#444140]/70">
                 No events yet. Check back soon!
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function Home() {
           <div className="mt-8 text-center sm:hidden">
             <Link
               href="/events"
-                className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#00749C] transition-colors hover:text-[#005A7A]"
             >
               View All Events
               <ArrowRight size={16} />
@@ -152,12 +152,12 @@ export default function Home() {
             className="mb-8"
           >
             <div className="mb-2 flex items-center gap-2">
-              <Users className="text-orange-600" size={24} />
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              <Users className="text-[#00749C]" size={24} />
+                <h2 className="text-2xl font-black tracking-tight text-[#444140]">
                 Community Posts
               </h2>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-[#444140]/70">
               Discover what our community is sharing
             </p>
           </motion.div>
@@ -167,7 +167,7 @@ export default function Home() {
             <PostSlider
               posts={trendingPosts}
               title="Trending Posts"
-              icon={<TrendingUp className="text-orange-500" size={20} />}
+              icon={<TrendingUp className="text-[#00749C]" size={20} />}
             />
           </div>
 
@@ -176,7 +176,7 @@ export default function Home() {
             <PostSlider
               posts={recentPosts}
               title="Recent Posts"
-              icon={<Clock className="text-blue-500" size={20} />}
+              icon={<Clock className="text-[#00749C]" size={20} />}
             />
           </div>
         </div>
@@ -192,18 +192,18 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               <div className="mb-2 flex items-center gap-2">
-                <FileText className="text-blue-600" size={24} />
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <FileText className="text-[#00749C]" size={24} />
+                <h2 className="text-2xl font-black tracking-tight text-[#444140]">
                   Latest Articles
                 </h2>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-[#444140]/70">
                 In-depth tutorials and insights from our editorial team
               </p>
             </motion.div>
             <Link
               href="/blog"
-                className="hidden items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 sm:flex"
+                className="hidden items-center gap-2 text-sm font-semibold text-[#00749C] transition-colors hover:text-[#005A7A] sm:flex"
             >
               View All Articles
               <ArrowRight size={16} />
@@ -213,7 +213,7 @@ export default function Home() {
           {/* Loading State */}
           {blogLoading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#00749C]/20 border-t-[#00749C]"></div>
             </div>
           ) : blogPosts.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -222,9 +222,9 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl bg-gray-100 p-12 text-center dark:bg-gray-700">
-              <FileText className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-400">
+            <div className="rounded-3xl border border-[#00749C]/15 bg-[#FFFDF9] p-12 text-center shadow-md">
+              <FileText className="mx-auto mb-4 h-12 w-12 text-[#00749C]/40" />
+              <p className="text-[#444140]/70">
                 No blog posts yet. Check back soon!
               </p>
             </div>
@@ -233,7 +233,7 @@ export default function Home() {
           <div className="mt-8 text-center sm:hidden">
             <Link
               href="/blog"
-                className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#00749C] transition-colors hover:text-[#005A7A]"
             >
               View All Articles
               <ArrowRight size={16} />
@@ -252,12 +252,12 @@ export default function Home() {
             className="text-center"
           >
             <div className="mb-4 flex items-center justify-center gap-2">
-              <Sparkles className="text-yellow-500" size={28} />
-              <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+              <Sparkles className="text-[#00749C]" size={28} />
+              <h2 className="text-2xl font-black text-[#444140]">
                 Why Join Our Community?
               </h2>
             </div>
-            <p className="mb-10 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mb-10 text-sm text-[#444140]/70">
               Everything you need to learn, grow, and connect
             </p>
           </motion.div>
@@ -285,13 +285,13 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="rounded-2xl bg-white p-8 text-center shadow-md dark:bg-gray-800"
+                className="rounded-3xl border border-[#00749C]/10 bg-white p-8 text-center shadow-md"
               >
                 <div className="mb-4 text-5xl">{feature.icon}</div>
-                <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+                <h3 className="mb-2 text-xl font-black text-[#444140]">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-[#444140]/70">
                   {feature.description}
                 </p>
               </motion.div>
@@ -301,24 +301,24 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-        <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <section className="relative isolate overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8" style={{backgroundImage: "linear-gradient(130deg, #031926 0%, #00749C 48%, #00B7D3 100%)"}}>
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="mb-4 text-4xl font-bold text-white sm:text-5xl">
+            <h2 className="mb-4 text-4xl font-black text-white sm:text-5xl">
               Ready to Get Started?
             </h2>
-            <p className="mb-8 text-xl text-white/90">
+            <p className="mb-8 text-xl font-light text-white/90">
               Join our community today and start your journey with fellow creators
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <button className="w-full rounded-2xl bg-white px-8 py-4 text-base font-semibold text-blue-600 shadow-xl transition-all hover:bg-gray-100 hover:shadow-2xl sm:w-auto">
+              <button className="w-full rounded-full bg-white px-8 py-4 text-base font-semibold text-[#00749C] shadow-xl shadow-black/25 transition-all hover:-translate-y-0.5 hover:bg-white/95 sm:w-auto">
                 Create Free Account
               </button>
-              <button className="w-full rounded-2xl border-2 border-white px-8 py-4 text-base font-semibold text-white transition-all hover:bg-white/10 sm:w-auto">
+              <button className="w-full rounded-full border-2 border-white/40 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-white/10 sm:w-auto">
                 Learn More
               </button>
             </div>

@@ -17,13 +17,13 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-lg dark:bg-gray-950/80">
+    <nav className="sticky top-0 z-50 w-full border-b border-[#00749C]/10 bg-white/95 backdrop-blur-lg">
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-            <Link 
-              href="/" 
-              className="text-xl font-black tracking-tight text-gray-900 transition-colors hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+          <Link 
+            href="/" 
+            className="text-xl font-black tracking-tight text-[#00749C] transition-colors hover:text-[#005A7A]"
           >
             Community Hub
           </Link>
@@ -34,7 +34,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                  className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                className="text-sm font-semibold text-[#444140] transition-colors hover:text-[#00749C]"
               >
                 {link.label}
               </Link>
@@ -44,7 +44,7 @@ export default function Navbar() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 md:hidden dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+            className="inline-flex items-center justify-center rounded-lg p-2 text-[#444140] transition-colors hover:bg-[#00749C]/5 hover:text-[#00749C] md:hidden"
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -59,13 +59,13 @@ export default function Navbar() {
           isOpen ? "max-h-64" : "max-h-0"
         )}
       >
-        <div className="space-y-1 border-t border-gray-200 bg-white px-4 pb-4 pt-2 dark:border-gray-800 dark:bg-gray-950">
+        <div className="space-y-1 border-t border-[#00749C]/10 bg-white px-4 pb-4 pt-2">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setIsOpen(false)}
-                className="block rounded-lg px-3 py-2 text-base font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+              className="block rounded-lg px-3 py-2 text-base font-medium text-[#444140] transition-colors hover:bg-[#00749C]/5 hover:text-[#00749C]"
             >
               {link.label}
             </Link>

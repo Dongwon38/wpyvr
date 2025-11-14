@@ -73,14 +73,14 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto bg-white shadow-2xl transition-transform duration-300 dark:bg-gray-900 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:bg-gray-50 lg:shadow-none lg:dark:bg-gray-950",
+          "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto border-l border-[#00749C]/10 bg-white shadow-2xl transition-transform duration-300 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:shadow-none",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Mobile Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
+          className="absolute right-4 top-4 rounded-lg p-2 text-[#444140] transition-colors hover:bg-[#00749C]/5 lg:hidden"
           aria-label="Close sidebar"
         >
           <X size={24} />
@@ -92,7 +92,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             <>
               {user && wpUser ? (
                 // Logged in state
-                <div className="rounded-2xl bg-gradient-to-br from-green-600 to-teal-600 p-5 text-white shadow-md">
+                <div className="rounded-3xl p-5 text-white shadow-md" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #00B7D3 100%)"}}>
                   <div className="mb-3 flex items-center gap-3">
                     {userProfile?.avatar_url || user.photoURL ? (
                       <img 
@@ -101,7 +101,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                         className="h-10 w-10 rounded-full border-2 border-white object-cover"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-green-600 font-bold">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#00749C] font-bold">
                         <UserIcon size={20} />
                       </div>
                     )}
@@ -122,7 +122,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                           router.push("/profile");
                           onClose();
                         }}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-green-600 transition-all hover:bg-gray-100"
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#00749C] transition-all hover:bg-gray-100"
                       >
                         <Settings size={14} />
                         Manage Info
@@ -138,7 +138,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                 </div>
               ) : (
                 // Not logged in state
-                <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-md">
+                <div className="rounded-3xl p-6 text-white shadow-md" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #444140 100%)"}}>
                     <div className="mb-4 flex items-center gap-2">
                       <LogIn size={20} />
                       <h3 className="text-lg font-black tracking-tight">Join Our Community</h3>
@@ -149,7 +149,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                   <div className="space-y-2">
                       <button 
                       onClick={openAuthModal}
-                        className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-blue-600 transition-all hover:bg-gray-100"
+                        className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
                     >
                       Sign In
                     </button>
@@ -166,7 +166,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           )}
 
             {/* Members Link Section */}
-            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 p-6 text-white shadow-md lg:hidden">
+            <div className="rounded-3xl p-6 text-white shadow-md lg:hidden" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #003B52 100%)"}}>
               <div className="mb-3 flex items-center gap-2">
                 <UsersRound size={20} />
                 <h3 className="text-lg font-black tracking-tight">Meet the Members</h3>
@@ -176,7 +176,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               </p>
               <button
                 onClick={() => handleNavigate("/members")}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-bold text-blue-600 transition-all hover:bg-gray-100"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
               >
                 Visit Members Page
                 <ArrowRight size={16} />
@@ -187,7 +187,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               <StayConnectedCard className="lg:hidden" />
 
               {/* Need Help Section */}
-              <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-6 text-white shadow-md">
+              <div className="rounded-3xl p-6 text-white shadow-md" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #00B7D3 100%)"}}>
                 <div className="mb-3 flex items-center gap-2">
                   <HelpCircle size={20} />
                   <h3 className="text-lg font-black tracking-tight">Need a Hand?</h3>
@@ -197,7 +197,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                 </p>
                 <button
                   onClick={handleSupportClick}
-                  className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-orange-600 transition-all hover:bg-gray-100"
+                  className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
                 >
                   Ask the Team
                 </button>
@@ -211,7 +211,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           <div className="relative w-full max-w-md">
             <button
               onClick={closeAuthModal}
-              className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-gray-600 shadow-lg transition-colors hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="absolute -right-2 -top-2 z-10 rounded-full bg-white p-2 text-[#444140] shadow-lg transition-colors hover:bg-[#00749C]/5"
               aria-label="Close modal"
             >
               <X size={20} />

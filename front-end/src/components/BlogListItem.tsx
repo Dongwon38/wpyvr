@@ -38,18 +38,18 @@ export default function BlogListItem({ post, index = 0 }: BlogListItemProps) {
       <div className="flex flex-col gap-2 py-4">
         {/* Title */}
           <Link href={`/blog/${post.slug}`} className="group/title">
-            <h2 className="text-lg font-bold leading-snug tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
+            <h2 className="text-lg font-black leading-snug tracking-tight text-[#444140] transition-colors group-hover/title:text-[#00749C]">
             {post.title}
           </h2>
         </Link>
 
         {/* Excerpt - Limited to 2 lines with ellipsis */}
-          <p className="line-clamp-2 text-sm font-light leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="line-clamp-2 text-sm leading-relaxed text-[#444140]/70">
           {post.excerpt}
         </p>
 
         {/* Meta Information */}
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500">
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-[#444140]/60">
           {/* Author */}
             <div className="flex items-center gap-1.5">
               <span className="font-medium">{post.author.name}</span>

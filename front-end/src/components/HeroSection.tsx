@@ -108,7 +108,12 @@ export default function HeroSection() {
               className="object-cover"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-black/50 to-black/30" />
+            <div 
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "linear-gradient(130deg, rgba(3, 25, 38, 0.85), rgba(0, 116, 156, 0.75), rgba(0, 183, 211, 0.65))"
+              }}
+            />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -129,10 +134,10 @@ export default function HeroSection() {
             }}
             className="max-w-3xl text-white"
           >
-            <h1 className="text-[2rem] font-bold leading-tight sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-md">
+            <h1 className="text-[2rem] font-black leading-tight tracking-tight sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-md">
               {slide.title}
             </h1>
-            <p className="mt-4 hidden max-w-2xl text-base leading-relaxed text-white/85 md:block md:text-lg lg:text-xl">
+            <p className="mt-4 hidden max-w-2xl text-base leading-relaxed text-white/90 md:block md:text-lg lg:text-xl">
               {slide.tagline}
             </p>
 
@@ -140,7 +145,7 @@ export default function HeroSection() {
               <div className="mt-8 hidden md:flex">
                 <Link
                   href={slide.cta.href}
-                  className="group inline-flex items-center gap-3 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20 md:text-base"
+                  className="group inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#00749C] shadow-xl shadow-black/25 transition-all hover:-translate-y-0.5 hover:bg-white/95 md:text-base"
                 >
                   {slide.cta.text}
                   <ArrowRight
@@ -158,15 +163,15 @@ export default function HeroSection() {
       <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10 sm:gap-3">
         <button
           onClick={prevSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#00749C] shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
           aria-label="Previous slide"
         >
           <ChevronLeft size={22} />
         </button>
 
-        <div className="flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 text-xs font-medium text-gray-900 shadow-lg backdrop-blur sm:px-4 sm:py-2 sm:text-sm">
+        <div className="flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#444140] shadow-lg backdrop-blur sm:px-4 sm:py-2 sm:text-sm">
           <span>{currentSlide + 1}</span>
-          <span className="text-gray-400">/</span>
+          <span className="text-[#00749C]/40">/</span>
           <span>{totalSlides}</span>
           <div className="hidden gap-1 sm:flex">
             {heroSlides.map((heroSlide, index) => (
@@ -175,8 +180,8 @@ export default function HeroSection() {
                 onClick={() => goToSlide(index)}
                 className={`h-1.5 rounded-full transition-all ${
                   index === currentSlide
-                    ? "w-4 bg-gray-900"
-                    : "w-1.5 bg-gray-300 hover:bg-gray-400"
+                    ? "w-4 bg-[#00749C]"
+                    : "w-1.5 bg-[#00749C]/30 hover:bg-[#00749C]/50"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -186,7 +191,7 @@ export default function HeroSection() {
 
         <button
           onClick={nextSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#00749C] shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
           aria-label="Next slide"
         >
           <ChevronRight size={22} />
