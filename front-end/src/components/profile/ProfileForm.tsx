@@ -228,7 +228,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       <div>
         <label
           htmlFor="nickname"
-          className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+          className="mb-2 block text-sm font-bold text-[#00749C]"
         >
           Nickname <span className="text-red-500">*</span>
         </label>
@@ -239,22 +239,22 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           onChange={(e) => setNickname(e.target.value)}
           placeholder="e.g., DW"
           maxLength={100}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+          className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
           required
         />
       </div>
 
       {/* Profile Visibility - Card Style */}
       <div>
-        <label className="mb-3 block text-sm font-semibold text-gray-900 dark:text-white">
+        <label className="mb-3 block text-sm font-bold text-[#00749C]">
           Profile Visibility <span className="text-red-500">*</span>
         </label>
         <div className="grid gap-4 md:grid-cols-2">
           {/* Public Option Card */}
-          <label className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+          <label className={`relative cursor-pointer rounded-2xl border-2 p-5 transition-all ${
             profileVisibility === 'public'
-              ? 'border-green-500 bg-green-50 dark:border-green-400 dark:bg-green-900/20'
-              : 'border-gray-300 bg-white hover:border-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500'
+              ? 'border-[#00B7D3] bg-gradient-to-br from-[#00749C]/10 to-[#00B7D3]/10 shadow-lg'
+              : 'border-[#00749C]/20 bg-white hover:border-[#00749C]/40'
           }`}>
             <input
               type="radio"
@@ -266,10 +266,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               required
             />
             <div className="flex items-start gap-3">
-              <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+              <div className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 ${
                 profileVisibility === 'public'
-                  ? 'border-green-500 bg-green-500'
-                  : 'border-gray-300 dark:border-gray-600'
+                  ? 'border-[#00B7D3] bg-[#00B7D3]'
+                  : 'border-[#00749C]/30'
               }`}>
                 {profileVisibility === 'public' && (
                   <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
@@ -279,19 +279,19 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <Unlock size={18} className={profileVisibility === 'public' ? 'text-green-600 dark:text-green-400' : 'text-gray-500'} />
-                  <span className={`text-base font-semibold ${
+                  <Unlock size={18} className={profileVisibility === 'public' ? 'text-[#00B7D3]' : 'text-[#444140]/50'} />
+                  <span className={`text-base font-bold ${
                     profileVisibility === 'public'
-                      ? 'text-green-900 dark:text-green-300'
-                      : 'text-gray-900 dark:text-white'
+                      ? 'text-[#00749C]'
+                      : 'text-[#444140]'
                   }`}>
                     Public
                   </span>
                 </div>
                 <p className={`mt-1 text-sm ${
                   profileVisibility === 'public'
-                    ? 'text-green-700 dark:text-green-400'
-                    : 'text-gray-600 dark:text-gray-400'
+                    ? 'text-[#00749C]/80'
+                    : 'text-[#444140]/60'
                 }`}>
                   Visible in members list
                 </p>
@@ -300,10 +300,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           </label>
 
           {/* Private Option Card */}
-          <label className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+          <label className={`relative cursor-pointer rounded-2xl border-2 p-5 transition-all ${
             profileVisibility === 'private'
-              ? 'border-purple-500 bg-purple-50 dark:border-purple-400 dark:bg-purple-900/20'
-              : 'border-gray-300 bg-white hover:border-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500'
+              ? 'border-[#444140] bg-gradient-to-br from-[#444140]/5 to-[#444140]/10 shadow-lg'
+              : 'border-[#00749C]/20 bg-white hover:border-[#00749C]/40'
           }`}>
             <input
               type="radio"
@@ -315,10 +315,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               required
             />
             <div className="flex items-start gap-3">
-              <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+              <div className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 ${
                 profileVisibility === 'private'
-                  ? 'border-purple-500 bg-purple-500'
-                  : 'border-gray-300 dark:border-gray-600'
+                  ? 'border-[#444140] bg-[#444140]'
+                  : 'border-[#00749C]/30'
               }`}>
                 {profileVisibility === 'private' && (
                   <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
@@ -328,19 +328,19 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <Lock size={18} className={profileVisibility === 'private' ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500'} />
-                  <span className={`text-base font-semibold ${
+                  <Lock size={18} className={profileVisibility === 'private' ? 'text-[#444140]' : 'text-[#444140]/50'} />
+                  <span className={`text-base font-bold ${
                     profileVisibility === 'private'
-                      ? 'text-purple-900 dark:text-purple-300'
-                      : 'text-gray-900 dark:text-white'
+                      ? 'text-[#444140]'
+                      : 'text-[#444140]'
                   }`}>
                     Private
                   </span>
                 </div>
                 <p className={`mt-1 text-sm ${
                   profileVisibility === 'private'
-                    ? 'text-purple-700 dark:text-purple-400'
-                    : 'text-gray-600 dark:text-gray-400'
+                    ? 'text-[#444140]/70'
+                    : 'text-[#444140]/60'
                 }`}>
                   Hidden from list
                 </p>
@@ -348,8 +348,8 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             </div>
           </label>
         </div>
-        <div className="mt-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
-          <p className="text-xs text-blue-800 dark:text-blue-300">
+        <div className="mt-3 rounded-xl border border-[#00749C]/20 bg-[#00749C]/5 p-4">
+          <p className="text-xs font-medium text-[#00749C]">
             <strong>Note:</strong> Individual fields can be controlled separately with toggles below.
           </p>
         </div>
@@ -359,7 +359,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       <div>
         <label
           htmlFor="bio"
-          className="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+          className="mb-2 block text-sm font-bold text-[#00749C]"
         >
           Bio / About Me
         </label>
@@ -370,9 +370,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           placeholder="Tell the community about yourself..."
           rows={4}
           maxLength={500}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+          className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
         />
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-xs text-[#444140]/60">
           {bio.length}/500 characters
         </p>
       </div>
@@ -384,12 +384,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           <div className="mb-2 flex items-center justify-between">
             <label
               htmlFor="position"
-              className="text-sm font-semibold text-gray-900 dark:text-white"
+              className="text-sm font-bold text-[#00749C]"
             >
               Position / Job Title
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs font-medium text-[#444140]/60">
                 {privacySettings.show_position ? "Public" : "Private"}
               </span>
               <Switch
@@ -406,7 +406,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             onChange={(e) => setPosition(e.target.value)}
             placeholder="e.g., Full-stack Developer"
             maxLength={255}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+            className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
           />
         </div>
 
@@ -415,12 +415,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           <div className="mb-2 flex items-center justify-between">
             <label
               htmlFor="company"
-              className="text-sm font-semibold text-gray-900 dark:text-white"
+              className="text-sm font-bold text-[#00749C]"
             >
               Company
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs font-medium text-[#444140]/60">
                 {privacySettings.show_company ? "Public" : "Private"}
               </span>
               <Switch
@@ -437,7 +437,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             onChange={(e) => setCompany(e.target.value)}
             placeholder="e.g., Tech Innovations Inc."
             maxLength={255}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+            className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
           />
         </div>
       </div>
@@ -445,11 +445,11 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       {/* Specialties */}
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <label className="text-sm font-semibold text-gray-900 dark:text-white">
+          <label className="text-sm font-bold text-[#00749C]">
             Specialties / Skills
           </label>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs font-medium text-[#444140]/60">
               {privacySettings.show_specialties ? "Public" : "Private"}
             </span>
             <Switch
@@ -472,12 +472,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             }}
             placeholder="e.g., React, Node.js, TypeScript"
             maxLength={50}
-            className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+            className="flex-1 rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
           />
           <button
             type="button"
             onClick={handleAddSpecialty}
-            className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="flex items-center gap-1 rounded-xl bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
             <Plus size={16} />
             Add
@@ -487,13 +487,13 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           {specialties.map((specialty, index) => (
             <span
               key={index}
-              className="inline-flex items-center gap-2 rounded-md bg-purple-100 px-3 py-1 text-sm font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+              className="inline-flex items-center gap-2 rounded-lg border border-[#00749C]/30 bg-[#00749C]/10 px-3 py-1.5 text-sm font-medium text-[#00749C]"
             >
               {specialty}
               <button
                 type="button"
                 onClick={() => handleRemoveSpecialty(index)}
-                className="hover:text-purple-900 dark:hover:text-purple-100"
+                className="hover:text-[#444140]"
               >
                 <X size={14} />
               </button>
@@ -505,11 +505,11 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       {/* Email */}
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <label className="text-sm font-semibold text-gray-900 dark:text-white">
+          <label className="text-sm font-bold text-[#00749C]">
             Email Address
           </label>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs font-medium text-[#444140]/60">
               {privacySettings.show_email ? "Public" : "Private"}
             </span>
             <Switch
@@ -529,9 +529,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 name="emailType"
                 checked={!useCustomEmail}
                 onChange={() => setUseCustomEmail(false)}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                className="h-4 w-4 border-[#00749C]/30 text-[#00749C] focus:ring-2 focus:ring-[#00749C]/20"
               />
-              <span className="text-sm text-gray-900 dark:text-white">Use account email</span>
+              <span className="text-sm font-medium text-[#444140]">Use account email</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -539,9 +539,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 name="emailType"
                 checked={useCustomEmail}
                 onChange={() => setUseCustomEmail(true)}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                className="h-4 w-4 border-[#00749C]/30 text-[#00749C] focus:ring-2 focus:ring-[#00749C]/20"
               />
-              <span className="text-sm text-gray-900 dark:text-white">Use custom email</span>
+              <span className="text-sm font-medium text-[#444140]">Use custom email</span>
             </label>
           </div>
 
@@ -553,10 +553,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               onChange={(e) => setCustomEmail(e.target.value)}
               placeholder="custom@example.com"
               maxLength={255}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+              className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
             />
           ) : (
-            <div className="rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-gray-600 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400">
+            <div className="rounded-xl border border-[#00749C]/20 bg-[#444140]/5 px-4 py-3 text-[#444140]/70">
               {wpUser?.email || 'No account email available'}
             </div>
           )}
@@ -568,12 +568,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         <div className="mb-2 flex items-center justify-between">
           <label
             htmlFor="website"
-            className="text-sm font-semibold text-gray-900 dark:text-white"
+            className="text-sm font-bold text-[#00749C]"
           >
             Website
           </label>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs font-medium text-[#444140]/60">
               {privacySettings.show_website ? "Public" : "Private"}
             </span>
             <Switch
@@ -590,20 +590,20 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           onChange={(e) => setWebsite(e.target.value)}
           placeholder="yoursite.com or https://yoursite.com"
           maxLength={255}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+          className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-4 py-3 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
         />
       </div>
 
       {/* Social Links */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <label className="block text-sm font-semibold text-gray-900 dark:text-white">
+          <label className="block text-sm font-bold text-[#00749C]">
             Social Links
           </label>
           <button
             type="button"
             onClick={handleAddSocialLink}
-            className="flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="flex items-center gap-1 rounded-xl bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-4 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
             <Plus size={16} />
             Add Link
@@ -618,7 +618,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 onChange={(e) =>
                   handleSocialLinkChange(index, "type", e.target.value)
                 }
-                className="w-1/3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                className="w-1/3 rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-3 py-2.5 text-[#444140] transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
               >
                 <option value="">Select...</option>
                 <option value="github">GitHub</option>
@@ -638,12 +638,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                   handleSocialLinkChange(index, "url", e.target.value)
                 }
                 placeholder="username or https://..."
-                className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                className="flex-1 rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-3 py-2.5 text-[#444140] placeholder-[#444140]/40 transition-all focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
               />
               <button
                 type="button"
                 onClick={() => handleRemoveSocialLink(index)}
-                className="rounded-lg border border-red-300 bg-white px-3 py-2 text-red-600 transition-colors hover:bg-red-50 dark:border-red-600 dark:bg-gray-800 dark:hover:bg-red-900/20"
+                className="rounded-xl border-2 border-red-300 bg-white px-3 py-2.5 text-red-600 transition-all hover:bg-red-50"
                 aria-label="Remove link"
               >
                 <X size={18} />
@@ -652,7 +652,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           ))}
 
           {socialLinks.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-[#444140]/60">
               No social links yet. Click "Add Link" to get started.
             </p>
           )}
@@ -660,25 +660,25 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       </div>
 
       {/* Privacy Info */}
-      <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
-        <div className="flex items-start gap-3">
-          <div className="rounded-full bg-purple-100 p-2 dark:bg-purple-900/50">
-            <Lock size={20} className="text-purple-600 dark:text-purple-400" />
+      <div className="rounded-2xl border border-[#00749C]/30 bg-gradient-to-br from-[#00749C]/5 to-[#00B7D3]/5 p-5">
+        <div className="flex items-start gap-4">
+          <div className="rounded-xl bg-gradient-to-br from-[#00749C] to-[#00B7D3] p-3">
+            <Lock size={20} className="text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="mb-1 font-semibold text-purple-900 dark:text-purple-300">
+            <h3 className="mb-2 text-base font-bold text-[#00749C]">
               Privacy Settings
             </h3>
-            <p className="text-sm text-purple-800 dark:text-purple-400">
+            <p className="text-sm text-[#444140]/80">
               Use the toggle switches to control what information is visible on your public profile.
               When switched off, fields will show "—" to other members.
             </p>
-            <div className="mt-3 flex flex-wrap gap-2 text-xs">
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-purple-100 px-2 py-1 font-medium text-purple-700 dark:bg-purple-900/50 dark:text-purple-300">
+            <div className="mt-4 flex flex-wrap gap-2 text-xs">
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#00B7D3]/50 bg-[#00B7D3]/10 px-3 py-1.5 font-medium text-[#00749C]">
                 <Unlock size={12} />
                 Public = Visible to all
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-gray-100 px-2 py-1 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#444140]/30 bg-[#444140]/5 px-3 py-1.5 font-medium text-[#444140]">
                 <Lock size={12} />
                 Private = Hidden (shows "—")
               </span>
@@ -690,10 +690,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       {/* Status Message */}
       {message && (
         <div
-          className={`rounded-lg p-4 ${
+          className={`rounded-2xl p-4 ${
             message.type === "success"
-              ? "bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-              : "bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+              ? "border border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-800"
+              : "border border-red-200 bg-gradient-to-br from-red-50 to-red-100 text-red-800"
           }`}
         >
           {message.text}
@@ -705,18 +705,18 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="rounded-lg border border-gray-300 bg-white px-6 py-2.5 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          className="rounded-xl border-2 border-[#444140]/20 bg-white px-6 py-3 font-bold text-[#444140] transition-all hover:bg-[#444140]/5"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={!isValid || saving}
-          className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2.5 font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-8 py-3 font-bold text-white shadow-xl transition-all hover:scale-105 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
         >
           {saving ? (
             <>
-              <div className="relative h-4 w-4">
+              <div className="relative h-5 w-5">
                 <div className="absolute inset-0 rounded-full border-2 border-white/30" />
                 <div 
                   className="absolute inset-0 rounded-full border-2 border-transparent border-t-white animate-spin"
