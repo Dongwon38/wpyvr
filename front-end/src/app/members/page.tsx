@@ -130,41 +130,31 @@ export default function MembersPage() {
     return filtered;
   }, [members, searchQuery, sortBy, filterSpecialty]);
 
-  return (
-    <div className="min-h-screen bg-[#F5F3EF]">
-      {/* Hero Section with Gradient */}
-      <section className="relative isolate overflow-hidden border-b border-[#00749C]/10">
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: "linear-gradient(135deg, #003B52 0%, #00749C 55%, #00B7D3 100%)",
-          }}
-        />
-        <div className="absolute -left-10 top-8 h-40 w-40 rounded-full bg-[#00B4D8]/20 blur-3xl" />
-        <div className="absolute right-8 top-12 h-48 w-48 rounded-full bg-[#0390B8]/15 blur-[100px]" />
-        
-        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="text-white"
-          >
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-white/90 backdrop-blur-sm">
-              <Users className="h-3.5 w-3.5" />
-              Community
-            </span>
-            <h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl">
-              Community Members
-            </h1>
-            <p className="mt-3 max-w-2xl text-lg leading-relaxed text-white/85">
-              {loading
-                ? "Discovering who's active in the community..."
-                : `Connect with ${members.length} talented creators, developers, and designers in our community.`}
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    return (
+      <div className="min-h-screen bg-white text-[#111111]">
+        <section className="border-b border-neutral-200 bg-white">
+          <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-4"
+            >
+              <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-neutral-600">
+                <Users className="h-3.5 w-3.5 text-[#00749C]" />
+                Members
+              </span>
+              <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+                Community Members
+              </h1>
+              <p className="max-w-2xl text-base leading-relaxed text-neutral-600">
+                {loading
+                  ? "Discovering who's active in the community..."
+                  : `Connect with ${members.length} creators, developers, and designers in our chapter.`}
+              </p>
+            </motion.div>
+          </div>
+        </section>
 
       <section className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
@@ -173,23 +163,23 @@ export default function MembersPage() {
           ) : (
             <>
               {/* Search and Filter Bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="mb-6 rounded-3xl border border-[#00749C]/10 bg-white p-4 shadow-lg sm:p-6"
-              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="mb-6 rounded-sm border border-neutral-200 bg-white p-4 sm:p-6"
+                >
                 <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center">
                   {/* Search */}
                   <div className="flex-1">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#00749C]/60" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={18} />
                       <input
                         type="text"
                         placeholder="Search members..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] py-2 pl-10 pr-4 text-sm text-[#444140] placeholder-[#444140]/50 focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
+                          className="w-full rounded-sm border border-neutral-300 bg-white py-2 pl-10 pr-4 text-sm text-[#111111] placeholder:text-neutral-500 focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20"
                       />
                     </div>
                   </div>
@@ -197,12 +187,12 @@ export default function MembersPage() {
                   {/* Sort & Filter */}
                   <div className="flex gap-2">
                     {/* Sort */}
-                    <div className="flex flex-1 items-center gap-2 sm:flex-initial">
-                      <ArrowUpDown className="hidden text-[#00749C] sm:block" size={16} />
+                      <div className="flex flex-1 items-center gap-2 sm:flex-initial">
+                        <ArrowUpDown className="hidden text-neutral-500 sm:block" size={16} />
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as SortOption)}
-                        className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-3 py-2 text-xs font-medium text-[#444140] focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20 sm:text-sm"
+                          className="w-full rounded-sm border border-neutral-300 bg-white px-3 py-2 text-xs font-medium text-[#111111] focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20 sm:text-sm"
                       >
                         <option value="default">Default</option>
                         <option value="name-asc">Name (A-Z)</option>
@@ -211,12 +201,12 @@ export default function MembersPage() {
                     </div>
 
                     {/* Filter by Specialty */}
-                    <div className="flex flex-1 items-center gap-2 sm:flex-initial">
-                      <Filter className="hidden text-[#00749C] sm:block" size={16} />
+                      <div className="flex flex-1 items-center gap-2 sm:flex-initial">
+                        <Filter className="hidden text-neutral-500 sm:block" size={16} />
                       <select
                         value={filterSpecialty}
                         onChange={(e) => setFilterSpecialty(e.target.value)}
-                        className="w-full rounded-xl border border-[#00749C]/20 bg-[#FFFDF9] px-3 py-2 text-xs font-medium text-[#444140] focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20 sm:text-sm"
+                          className="w-full rounded-sm border border-neutral-300 bg-white px-3 py-2 text-xs font-medium text-[#111111] focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00749C]/20 sm:text-sm"
                       >
                         <option value="all">All Specialties</option>
                         {allSpecialties.map((specialty) => (
@@ -230,39 +220,39 @@ export default function MembersPage() {
                 </div>
 
                 {/* Active Filters Summary */}
-                {(searchQuery || filterSpecialty !== "all") && (
-                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#00749C]/10 pt-3">
-                    <span className="text-xs font-semibold text-[#444140]/70">
-                      Active:
-                    </span>
-                    {searchQuery && (
-                      <span className="rounded-full border border-[#00749C]/30 bg-[#00749C]/10 px-2.5 py-0.5 text-xs font-medium text-[#00749C]">
-                        "{searchQuery}"
+                  {(searchQuery || filterSpecialty !== "all") && (
+                    <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-neutral-200 pt-3">
+                      <span className="text-xs font-semibold text-neutral-500">
+                        Active:
                       </span>
-                    )}
-                    {filterSpecialty !== "all" && (
-                      <span className="rounded-full border border-[#00749C]/30 bg-[#00749C]/10 px-2.5 py-0.5 text-xs font-medium text-[#00749C]">
-                        {filterSpecialty}
-                      </span>
-                    )}
-                    <button
-                      onClick={() => {
-                        setSearchQuery("");
-                        setFilterSpecialty("all");
-                        setSortBy("default");
-                      }}
-                      className="text-xs font-medium text-[#444140]/60 hover:text-[#444140]"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                )}
+                      {searchQuery && (
+                        <span className="rounded-full border border-neutral-300 bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-700">
+                          "{searchQuery}"
+                        </span>
+                      )}
+                      {filterSpecialty !== "all" && (
+                        <span className="rounded-full border border-neutral-300 bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-700">
+                          {filterSpecialty}
+                        </span>
+                      )}
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          setFilterSpecialty("all");
+                          setSortBy("default");
+                        }}
+                        className="text-xs font-medium text-neutral-500 hover:text-neutral-900"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  )}
               </motion.div>
 
               {/* Results Count */}
-              <div className="mb-4 flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#00749C]" />
-                <span className="text-sm font-medium text-[#444140]/70">
+                <div className="mb-4 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-[#00749C]" />
+                  <span className="text-sm text-neutral-600">
                   {filteredMembers.length} of {members.length} members
                 </span>
               </div>
@@ -271,177 +261,162 @@ export default function MembersPage() {
               {filteredMembers.length > 0 ? (
                 <>
                   {/* Mobile Card View */}
-                  <div className="space-y-4 md:hidden">
+                    <div className="space-y-4 md:hidden">
                     {filteredMembers.map((member, index) => {
                       const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
                       const hasBio = trimmedBio.length > 0;
                       const memberId = member.user_id ?? member.id ?? index;
                       const isExpanded = activeBioId === memberId;
 
-                      return (
-                        <motion.div
-                          key={memberId}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.03 }}
-                          className="rounded-2xl border border-[#00749C]/10 bg-white p-4 shadow-md"
-                        >
-                          {/* Member Header */}
-                          <div className="flex items-start gap-3">
-                            {/* Avatar */}
-                            <div className="flex-shrink-0">
-                              {member.avatar_url ? (
-                                <img
-                                  src={member.avatar_url}
-                                  alt={member.nickname}
-                                  className="h-14 w-14 rounded-full object-cover ring-2 ring-[#00749C]/20"
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = "none";
-                                    const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
-                                    if (placeholder) placeholder.style.display = "flex";
-                                  }}
-                                />
-                              ) : null}
-                              <div
-                                className={`${member.avatar_url ? 'hidden' : 'flex'} h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00749C] to-[#00B7D3] text-base font-bold text-white`}
-                              >
-                                {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
+                        return (
+                          <motion.div
+                            key={memberId}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.03 }}
+                            className="rounded-sm border border-neutral-200 bg-white p-4 shadow-sm"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0">
+                                {member.avatar_url ? (
+                                  <img
+                                    src={member.avatar_url}
+                                    alt={member.nickname}
+                                    className="h-14 w-14 rounded-full object-cover ring-1 ring-neutral-200"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                      const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                                      if (placeholder) placeholder.style.display = "flex";
+                                    }}
+                                  />
+                                ) : null}
+                                <div
+                                  className={`${member.avatar_url ? "hidden" : "flex"} h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white`}
+                                >
+                                  {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
+                                </div>
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  {(member.role === "administrator" || member.role === "staff") && (
+                                    <span className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-700">
+                                      <Award size={10} />
+                                      Staff
+                                    </span>
+                                  )}
+                                  <h3 className="truncate text-base font-semibold text-[#111111]">
+                                    {member.nickname}
+                                  </h3>
+                                </div>
+
+                                <div className="mt-2 flex items-center gap-1.5">
+                                  {(member.custom_email || member.email) && (
+                                    <a
+                                      href={`mailto:${member.custom_email || member.email}`}
+                                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <Mail size={14} />
+                                    </a>
+                                  )}
+                                  {member.website && (
+                                    <a
+                                      href={member.website}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <Globe size={14} />
+                                    </a>
+                                  )}
+                                </div>
                               </div>
                             </div>
 
-                            {/* Member Info */}
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2">
-                                {(member.role === "administrator" || member.role === "staff") && (
-                                  <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-1.5 py-0.5 text-xs font-semibold text-white">
-                                    <Award size={10} />
-                                    Staff
+                            {(member.position || member.company) && (
+                              <div className="mt-3 space-y-1 border-t border-neutral-200 pt-3">
+                                {member.position && (
+                                  <div className="flex items-center gap-2 text-sm text-[#111111]">
+                                    <Briefcase size={14} className="flex-shrink-0 text-neutral-500" />
+                                    <span>{member.position}</span>
+                                  </div>
+                                )}
+                                {member.company && (
+                                  <div className="flex items-center gap-2 text-xs text-neutral-500">
+                                    <Building2 size={12} className="flex-shrink-0 text-neutral-400" />
+                                    <span>{member.company}</span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {member.specialties && member.specialties.length > 0 && (
+                              <div className="mt-3 flex flex-wrap gap-1.5">
+                                {member.specialties.slice(0, 3).map((specialty) => (
+                                  <span
+                                    key={specialty}
+                                    className="rounded-full border border-neutral-300 bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700"
+                                  >
+                                    {specialty}
+                                  </span>
+                                ))}
+                                {member.specialties.length > 3 && (
+                                  <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs font-medium text-neutral-500">
+                                    +{member.specialties.length - 3}
                                   </span>
                                 )}
-                                <h3 className="truncate text-base font-semibold text-[#444140]">
-                                  {member.nickname}
-                                </h3>
                               </div>
+                            )}
 
-                              {/* Contact Icons */}
-                              <div className="mt-2 flex items-center gap-2">
-                                {(member.custom_email || member.email) && (
-                                  <a
-                                    href={`mailto:${member.custom_email || member.email}`}
-                                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#00749C]/10 text-[#00749C] transition-all hover:bg-[#00749C] hover:text-white"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <Mail size={14} />
-                                  </a>
-                                )}
-                                {member.website && (
-                                  <a
-                                    href={member.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#00749C]/10 text-[#00749C] transition-all hover:bg-gradient-to-r hover:from-[#00749C] hover:to-[#00B7D3] hover:text-white"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <Globe size={14} />
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Position & Company */}
-                          {(member.position || member.company) && (
-                            <div className="mt-3 space-y-1 border-t border-[#00749C]/5 pt-3">
-                              {member.position && (
-                                <div className="flex items-center gap-2 text-sm">
-                                  <Briefcase size={14} className="flex-shrink-0 text-[#00749C]" />
-                                  <span className="text-[#444140]">{member.position}</span>
-                                </div>
-                              )}
-                              {member.company && (
-                                <div className="flex items-center gap-2 text-xs">
-                                  <Building2 size={12} className="flex-shrink-0 text-[#444140]/50" />
-                                  <span className="text-[#444140]/70">{member.company}</span>
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Specialties */}
-                          {member.specialties && member.specialties.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-1.5">
-                              {member.specialties.slice(0, 3).map((specialty) => (
-                                <span
-                                  key={specialty}
-                                  className="rounded-md border border-[#00749C]/30 bg-[#00749C]/10 px-2 py-0.5 text-xs font-medium text-[#00749C]"
+                            {hasBio && (
+                              <>
+                                <button
+                                  onClick={() => handleMemberToggle(memberId, hasBio)}
+                                  className="mt-3 w-full rounded-full border border-neutral-300 px-3 py-2 text-xs font-medium text-neutral-700 transition-colors hover:border-neutral-900"
                                 >
-                                  {specialty}
-                                </span>
-                              ))}
-                              {member.specialties.length > 3 && (
-                                <span className="rounded-md border border-[#444140]/20 bg-[#444140]/5 px-2 py-0.5 text-xs font-medium text-[#444140]/70">
-                                  +{member.specialties.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Bio Toggle */}
-                          {hasBio && (
-                            <>
-                              <button
-                                onClick={() => handleMemberToggle(memberId, hasBio)}
-                                className="mt-3 w-full rounded-lg bg-[#00749C]/5 px-3 py-2 text-xs font-medium text-[#00749C] transition-colors hover:bg-[#00749C]/10"
-                              >
-                                {isExpanded ? "Hide Bio" : "Show Bio"}
-                              </button>
-                              {isExpanded && (
-                                <div className="mt-2 rounded-lg border border-[#00749C]/20 bg-gradient-to-br from-[#00749C]/5 to-[#00B7D3]/5 p-3 text-sm text-[#444140]">
-                                  {trimmedBio}
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </motion.div>
-                      );
+                                  {isExpanded ? "Hide Bio" : "Show Bio"}
+                                </button>
+                                {isExpanded && (
+                                  <div className="mt-2 rounded-sm border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-700">
+                                    {trimmedBio}
+                                  </div>
+                                )}
+                              </>
+                            )}
+                          </motion.div>
+                        );
                     })}
                   </div>
 
                   {/* Desktop Table View */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="relative hidden rounded-3xl border border-[#00749C]/10 bg-white shadow-xl md:block"
-                  >
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="relative hidden rounded-sm border border-neutral-200 bg-white md:block"
+                    >
                     <div className="overflow-x-auto">
                       <table className="w-full">
-                        <thead className="border-b border-[#00749C]/10 bg-gradient-to-r from-[#00749C]/5 to-[#00B7D3]/5">
+                          <thead className="border-b border-neutral-200 bg-neutral-50 text-left text-sm font-semibold text-neutral-600">
                           <tr>
-                            <th className="px-6 py-4 text-left text-sm font-bold text-[#00749C]">
-                              Member
-                            </th>
-                            <th className="px-6 py-4 text-left text-sm font-bold text-[#00749C]">
-                              Specialties
-                            </th>
-                            <th className="px-6 py-4 text-left text-sm font-bold text-[#00749C]">
-                              Position / Company
-                            </th>
-                            <th className="px-6 py-4 text-center text-sm font-bold text-[#00749C]">
-                              Website
-                            </th>
+                              <th className="px-6 py-4">Member</th>
+                              <th className="px-6 py-4">Specialties</th>
+                              <th className="px-6 py-4">Position / Company</th>
+                              <th className="px-6 py-4 text-center">Website</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-[#00749C]/5">
+                          <tbody className="divide-y divide-neutral-200">
                           {filteredMembers.map((member, index) => {
                             const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
                             const hasBio = trimmedBio.length > 0;
                             const memberId = member.user_id ?? member.id ?? index;
                             const rowIsActive = activeBioId === memberId;
                             const inlineOpen = hasBio && (rowIsActive || (!isMobile && hoveredBioId === memberId));
-                            const rowClassName = `group transition-colors hover:bg-[#00749C]/5${
-                              hasBio ? " cursor-pointer" : ""
-                            }${inlineOpen ? " bg-[#00B7D3]/10" : ""}`;
+                              const rowClassName = `group transition-colors hover:bg-neutral-50${
+                                hasBio ? " cursor-pointer" : ""
+                              }${inlineOpen ? " bg-neutral-50" : ""}`;
 
                             return (
                               <Fragment key={memberId}>
@@ -475,117 +450,117 @@ export default function MembersPage() {
                                     }
                                   }}
                                 >
-                                  <td className="px-6 py-4">
-                                    <div className="flex items-center gap-4">
-                                      <div className="relative flex-shrink-0">
-                                        {member.avatar_url ? (
-                                          <>
-                                            <img
-                                              src={member.avatar_url}
-                                              alt={member.nickname}
-                                              className="h-14 w-14 rounded-full object-cover ring-2 ring-[#00749C]/20"
-                                              onError={(e) => {
-                                                e.currentTarget.style.display = "none";
-                                                const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
-                                                if (placeholder) placeholder.style.display = "flex";
-                                              }}
-                                            />
-                                            <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00749C] to-[#00B7D3] text-base font-bold text-white">
+                                    <td className="px-6 py-4">
+                                      <div className="flex items-center gap-4">
+                                        <div className="relative flex-shrink-0">
+                                          {member.avatar_url ? (
+                                            <>
+                                              <img
+                                                src={member.avatar_url}
+                                                alt={member.nickname}
+                                                className="h-14 w-14 rounded-full object-cover ring-1 ring-neutral-200"
+                                                onError={(e) => {
+                                                  e.currentTarget.style.display = "none";
+                                                  const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                                                  if (placeholder) placeholder.style.display = "flex";
+                                                }}
+                                              />
+                                              <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-base font-semibold uppercase text-white">
+                                                {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
+                                              </div>
+                                            </>
+                                          ) : (
+                                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-base font-semibold uppercase text-white">
                                               {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
                                             </div>
-                                          </>
-                                        ) : (
-                                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00749C] to-[#00B7D3] text-base font-bold text-white">
-                                            {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
-                                          </div>
-                                        )}
-                                      </div>
+                                          )}
+                                        </div>
 
-                                      <div className="flex items-center gap-2">
-                                        {(member.role === "administrator" || member.role === "staff") && (
-                                          <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
-                                            <Award size={10} />
-                                            Staff
-                                          </span>
-                                        )}
-                                        <span className="font-semibold text-[#444140]">{member.nickname}</span>
-                                        {(member.custom_email || member.email) && (
+                                        <div className="flex items-center gap-2">
+                                          {(member.role === "administrator" || member.role === "staff") && (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-700">
+                                              <Award size={10} />
+                                              Staff
+                                            </span>
+                                          )}
+                                          <span className="font-semibold text-[#111111]">{member.nickname}</span>
+                                          {(member.custom_email || member.email) && (
+                                            <a
+                                              href={`mailto:${member.custom_email || member.email}`}
+                                              title={member.custom_email || member.email}
+                                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                                              onClick={(e) => e.stopPropagation()}
+                                            >
+                                              <Mail size={13} />
+                                            </a>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                      {member.specialties && member.specialties.length > 0 ? (
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {member.specialties.slice(0, 2).map((specialty) => (
+                                            <span
+                                              key={specialty}
+                                              className="rounded-full border border-neutral-300 bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-700"
+                                            >
+                                              {specialty}
+                                            </span>
+                                          ))}
+                                          {member.specialties.length > 2 && (
+                                            <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-500">
+                                              +{member.specialties.length - 2}
+                                            </span>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        <span className="text-sm text-neutral-400">—</span>
+                                      )}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                      {member.position || member.company ? (
+                                        <div className="flex flex-col gap-1">
+                                          {member.position ? (
+                                            <div className="flex items-center gap-2 text-sm font-medium text-[#111111]">
+                                              <Briefcase size={14} className="flex-shrink-0 text-neutral-500" />
+                                              <span>{member.position}</span>
+                                            </div>
+                                          ) : (
+                                            <span className="text-sm text-neutral-400">—</span>
+                                          )}
+                                          {member.company && (
+                                            <div className="flex items-center gap-2 text-xs text-neutral-500">
+                                              <Building2 size={12} className="flex-shrink-0 text-neutral-400" />
+                                              <span>{member.company}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        <span className="text-sm text-neutral-400">—</span>
+                                      )}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                      <div className="flex items-center justify-center">
+                                        {member.website ? (
                                           <a
-                                            href={`mailto:${member.custom_email || member.email}`}
-                                            title={member.custom_email || member.email}
-                                            className="group/email relative inline-flex h-6 w-6 items-center justify-center rounded-lg bg-[#00749C]/10 text-[#00749C] transition-all hover:bg-[#00749C] hover:text-white"
+                                            href={member.website}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title={member.website}
+                                            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
                                             onClick={(e) => e.stopPropagation()}
                                           >
-                                            <Mail size={13} />
+                                            <Globe size={18} />
                                           </a>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </td>
-
-                                  <td className="px-6 py-4">
-                                    {member.specialties && member.specialties.length > 0 ? (
-                                      <div className="flex flex-wrap gap-1.5">
-                                        {member.specialties.slice(0, 2).map((specialty) => (
-                                          <span
-                                            key={specialty}
-                                            className="rounded-lg border border-[#00749C]/30 bg-[#00749C]/10 px-2 py-1 text-xs font-medium text-[#00749C]"
-                                          >
-                                            {specialty}
-                                          </span>
-                                        ))}
-                                        {member.specialties.length > 2 && (
-                                          <span className="rounded-lg border border-[#444140]/20 bg-[#444140]/5 px-2 py-1 text-xs font-medium text-[#444140]/70">
-                                            +{member.specialties.length - 2}
-                                          </span>
-                                        )}
-                                      </div>
-                                    ) : (
-                                      <span className="text-sm text-[#444140]/40">—</span>
-                                    )}
-                                  </td>
-
-                                  <td className="px-6 py-4">
-                                    {member.position || member.company ? (
-                                      <div className="flex flex-col gap-1">
-                                        {member.position ? (
-                                          <div className="flex items-center gap-2 text-sm font-medium text-[#444140]">
-                                            <Briefcase size={14} className="flex-shrink-0 text-[#00749C]" />
-                                            <span>{member.position}</span>
-                                          </div>
                                         ) : (
-                                          <span className="text-sm text-[#444140]/40">—</span>
-                                        )}
-                                        {member.company && (
-                                          <div className="flex items-center gap-2 text-xs text-[#444140]/70">
-                                            <Building2 size={12} className="flex-shrink-0 text-[#444140]/50" />
-                                            <span>{member.company}</span>
-                                          </div>
+                                          <span className="text-sm text-neutral-400">—</span>
                                         )}
                                       </div>
-                                    ) : (
-                                      <span className="text-sm text-[#444140]/40">—</span>
-                                    )}
-                                  </td>
-
-                                  <td className="px-6 py-4">
-                                    <div className="flex items-center justify-center">
-                                      {member.website ? (
-                                        <a
-                                          href={member.website}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          title={member.website}
-                                          className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#00749C]/10 text-[#00749C] transition-all hover:bg-gradient-to-r hover:from-[#00749C] hover:to-[#00B7D3] hover:text-white"
-                                          onClick={(e) => e.stopPropagation()}
-                                        >
-                                          <Globe size={18} />
-                                        </a>
-                                      ) : (
-                                        <span className="text-sm text-[#444140]/40">—</span>
-                                      )}
-                                    </div>
-                                  </td>
+                                    </td>
                                 </motion.tr>
 
                                 {hasBio && (
@@ -604,26 +579,26 @@ export default function MembersPage() {
                                       }
                                     }}
                                   >
-                                    <td colSpan={4} className="px-6 pb-4 pt-0">
-                                      <div
-                                        className={`overflow-hidden rounded-2xl border border-[#00749C]/20 bg-gradient-to-br from-[#00749C]/5 to-[#00B7D3]/5 text-sm text-[#444140] shadow-lg transition-all duration-200 ${
-                                          inlineOpen
-                                            ? "mt-2 max-h-80 scale-100 opacity-100"
-                                            : "mt-0 max-h-0 scale-95 opacity-0 pointer-events-none"
-                                        }`}
-                                        onClick={() => handleMemberToggle(memberId, hasBio)}
-                                      >
-                                        <div className="flex items-center justify-between gap-3 border-b border-[#00749C]/20 bg-white/50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-[#00749C]">
-                                          <span>Bio</span>
-                                          <span className="text-[10px] font-medium text-[#444140]/50">
-                                            클릭하거나 탭하면 닫혀요
-                                          </span>
+                                      <td colSpan={4} className="px-6 pb-4 pt-0">
+                                        <div
+                                          className={`overflow-hidden rounded-sm border border-neutral-200 bg-neutral-50 text-sm text-neutral-700 transition-all duration-200 ${
+                                            inlineOpen
+                                              ? "mt-2 max-h-80 scale-100 opacity-100"
+                                              : "mt-0 max-h-0 scale-95 opacity-0 pointer-events-none"
+                                          }`}
+                                          onClick={() => handleMemberToggle(memberId, hasBio)}
+                                        >
+                                          <div className="flex items-center justify-between gap-3 border-b border-neutral-200 bg-white px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                                            <span>Bio</span>
+                                            <span className="text-[10px] font-medium text-neutral-500">
+                                              Click or tap to close
+                                            </span>
+                                          </div>
+                                          <div className="max-h-64 overflow-y-auto px-4 py-3 text-sm leading-6">
+                                            {trimmedBio}
+                                          </div>
                                         </div>
-                                        <div className="max-h-64 overflow-y-auto px-4 py-3 text-sm leading-6">
-                                          {trimmedBio}
-                                        </div>
-                                      </div>
-                                    </td>
+                                      </td>
                                   </tr>
                                 )}
                               </Fragment>
@@ -633,38 +608,38 @@ export default function MembersPage() {
                       </table>
                     </div>
 
-                    <div className="border-t border-[#00749C]/10 bg-[#FFFDF9] px-6 py-3">
-                      <p className="text-xs text-[#444140]/60">
-                        <span className="font-medium">Note:</span> "—" indicates information is unavailable or set to private by the user.
-                      </p>
-                    </div>
+                      <div className="border-t border-neutral-200 bg-white px-6 py-3">
+                        <p className="text-xs text-neutral-500">
+                          <span className="font-semibold text-neutral-700">Note:</span> "—" indicates information is unavailable or private.
+                        </p>
+                      </div>
                   </motion.div>
                 </>
               ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="rounded-3xl border border-[#00749C]/10 bg-white p-12 text-center shadow-lg"
-                >
-                  <Users className="mx-auto mb-4 h-16 w-16 text-[#00749C]/40" />
-                  <h3 className="mb-2 text-xl font-bold text-[#444140]">
-                    No members found
-                  </h3>
-                  <p className="mb-6 text-[#444140]/70">
-                    Try adjusting your search or filter criteria
-                  </p>
-                  <button
-                    onClick={() => {
-                      setSearchQuery("");
-                      setFilterSpecialty("all");
-                      setSortBy("default");
-                    }}
-                    className="rounded-xl bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="rounded-sm border border-neutral-200 bg-white p-12 text-center"
                   >
-                    Clear Filters
-                  </button>
-                </motion.div>
+                    <Users className="mx-auto mb-4 h-16 w-16 text-neutral-200" />
+                    <h3 className="mb-2 text-xl font-semibold text-[#111111]">
+                      No members found
+                    </h3>
+                    <p className="mb-6 text-neutral-500">
+                      Try adjusting your search or filter criteria.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setFilterSpecialty("all");
+                        setSortBy("default");
+                      }}
+                      className="rounded-full border border-neutral-900 px-6 py-2.5 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white"
+                    >
+                      Clear filters
+                    </button>
+                  </motion.div>
               )}
             </>
           )}
