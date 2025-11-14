@@ -13,6 +13,7 @@ import {
   MoreHorizontal,
   Users,
 } from "lucide-react";
+import MobileHeader from "./MobileHeader";
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -50,6 +51,10 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   return (
     <div className="flex w-full">
+
+      {/* Mobile Header */}
+      <MobileHeader />
+
       {/* Left Sidebar - Fixed on desktop */}
       <LeftSidebar 
         isOpen={leftSidebarOpen} 

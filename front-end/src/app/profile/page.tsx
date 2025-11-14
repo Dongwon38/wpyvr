@@ -95,9 +95,6 @@ export default function ProfilePage() {
           </button>
           
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-              <User className="h-5 w-5 text-[#444140]" />
-            </div>
             <div>
               <h1 className="text-2xl font-bold text-[#444140]">
                 My Profile
@@ -112,7 +109,7 @@ export default function ProfilePage() {
 
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Profile Form Card */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+        <div className=" bg-white p-0">
           <ProfileForm
             initialData={
               profile
@@ -141,7 +138,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Help Text */}
-        <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <div className="mt-6 rounded-sm border border-gray-200 bg-gray-50 p-5">
           <h3 className="text-sm font-semibold text-[#444140]">
             💡 Profile Tips
           </h3>

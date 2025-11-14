@@ -111,10 +111,10 @@ export default function HeroSection() {
             <div 
               className="absolute inset-0"
               style={{
-                backgroundImage: "linear-gradient(130deg, rgba(3, 25, 38, 0.85), rgba(0, 116, 156, 0.75), rgba(0, 183, 211, 0.65))"
+                backgroundImage: "linear-gradient(130deg, rgba(3, 25, 38, 0.85), rgba(22, 52, 62, 0.75), rgba(170, 173, 174, 0.65))"
               }}
             />
-          </motion.div>
+          </motion.div> 
         </AnimatePresence>
       </div>
 
@@ -145,7 +145,7 @@ export default function HeroSection() {
               <div className="mt-8 hidden md:flex">
                 <Link
                   href={slide.cta.href}
-                  className="group inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#00749C] shadow-xl shadow-black/25 transition-all hover:-translate-y-0.5 hover:bg-white/95 md:text-base"
+                  className="group inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#444140] shadow-xl shadow-black/25 transition-all hover:-translate-y-0.5 hover:bg-white/95 md:text-base"
                 >
                   {slide.cta.text}
                   <ArrowRight

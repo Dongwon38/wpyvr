@@ -36,7 +36,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-[#00749C]/10 bg-white shadow-md transition-all hover:shadow-xl",
+        "group relative overflow-hidden rounded-sm border border-[#00749C]/10 bg-white shadow-md transition-all hover:shadow-xl",
         isPast && "opacity-75"
       )}
     >
@@ -134,7 +134,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
                 href={event.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="line-clamp-1 text-[#00749C] hover:text-[#005A7A] hover:underline"
+                className="line-clamp-1 text-[#444140] hover:text-[#444140] hover:underline"
               >
                 {event.locationTitle}
               </a>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Save, Plus, X, Lock, Unlock } from "lucide-react"
+import { Save, Plus, X, Lock, Eye, EyeOff } from "lucide-react"
 import AvatarUploader from "./AvatarUploader"
 import Switch from "@/components/ui/Switch"
 import { useAuth } from "@/context/AuthContext"
@@ -239,7 +239,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           onChange={(e) => setNickname(e.target.value)}
           placeholder="e.g., DW"
           maxLength={100}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="w-full rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
           required
         />
       </div>
@@ -251,9 +251,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </label>
         <div className="grid gap-4 md:grid-cols-2">
           {/* Public Option Card */}
-          <label className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+          <label className={`relative cursor-pointer rounded-sm border p-4 transition-all ${
             profileVisibility === 'public'
-              ? 'border-[#444140] bg-gray-50'
+              ? 'border-[#00749C] bg-[#00749C]/5'
               : 'border-gray-200 bg-white hover:border-gray-300'
           }`}>
             <input
@@ -265,25 +265,17 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               className="sr-only"
               required
             />
-            <div className="flex items-start gap-3">
-              <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
-                profileVisibility === 'public'
-                  ? 'border-[#444140] bg-[#444140]'
-                  : 'border-gray-300'
-              }`}>
-                {profileVisibility === 'public' && (
-                  <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
-                    <circle cx="6" cy="6" r="3" />
-                  </svg>
-                )}
+            <div className="flex items-start gap-2">
+              <div>
+              <Eye size={20} className={profileVisibility === 'public' ? 'text-[#00749C]' : 'text-gray-400'} />
+                
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <Unlock size={16} className={profileVisibility === 'public' ? 'text-[#444140]' : 'text-gray-400'} />
                   <span className={`text-sm font-semibold ${
                     profileVisibility === 'public'
-                      ? 'text-[#444140]'
-                      : 'text-gray-700'
+                      ? 'text-[#00749C]'
+                      : 'text-gray-400'
                   }`}>
                     Public
                   </span>
@@ -296,9 +288,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           </label>
 
           {/* Private Option Card */}
-          <label className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+          <label className={`relative cursor-pointer rounded-sm border p-4 transition-all ${
             profileVisibility === 'private'
-              ? 'border-[#444140] bg-gray-50'
+              ? 'border-[#00749C] bg-[#00749C]/5'
               : 'border-gray-200 bg-white hover:border-gray-300'
           }`}>
             <input
@@ -310,29 +302,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               className="sr-only"
               required
             />
-            <div className="flex items-start gap-3">
-              <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
-                profileVisibility === 'private'
-                  ? 'border-[#444140] bg-[#444140]'
-                  : 'border-gray-300'
-              }`}>
-                {profileVisibility === 'private' && (
-                  <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
-                    <circle cx="6" cy="6" r="3" />
-                  </svg>
-                )}
-              </div>
+            <div className="flex items-start gap-2">
+              <EyeOff size={20} className={profileVisibility === 'private' ? 'text-[#00749C]' : 'text-gray-400'} />
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <Lock size={16} className={profileVisibility === 'private' ? 'text-[#444140]' : 'text-gray-400'} />
-                  <span className={`text-sm font-semibold ${
-                    profileVisibility === 'private'
-                      ? 'text-[#444140]'
-                      : 'text-gray-700'
-                  }`}>
-                    Private
-                  </span>
-                </div>
+                <span className={`text-sm font-semibold ${profileVisibility === 'private' ? 'text-[#00749C]' : 'text-gray-400'}`}>
+                  Private
+                </span>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Hidden from list
                 </p>
@@ -340,7 +315,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             </div>
           </label>
         </div>
-        <div className="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-xs text-gray-600">
+        <div className="mt-3 rounded-sm bg-gray-50 px-4 py-3 text-xs text-gray-600">
           <strong className="font-semibold">Note:</strong> Individual fields can be controlled separately with toggles below.
         </div>
       </div>
@@ -360,7 +335,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           placeholder="Tell the community about yourself..."
           rows={4}
           maxLength={500}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="w-full rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
         />
         <p className="mt-1 text-xs text-gray-500">
           {bio.length}/500 characters
@@ -396,7 +371,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             onChange={(e) => setPosition(e.target.value)}
             placeholder="e.g., Full-stack Developer"
             maxLength={255}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="w-full rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
           />
         </div>
 
@@ -427,7 +402,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             onChange={(e) => setCompany(e.target.value)}
             placeholder="e.g., Tech Innovations Inc."
             maxLength={255}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="w-full rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
           />
         </div>
       </div>
@@ -462,12 +437,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
             }}
             placeholder="e.g., React, Node.js, TypeScript"
             maxLength={50}
-            className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="flex-1 rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
           />
           <button
             type="button"
             onClick={handleAddSpecialty}
-            className="flex items-center gap-1.5 rounded-lg bg-[#00749C] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#005a7a]"
+            className="flex items-center gap-1.5 rounded-sm cursor-pointer border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-[#444140] transition-colors hover:bg-gray-50"
           >
             <Plus size={16} />
             Add
@@ -477,13 +452,13 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           {specialties.map((specialty, index) => (
             <span
               key={index}
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm font-medium text-[#444140]"
+              className="inline-flex items-center gap-2 rounded-sm border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm font-medium text-[#444140]"
             >
               {specialty}
               <button
                 type="button"
                 onClick={() => handleRemoveSpecialty(index)}
-                className="text-gray-400 hover:text-[#444140]"
+                className="cursor-pointer text-gray-400 hover:text-[#444140]"
               >
                 <X size={14} />
               </button>
@@ -543,10 +518,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
               onChange={(e) => setCustomEmail(e.target.value)}
               placeholder="custom@example.com"
               maxLength={255}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+              className="w-full rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
             />
           ) : (
-            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-600">
+            <div className="rounded-sm border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-600">
               {wpUser?.email || 'No account email available'}
             </div>
           )}
@@ -580,7 +555,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           onChange={(e) => setWebsite(e.target.value)}
           placeholder="yoursite.com or https://yoursite.com"
           maxLength={255}
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="w-full rounded-sm border border-gray-300 bg-white px-4 py-2.5 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
         />
       </div>
 
@@ -593,7 +568,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
           <button
             type="button"
             onClick={handleAddSocialLink}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-[#444140] transition-colors hover:bg-gray-50"
+            className="flex items-center gap-1.5 rounded-sm cursor-pointer border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-[#444140] transition-colors hover:bg-gray-50"
           >
             <Plus size={14} />
             Add Link
@@ -608,7 +583,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                 onChange={(e) =>
                   handleSocialLinkChange(index, "type", e.target.value)
                 }
-                className="w-1/3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-[#444140] transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+                className="w-1/3 rounded-sm border border-gray-300 bg-white px-3 py-2 text-[#444140] transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
               >
                 <option value="">Select...</option>
                 <option value="github">GitHub</option>
@@ -628,12 +603,12 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
                   handleSocialLinkChange(index, "url", e.target.value)
                 }
                 placeholder="username or https://..."
-                className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
+                className="flex-1 rounded-sm border border-gray-300 bg-white px-4 py-2 text-[#444140] placeholder-gray-400 transition-colors focus:border-[#444140] focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
               <button
                 type="button"
                 onClick={() => handleRemoveSocialLink(index)}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-red-600"
+                className="rounded-sm border border-gray-300 bg-white px-3 py-2 text-gray-500 cursor-pointer transition-colors hover:bg-gray-50 hover:text-red-600"
                 aria-label="Remove link"
               >
                 <X size={16} />
@@ -650,9 +625,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       </div>
 
       {/* Privacy Info */}
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+      <div className="rounded-sm border border-gray-200 bg-gray-50 p-5">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-sm bg-white">
             <Lock size={18} className="text-[#444140]" />
           </div>
           <div className="flex-1">
@@ -670,7 +645,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       {/* Status Message */}
       {message && (
         <div
-          className={`rounded-lg px-4 py-3 text-sm ${
+          className={`rounded-sm px-4 py-3 text-sm ${
             message.type === "success"
               ? "border border-green-200 bg-green-50 text-green-800"
               : "border border-red-200 bg-red-50 text-red-800"
@@ -685,32 +660,49 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-semibold text-[#444140] transition-colors hover:bg-gray-50"
+          className="rounded-sm cursor-pointer border border-gray-300 bg-white px-6 py-2.5 text-sm font-semibold text-[#444140] transition-colors hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={!isValid || saving}
-          className="flex items-center gap-2 rounded-lg bg-[#00749C] px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#005a7a] disabled:cursor-not-allowed disabled:opacity-50"
+          className={`
+            group relative overflow-hidden rounded-sm cursor-pointer border border-transparent
+            bg-[#00749C] px-8 py-3 text-sm font-semibold text-white
+            shadow-[0_20px_55px_-32px_rgba(0,116,156,1)]
+            transition-all
+            hover:bg-[#00749C]
+            focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 
+            focus-visible:outline-[#00A8C6]
+            disabled:cursor-not-allowed disabled:opacity-50
+          `}
         >
-          {saving ? (
-            <>
-              <div className="relative h-4 w-4">
-                <div className="absolute inset-0 rounded-full border-2 border-white/30" />
-                <div 
-                  className="absolute inset-0 rounded-full border-2 border-transparent border-t-white animate-spin"
-                  style={{ animationDuration: "0.6s" }}
-                />
-              </div>
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save size={16} />
-              Save Changes
-            </>
-          )}
+          {/* gradient hover layer */}
+          <span
+            className="absolute inset-0 bg-gradient-to-r from-[#00749C] via-[#00A8C6] to-[#62C8E6] opacity-0 transition group-hover:opacity-100"
+          />
+
+          {/* content */}
+          <span className="relative z-10 flex items-center gap-2">
+            {saving ? (
+              <>
+                <div className="relative h-4 w-4">
+                  <div className="absolute inset-0 rounded-sm border-2 border-white/30" />
+                  <div
+                    className="absolute inset-0 rounded-sm border-2 border-transparent border-t-white animate-spin"
+                    style={{ animationDuration: "0.6s" }}
+                  />
+                </div>
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save size={16} />
+                Save Changes
+              </>
+            )}
+          </span>
         </button>
       </div>
     </form>

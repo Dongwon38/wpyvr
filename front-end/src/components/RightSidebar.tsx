@@ -92,7 +92,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
             <>
               {user && wpUser ? (
                 // Logged in state
-                <div className="rounded-3xl p-5 text-white shadow-md" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #00B7D3 100%)"}}>
+                <div className="rounded-sm p-5 text-black shadow-md bg-[#fff]">
                   <div className="mb-3 flex items-center gap-3">
                     {userProfile?.avatar_url || user.photoURL ? (
                       <img 
@@ -101,7 +101,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                         className="h-10 w-10 rounded-full border-2 border-white object-cover"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#00749C] font-bold">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#444140] text-black font-bold">
                         <UserIcon size={20} />
                       </div>
                     )}
@@ -122,14 +122,14 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                           router.push("/profile");
                           onClose();
                         }}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-white px-3 py-2 text-xs font-bold text-[#00749C] transition-all hover:bg-gray-100"
                       >
                         <Settings size={14} />
                         Manage Info
                       </button>
                       <button
                         onClick={handleLogout}
-                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/30 px-3 py-2 text-xs font-medium text-white transition-all hover:bg-white/10"
+                        className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border border-white/30 px-3 py-2 text-xs font-medium text-black transition-all hover:bg-white/10"
                       >
                         <LogOut size={14} />
                         Sign Out
@@ -138,7 +138,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                 </div>
               ) : (
                 // Not logged in state
-                <div className="rounded-3xl p-6 text-white shadow-md" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #444140 100%)"}}>
+                <div className="rounded-sm p-5 text-black shadow-md bg-[#fff]">
                     <div className="mb-4 flex items-center gap-2">
                       <LogIn size={20} />
                       <h3 className="text-lg font-black tracking-tight">Join Our Community</h3>
@@ -155,7 +155,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                     </button>
                       <button 
                       onClick={openAuthModal}
-                        className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-white/10"
+                        className="w-full rounded-lg border border-white/30 px-4 py-2.5 text-sm font-medium text-black transition-all hover:bg-white/10"
                     >
                       Create Account
                     </button>
@@ -166,7 +166,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
           )}
 
             {/* Members Link Section */}
-            <div className="rounded-3xl p-6 text-white shadow-md lg:hidden" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #003B52 100%)"}}>
+            <div className="rounded-3xl p-6 text-black shadow-md lg:hidden" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #003B52 100%)"}}>
               <div className="mb-3 flex items-center gap-2">
                 <UsersRound size={20} />
                 <h3 className="text-lg font-black tracking-tight">Meet the Members</h3>
@@ -187,7 +187,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               <StayConnectedCard className="lg:hidden" />
 
               {/* Need Help Section */}
-              <div className="rounded-3xl p-6 text-white shadow-md" style={{backgroundImage: "linear-gradient(135deg, #00749C 0%, #00B7D3 100%)"}}>
+              <div className="rounded-sm p-6 text-black shadow-md" style={{backgroundImage: "linear-gradient(135deg, #444140 0%,rgb(178, 178, 178) 100%)"}}>
                 <div className="mb-3 flex items-center gap-2">
                   <HelpCircle size={20} />
                   <h3 className="text-lg font-black tracking-tight">Need a Hand?</h3>
@@ -197,7 +197,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
                 </p>
                 <button
                   onClick={handleSupportClick}
-                  className="w-full rounded-lg bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
+                  className="w-full rounded-sm bg-white px-4 py-3 text-sm font-bold text-[#00749C] transition-all hover:bg-gray-100"
                 >
                   Ask the Team
                 </button>

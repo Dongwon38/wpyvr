@@ -182,7 +182,7 @@ export default function AvatarUploader({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="absolute bottom-0 right-0 rounded-full bg-blue-600 p-2 text-white shadow-lg transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="absolute bottom-0 right-0 rounded-full cursor-pointer bg-[#00749C] p-2 text-white shadow-lg transition-colors hover:bg-[#005a7a] focus:outline-none focus:ring-2 focus:ring-[#00749C] focus:ring-offset-2"
             aria-label="Upload avatar"
           >
             <Upload size={20} />

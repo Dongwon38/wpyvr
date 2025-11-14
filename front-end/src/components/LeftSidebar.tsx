@@ -54,7 +54,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
         {/* Mobile Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-2 text-[#444140] transition-colors hover:bg-[#00749C]/5 lg:hidden"
+          className="absolute right-4 top-4 rounded-sm p-2 text-[#444140] transition-colors hover:bg-[#444140]/5 lg:hidden"
           aria-label="Close sidebar"
         >
           <X size={24} />
@@ -65,7 +65,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
             <div className="border-b border-[#00749C]/10 px-4 py-3">
               <Link 
                 href="/" 
-                className="flex gap-2 text-sm font-black tracking-tight text-[#00749C] transition-colors hover:text-[#005A7A]"
+                className="flex gap-2 text-sm font-black tracking-tight text-[#444140] transition-colors hover:text-[#005A7A]"
                 onClick={onClose}
                 >
               <Image src="/logo-1.png" alt="WordPress Vancouver" width={36} height={36} className="w-10 h-10" />
@@ -85,10 +85,10 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
                   href={link.href}
                   onClick={onClose}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all",
+                    "flex items-center gap-3 rounded-sm px-4 py-3 text-sm font-semibold transition-all",
                     isActive
-                      ? "bg-[#00749C] text-white shadow-md"
-                      : "text-[#444140] hover:bg-[#00749C]/5 hover:text-[#00749C]"
+                      ? "bg-[#444140] text-white shadow-md"
+                      : "text-[#444140] hover:bg-[#444140]/5 hover:text-[#444140]"
                   )}
                 >
                   <Icon size={20} />
