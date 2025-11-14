@@ -1,3 +1,4 @@
+// 9542, GPT-5
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { ArrowRight, Palette, Sparkles, Waves } from "lucide-react";
