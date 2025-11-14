@@ -35,44 +35,46 @@ export default function BlogListItem({ post, index = 0 }: BlogListItemProps) {
       </Link>
 
       {/* Content */}
-      <div className="flex flex-col gap-2 py-4">
-        {/* Title */}
+        <div className="flex flex-col gap-2 py-4">
+          {/* Title */}
           <Link href={`/blog/${post.slug}`} className="group/title">
-            <h2 className="text-lg font-bold leading-snug tracking-tight text-gray-900 transition-colors group-hover/title:text-blue-600 dark:text-white dark:group-hover/title:text-blue-400">
-            {post.title}
-          </h2>
-        </Link>
+            <h2 className="text-lg font-bold leading-snug tracking-tight text-[#1F1C1A] transition-colors group-hover/title:text-[#00749C]">
+              {post.title}
+            </h2>
+          </Link>
 
-        {/* Excerpt - Limited to 2 lines with ellipsis */}
-          <p className="line-clamp-2 text-sm font-light leading-relaxed text-gray-600 dark:text-gray-400">
-          {post.excerpt}
-        </p>
+          {/* Excerpt - Limited to 2 lines with ellipsis */}
+          <p className="line-clamp-2 text-sm font-light leading-relaxed text-[#6B6663]">
+            {post.excerpt}
+          </p>
 
-        {/* Meta Information */}
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500">
-          {/* Author */}
+          {/* Meta Information */}
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-[#8A8581]">
+            {/* Author */}
             <div className="flex items-center gap-1.5">
-              <span className="font-medium">{post.author.name}</span>
-          </div>
+              <span className="font-semibold text-[#444140]">
+                {post.author.name}
+              </span>
+            </div>
 
-          {/* Date */}
-          <div className="flex items-center gap-1">
-            <Calendar size={12} />
-            <span className="font-normal">
-              {new Date(post.date).toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric' 
-              })}
-            </span>
-          </div>
+            {/* Date */}
+            <div className="flex items-center gap-1">
+              <Calendar size={12} className="text-[#00749C]" />
+              <span className="font-medium text-[#4C4744]">
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
 
-          {/* Read Time */}
-          <div className="flex items-center gap-1">
-            <Clock size={12} />
-            <span className="font-normal">{post.readTime}</span>
+            {/* Read Time */}
+            <div className="flex items-center gap-1">
+              <Clock size={12} className="text-[#00A7CF]" />
+              <span className="font-medium text-[#4C4744]">{post.readTime}</span>
+            </div>
           </div>
         </div>
-      </div>
     </motion.article>
   );
 }

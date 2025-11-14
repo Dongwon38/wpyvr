@@ -131,71 +131,69 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
   if (isMobile) {
     const mobilePosts = slidePosts.slice(0, 3);
 
-    return (
-      <div className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            {icon}
-            <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {title}
-            </h3>
+      return (
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2">
+              {icon}
+              <h3 className="text-xl font-bold tracking-tight text-[#1F1C1A]">
+                {title}
+              </h3>
+            </div>
+            <Link
+              href="/community"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-[#00749C] transition hover:text-[#005f7a]"
+            >
+              View all
+              <ArrowRight size={16} />
+            </Link>
           </div>
+
+          <div className="space-y-4">
+            {mobilePosts.map((post, index) => (
+              <PostListItem key={post.slug} post={post} index={index} />
+            ))}
+          </div>
+
           <Link
             href="/community"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            className="group flex items-center justify-center gap-2 rounded-2xl border border-dashed border-[#E4EBEF] px-6 py-3 text-sm font-semibold text-[#6B6663] transition hover:border-[#00749C]/40 hover:bg-[#F5FBFF]"
           >
-            View All
-            <ArrowRight size={16} />
+            Browse more posts
+            <ArrowRight
+              size={16}
+              className="transition-transform group-hover:translate-x-1"
+            />
           </Link>
         </div>
-
-        <div className="space-y-4">
-          {mobilePosts.map((post, index) => (
-            <PostListItem key={post.slug} post={post} index={index} />
-          ))}
-        </div>
-
-        <Link
-          href="/community"
-          className="group flex items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-gray-800"
-        >
-          Browse More Posts
-          <ArrowRight
-            size={16}
-            className="transition-transform group-hover:translate-x-1"
-          />
-        </Link>
-      </div>
-    );
+      );
   }
 
   return (
-    <div className="relative">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <div className="relative">
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[#1F1C1A]">
             {icon}
-            <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {title}
-          </h3>
+            <h3 className="text-xl font-bold tracking-tight">{title}</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrev}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E4EBEF] bg-white text-[#00749C] transition hover:bg-[#F5FBFF]"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={handleNext}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E4EBEF] bg-white text-[#00749C] transition hover:bg-[#F5FBFF]"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePrev}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={handleNext}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white transition-all hover:border-gray-400 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={20} />
-          </button>
-        </div>
-      </div>
 
       {/* Slider */}
       <div
@@ -228,22 +226,22 @@ export default function PostSlider({ posts, title, icon }: PostSliderProps) {
             </div>
           ))}
 
-          {/* View More Slide */}
+            {/* View More Slide */}
             <div className="w-full flex-shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]">
               <Link
                 href="/community"
-                className="group flex h-full min-h-[300px] w-full flex-col items-center justify-center gap-4 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              <div className="text-5xl">👀</div>
-                <h3 className="text-xl font-bold tracking-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
-                View All Posts
-              </h3>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Explore more</span>
-                <ArrowRight size={16} />
-              </div>
-            </Link>
-          </div>
+                className="group flex h-full min-h-[300px] w-full flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-[#E4EBEF] bg-[#F8FBFC] text-center transition hover:border-[#00749C]/40 hover:bg-white"
+              >
+                <div className="text-5xl">👀</div>
+                <h3 className="text-xl font-bold tracking-tight text-[#1F1C1A] transition group-hover:text-[#00749C]">
+                  View all posts
+                </h3>
+                <div className="flex items-center gap-2 text-sm text-[#6B6663]">
+                  <span>Explore more</span>
+                  <ArrowRight size={16} />
+                </div>
+              </Link>
+            </div>
         </div>
       </div>
     </div>

@@ -105,15 +105,16 @@ export default function ContactForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  return (
-    <div className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800 sm:p-8">
+    return (
+      <div className="mx-auto w-full max-w-2xl rounded-[28px] border border-[#E4EBEF] bg-white/95 p-6 shadow-sm shadow-[#031926]/5 sm:p-8">
         {/* Header */}
         <div className="mb-6 text-center">
-          <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+          <h3 className="mb-2 text-2xl font-black text-[#1F1C1A]">
             How can we help?
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Add a few details and one of our organizers will reach out within 24 hours.
+          <p className="text-sm text-[#6B6663]">
+            Add a few details and one of our organizers will reach out within 24
+            hours.
           </p>
         </div>
 
@@ -122,12 +123,10 @@ export default function ContactForm() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 flex items-center gap-3 rounded-lg bg-red-50 p-4 dark:bg-red-900/20"
+            className="mb-6 flex items-center gap-3 rounded-2xl border border-[#FAD0D6] bg-[#FFF1F3] p-4 text-[#B42318]"
         >
-          <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" />
-          <p className="text-sm text-red-800 dark:text-red-300">
-            {status.message}
-          </p>
+            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <p className="text-sm">{status.message}</p>
         </motion.div>
       )}
 
@@ -135,10 +134,10 @@ export default function ContactForm() {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Name */}
         <div>
-            <label
-              htmlFor="name"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+              <label
+                htmlFor="name"
+                className="mb-1 block text-sm font-semibold text-[#4C4744]"
+              >
               Name <span className="text-red-500">*</span>
             </label>
           <input
@@ -148,17 +147,17 @@ export default function ContactForm() {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+              className="w-full rounded-2xl border border-[#E4EBEF] px-4 py-2.5 text-sm text-[#1F1C1A] transition focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00B7D3]/30"
             placeholder="Your name"
           />
         </div>
 
         {/* Email */}
         <div>
-            <label
-              htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+              <label
+                htmlFor="email"
+                className="mb-1 block text-sm font-semibold text-[#4C4744]"
+              >
               Email <span className="text-red-500">*</span>
             </label>
           <input
@@ -168,17 +167,17 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+              className="w-full rounded-2xl border border-[#E4EBEF] px-4 py-2.5 text-sm text-[#1F1C1A] transition focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00B7D3]/30"
             placeholder="your.email@example.com"
           />
         </div>
 
         {/* Phone */}
         <div>
-            <label
-              htmlFor="phone"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+              <label
+                htmlFor="phone"
+                className="mb-1 block text-sm font-semibold text-[#4C4744]"
+              >
               Phone Number
             </label>
           <input
@@ -187,17 +186,17 @@ export default function ContactForm() {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+              className="w-full rounded-2xl border border-[#E4EBEF] px-4 py-2.5 text-sm text-[#1F1C1A] transition focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00B7D3]/30"
               placeholder="(555) 123-4567"
           />
         </div>
 
         {/* Preferred Contact Method */}
         <div>
-            <label
-              htmlFor="preferred_contact"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+              <label
+                htmlFor="preferred_contact"
+                className="mb-1 block text-sm font-semibold text-[#4C4744]"
+              >
               Preferred Contact Method
             </label>
           <div className="flex gap-4">
@@ -208,11 +207,9 @@ export default function ContactForm() {
                 value="email"
                 checked={formData.preferred_contact === "email"}
                 onChange={handleChange}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700"
+                  className="h-4 w-4 border-[#E4EBEF] text-[#00749C] focus:ring-2 focus:ring-[#00B7D3]/30"
               />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Email
-                </span>
+                <span className="ml-2 text-sm text-[#4C4744]">Email</span>
             </label>
             <label className="flex cursor-pointer items-center">
               <input
@@ -221,21 +218,19 @@ export default function ContactForm() {
                 value="phone"
                 checked={formData.preferred_contact === "phone"}
                 onChange={handleChange}
-                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700"
+                  className="h-4 w-4 border-[#E4EBEF] text-[#00749C] focus:ring-2 focus:ring-[#00B7D3]/30"
               />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Phone
-                </span>
+                <span className="ml-2 text-sm text-[#4C4744]">Phone</span>
             </label>
           </div>
         </div>
 
         {/* Subject */}
         <div>
-            <label
-              htmlFor="subject"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+              <label
+                htmlFor="subject"
+                className="mb-1 block text-sm font-semibold text-[#4C4744]"
+              >
               Subject
             </label>
           <input
@@ -244,17 +239,17 @@ export default function ContactForm() {
             name="subject"
             value={formData.subject}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+              className="w-full rounded-2xl border border-[#E4EBEF] px-4 py-2.5 text-sm text-[#1F1C1A] transition focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00B7D3]/30"
             placeholder="What is this about?"
           />
         </div>
 
         {/* Message */}
         <div>
-            <label
-              htmlFor="message"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+              <label
+                htmlFor="message"
+                className="mb-1 block text-sm font-semibold text-[#4C4744]"
+              >
               Message <span className="text-red-500">*</span>
             </label>
           <textarea
@@ -264,43 +259,44 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             rows={5}
-            className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
+              className="w-full resize-none rounded-2xl border border-[#E4EBEF] px-4 py-2.5 text-sm text-[#1F1C1A] transition focus:border-[#00749C] focus:outline-none focus:ring-2 focus:ring-[#00B7D3]/30"
             placeholder="Your message..."
           />
         </div>
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={status.type === "loading" || status.type === "success"}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {status.type === "loading" ? (
-            <>
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send className="h-4 w-4" />
-              Send Message
-            </>
-          )}
-        </button>
+          <button
+            type="submit"
+            disabled={status.type === "loading" || status.type === "success"}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00749C] to-[#00B7D3] px-6 py-3 text-sm font-bold text-white shadow-[0_20px_45px_rgba(0,116,156,0.35)] transition hover:-translate-y-0.5 hover:from-[#00688A] hover:to-[#00A2CA] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {status.type === "loading" ? (
+              <>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                Send message
+              </>
+            )}
+          </button>
 
         {/* Success Message - Below Button */}
-        {status.type === "success" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-900/20"
-          >
-            <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-              <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                Thanks for reaching out! A volunteer organizer will reply within about 24 hours.
+          {status.type === "success" && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-3 rounded-2xl border border-[#B7F0C4] bg-[#F0FFF4] p-4 text-[#1F6E43]"
+            >
+              <CheckCircle className="h-5 w-5 flex-shrink-0" />
+              <p className="text-sm font-medium">
+                Thanks for reaching out! A volunteer organizer will reply within
+                about 24 hours.
               </p>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
       </form>
     </div>
   );

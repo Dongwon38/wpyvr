@@ -1,196 +1,177 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  ArrowUpRight,
+  LineChart,
+  Palette,
+  Sparkles,
+  Wand2,
+} from "lucide-react";
 
-interface HeroSlide {
-  id: number;
-  title: string;
-  tagline: string;
-  imageSrc: string;
-  cta?: {
-    text: string;
-    href: string;
-  };
-}
-
-const heroSlides: HeroSlide[] = [
+const paletteSwatches = [
   {
-    id: 1,
-    title: "Vancouver WordPress Community: Connect, Learn, Build",
-    tagline:
-      "Join our vibrant community of WordPress enthusiasts. Explore events, share ideas, and grow together.",
-    imageSrc: "/images/img1.jpg",
+    name: "Core WordPress Teal",
+    hex: "#00749C",
+    description: "Hero surfaces, CTA glows, and primary actions.",
+    background:
+      "linear-gradient(145deg, #003B52 0%, #00749C 55%, #00B7D3 100%)",
   },
   {
-    id: 2,
-    title: "Monthly Meetups & Workshops",
-    tagline:
-      "Stay inspired with hands-on sessions led by local WordPress experts and community leaders.",
-    imageSrc: "/images/img2.jpg",
-    cta: {
-      text: "View Upcoming Events",
-      href: "/events",
-    },
+    name: "Inkstone",
+    hex: "#444140",
+    description: "Typography, iconography, and grounded cards.",
+    background: "#444140",
   },
   {
-    id: 3,
-    title: "Collaborate On Your Next Project",
-    tagline:
-      "Showcase your WordPress work, get feedback, and build meaningful collaborations.",
-    imageSrc: "/images/img3.jpg",
-    cta: {
-      text: "Join The Community",
-      href: "/community",
-    },
+    name: "White Canvas",
+    hex: "#FFFFFF",
+    description: "Breathing room for layouts and elevated cards.",
+    background:
+      "linear-gradient(145deg, #FFFFFF 0%, #F7F4EF 40%, #FFFFFF 100%)",
   },
 ];
 
-const backgroundVariants = {
-  enter: { opacity: 0, scale: 1.05 },
-  center: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.98 },
-};
-
-const contentVariants = {
-  enter: { opacity: 0, y: 20 },
-  center: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -15 },
-};
+const heroMetrics = [
+  { label: "Live members", value: "2.1k" },
+  { label: "Events booked", value: "48" },
+  { label: "Deck templates", value: "18" },
+];
 
 export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = heroSlides.length;
-  const slide = heroSlides[currentSlide];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [currentSlide]);
-
-  const nextSlide = () =>
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
-
-  const prevSlide = () =>
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-
-  const goToSlide = (index: number) => {
-    if (index !== currentSlide) setCurrentSlide(index);
-  };
-
   return (
-    <section className="relative min-h-[26rem] overflow-hidden sm:min-h-[30rem] md:min-h-[34rem]">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={slide.id}
-            variants={backgroundVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.5,
-              ease: [0.1, 0.25, 0.1, 0.8],
-            }}
-            className="absolute inset-0 will-change-transform"
-          >
-            <Image
-              src={slide.imageSrc}
-              alt={slide.title}
-              fill
-              priority={slide.id === 1}
-              className="object-cover"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-black/50 to-black/30" />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-[26rem] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[30rem] sm:px-6 sm:py-20 md:min-h-[34rem] lg:px-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.id}
-            variants={contentVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.3,
-              delay: 0.2,
-              ease: [0.1, 0.25, 0.1, 0.8],
-            }}
-            className="max-w-3xl text-white"
-          >
-            <h1 className="text-[2rem] font-bold leading-tight sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-md">
-              {slide.title}
+    <section className="relative isolate overflow-hidden bg-[#031926] px-4 py-20 text-white sm:px-6 lg:px-0">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 15% 20%, rgba(0,180,216,0.45), transparent 55%), radial-gradient(circle at 85% 0%, rgba(0,116,156,0.85), rgba(3,25,38,0.95)), linear-gradient(120deg, #03121C, #063549 55%, #0097C2)",
+        }}
+      />
+      <div className="relative mx-auto grid max-w-6xl gap-10 px-0 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+        <div className="space-y-8">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/80">
+            <Sparkles className="h-3.5 w-3.5" />
+            WordPress core palette
+          </span>
+          <div>
+            <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+              Gradient-forward WordPress showcase
             </h1>
-            <p className="mt-4 hidden max-w-2xl text-base leading-relaxed text-white/85 md:block md:text-lg lg:text-xl">
-              {slide.tagline}
+            <p className="mt-4 max-w-2xl text-lg text-white/85">
+              Keep #00749C as the hero, layer inkstone for warmth, and float
+              white canvases for breathing room. The Vancouver community hub now
+              mirrors the color story from the showcase deck.
             </p>
-
-            {slide.cta && (
-              <div className="mt-8 hidden md:flex">
-                <Link
-                  href={slide.cta.href}
-                  className="group inline-flex items-center gap-3 rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20 md:text-base"
-                >
-                  {slide.cta.text}
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform group-hover:translate-x-1.5"
-                  />
-                </Link>
+          </div>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <Link
+              href="/showcase-1"
+              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#00749C] shadow-[0_25px_50px_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:bg-white/95"
+            >
+              Explore showcase
+              <ArrowUpRight className="ml-2 h-4 w-4" />
+            </Link>
+            <Link
+              href="/community"
+              className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+            >
+              Join community
+            </Link>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {heroMetrics.map((metric) => (
+              <div
+                key={metric.label}
+                className="rounded-2xl border border-white/15 bg-white/10 p-4 text-white/80 backdrop-blur"
+              >
+                <p className="text-3xl font-black text-white">{metric.value}</p>
+                <p className="text-sm uppercase tracking-[0.35em]">
+                  {metric.label}
+                </p>
               </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Controls */}
-      <div className="absolute right-3 bottom-[5.5rem] z-20 flex items-center gap-2 sm:right-6 sm:bottom-10 sm:gap-3">
-        <button
-          onClick={prevSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={22} />
-        </button>
-
-        <div className="flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 text-xs font-medium text-gray-900 shadow-lg backdrop-blur sm:px-4 sm:py-2 sm:text-sm">
-          <span>{currentSlide + 1}</span>
-          <span className="text-gray-400">/</span>
-          <span>{totalSlides}</span>
-          <div className="hidden gap-1 sm:flex">
-            {heroSlides.map((heroSlide, index) => (
-              <button
-                key={heroSlide.id}
-                onClick={() => goToSlide(index)}
-                className={`h-1.5 rounded-full transition-all ${
-                  index === currentSlide
-                    ? "w-4 bg-gray-900"
-                    : "w-1.5 bg-gray-300 hover:bg-gray-400"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
             ))}
           </div>
         </div>
 
-        <button
-          onClick={nextSlide}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-gray-900 shadow-lg backdrop-blur transition hover:bg-white sm:h-11 sm:w-11"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={22} />
-        </button>
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur">
+            <div className="flex items-center justify-between text-white/75">
+              <p className="text-xs uppercase tracking-[0.4em]">Gradient tip</p>
+              <Palette className="h-4 w-4" />
+            </div>
+            <p className="mt-3 text-lg font-semibold leading-relaxed text-white">
+              Keep teal saturated at 60–70% opacity, then fade into aqua halos so
+              CTAs feel premium instead of corporate.
+            </p>
+            <div className="mt-4 flex items-center gap-3 text-sm text-white/80">
+              <div
+                className="h-10 w-10 rounded-full border border-white/40"
+                style={{
+                  background:
+                    "conic-gradient(from 90deg, #002638, #00749C, #00B4D8, #002638)",
+                }}
+              />
+              <div>
+                <p className="font-semibold">Conic halo</p>
+                <p>for CTA glows</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/20 bg-white/15 p-5 backdrop-blur">
+            <div className="flex items-center justify-between text-white/80">
+              <p className="text-xs uppercase tracking-[0.35em]">Sample CTA</p>
+              <Wand2 className="h-4 w-4" />
+            </div>
+            <p className="mt-3 text-2xl font-black">Meet the Color Lab</p>
+            <p className="mt-1 text-sm text-white/85">
+              Live preview of motion gradients, overlays, and teal-forward UI
+              fragments.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3 text-sm">
+              <span className="rounded-full border border-white/40 px-3 py-1 text-white/85">
+                Mesh glow
+              </span>
+              <span className="rounded-full border border-white/40 px-3 py-1 text-white/85">
+                Glass CTA
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/15 bg-white/5 p-5 backdrop-blur">
+            <div className="flex items-center gap-2 text-white/80">
+              <LineChart className="h-4 w-4" />
+              <p className="text-xs uppercase tracking-[0.35em]">
+                Palette tokens
+              </p>
+            </div>
+            <div className="mt-4 space-y-4">
+              {paletteSwatches.map((swatch) => (
+                <div
+                  key={swatch.hex}
+                  className="rounded-2xl border border-white/20 bg-white/5 p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                        {swatch.name}
+                      </p>
+                      <p className="text-lg font-semibold text-white">
+                        {swatch.hex}
+                      </p>
+                    </div>
+                    <span
+                      className="h-12 w-12 rounded-2xl border border-white/30"
+                      style={{ background: swatch.background }}
+                    />
+                  </div>
+                  <p className="mt-3 text-sm text-white/80">
+                    {swatch.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
