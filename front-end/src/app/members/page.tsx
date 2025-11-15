@@ -499,8 +499,8 @@ export default function MembersPage() {
                                           e.stopPropagation();
                                           toggleMemberLinks(memberId, hasLinks);
                                         }}
-                                        className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition ${
-                                          linksOpen ? "bg-[#00749C]" : "bg-neutral-900 hover:bg-neutral-800"
+                                        className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#00749C] shadow-sm transition hover:bg-[#00749C]/10 cursor-pointer ${
+                                          linksOpen ? "ring-2 ring-[#00749C]/40" : ""
                                         }`}
                                       >
                                         <Link2 size={16} />
@@ -571,7 +571,7 @@ export default function MembersPage() {
                                   onClick={() => handleMemberToggle(memberId, hasBio)}
                                   className="mt-3 w-full rounded-full border border-neutral-300 px-3 py-2 text-xs font-medium text-neutral-700 transition-colors hover:border-neutral-900"
                                 >
-                                  {isExpanded ? "Hide Bio" : "Show Bio"}
+                                    {isExpanded ? "Hide Intro" : "Read Intro"}
                                 </button>
                                 {isExpanded && (
                                   <div className="mt-2 rounded-sm border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-700">
@@ -746,45 +746,45 @@ export default function MembersPage() {
                                     </td>
 
                                       <td className="px-6 py-4">
-                                        {hasLinks ? (
-                                          <div className="relative flex items-center justify-center">
-                                            <button
-                                              type="button"
-                                              aria-expanded={linksOpen}
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleMemberLinks(memberId, hasLinks);
-                                              }}
-                                              className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition ${
-                                                linksOpen ? "bg-[#00749C]" : "bg-neutral-900 hover:bg-neutral-800"
-                                              }`}
-                                            >
-                                              <Link2 size={18} />
-                                              <span className="sr-only">
-                                                {linksOpen ? "Hide links" : "Show links"}
-                                              </span>
-                                            </button>
-                                            {linksOpen && (
-                                              <div className="absolute top-12 z-20 w-64 rounded-sm border border-neutral-200 bg-white p-3 text-sm shadow-lg">
-                                                {memberLinks.map((link) => (
-                                                  <a
-                                                    key={`${memberId}-${link.href}`}
-                                                    href={link.href}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center justify-between rounded-sm px-2 py-1 text-[#111111] transition hover:bg-neutral-50 hover:text-[#00749C]"
-                                                    onClick={(e) => e.stopPropagation()}
-                                                  >
-                                                    <span>{link.label}</span>
-                                                    <ExternalLink size={14} />
-                                                  </a>
-                                                ))}
-                                              </div>
-                                            )}
-                                          </div>
-                                        ) : (
-                                          <span className="flex justify-center text-sm text-neutral-400">—</span>
-                                        )}
+                                          {hasLinks ? (
+                                            <div className="relative flex items-center justify-center">
+                                              <button
+                                                type="button"
+                                                aria-expanded={linksOpen}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  toggleMemberLinks(memberId, hasLinks);
+                                                }}
+                                                className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#00749C] shadow-sm transition hover:bg-[#00749C]/10 cursor-pointer ${
+                                                  linksOpen ? "ring-2 ring-[#00749C]/40" : ""
+                                                }`}
+                                              >
+                                                <Link2 size={18} />
+                                                <span className="sr-only">
+                                                  {linksOpen ? "Hide links" : "Show links"}
+                                                </span>
+                                              </button>
+                                              {linksOpen && (
+                                                <div className="absolute top-12 z-20 w-64 rounded-sm border border-neutral-200 bg-white p-3 text-sm shadow-lg">
+                                                  {memberLinks.map((link) => (
+                                                    <a
+                                                      key={`${memberId}-${link.href}`}
+                                                      href={link.href}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="flex items-center justify-between rounded-sm px-2 py-1 text-[#111111] transition hover:bg-neutral-50 hover:text-[#00749C]"
+                                                      onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                      <span>{link.label}</span>
+                                                      <ExternalLink size={14} />
+                                                    </a>
+                                                  ))}
+                                                </div>
+                                              )}
+                                            </div>
+                                          ) : (
+                                            <span className="flex justify-center text-sm text-neutral-400">—</span>
+                                          )}
                                       </td>
                                 </motion.tr>
 
@@ -811,13 +811,7 @@ export default function MembersPage() {
                                           }`}
                                           onClick={() => handleMemberToggle(memberId, hasBio)}
                                         >
-                                          <div className="flex items-center justify-between gap-3 border-b border-neutral-200 bg-white px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                                            <span>Bio</span>
-                                            <span className="text-[10px] font-medium text-neutral-500">
-                                              Click or tap to close
-                                            </span>
-                                          </div>
-                                          <div className="max-h-64 overflow-y-auto px-4 py-3 text-sm leading-6">
+                                            <div className="max-h-64 overflow-y-auto px-4 py-3 text-sm leading-6">
                                             {trimmedBio}
                                           </div>
                                         </div>
