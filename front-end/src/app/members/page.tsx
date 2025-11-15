@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, Fragment } from "react";
 import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
 import { 
   Users, 
   Search, 
@@ -18,6 +19,56 @@ import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 type SortOption = "default" | "name-asc" | "name-desc";
+
+type StatusTagVariant = "staff" | "lookingForJob" | "takingOnProjects";
+
+const STATUS_TAG_BASE_CLASS =
+  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.15em]";
+
+const STATUS_TAG_CONFIG: Record<
+  StatusTagVariant,
+  { label: string; icon: LucideIcon; className: string }
+> = {
+  staff: {
+    label: "Staff",
+    icon: Award,
+    className: "border-violet-200 bg-violet-50 text-violet-700",
+  },
+  lookingForJob: {
+    label: "Looking for a job",
+    icon: Briefcase,
+    className: "border-amber-200 bg-amber-50 text-amber-700",
+  },
+  takingOnProjects: {
+    label: "Taking on projects",
+    icon: Sparkles,
+    className: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  },
+};
+
+const StatusTag = ({ variant }: { variant: StatusTagVariant }) => {
+  const { label, icon: Icon, className } = STATUS_TAG_CONFIG[variant];
+  return (
+    <span className={`${STATUS_TAG_BASE_CLASS} ${className}`}>
+      <Icon className="h-3 w-3" strokeWidth={2} />
+      {label}
+    </span>
+  );
+};
+
+const getMemberStatusTags = (member: UserProfile): StatusTagVariant[] => {
+  const tags: StatusTagVariant[] = [];
+  if (member.role === "administrator" || member.role === "staff") {
+    tags.push("staff");
+  }
+  if (member.looking_for_job) {
+    tags.push("lookingForJob");
+  }
+  if (member.taking_on_projects) {
+    tags.push("takingOnProjects");
+  }
+  return tags;
+};
 
 export default function MembersPage() {
   const [members, setMembers] = useState<UserProfile[]>([]);
@@ -274,10 +325,11 @@ export default function MembersPage() {
                   {/* Mobile Card View */}
                     <div className="space-y-4 md:hidden">
                     {filteredMembers.map((member, index) => {
-                      const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
-                      const hasBio = trimmedBio.length > 0;
-                      const memberId = member.user_id ?? member.id ?? index;
-                      const isExpanded = activeBioId === memberId;
+                        const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
+                        const hasBio = trimmedBio.length > 0;
+                        const memberId = member.user_id ?? member.id ?? index;
+                        const isExpanded = activeBioId === memberId;
+                        const statusTags = getMemberStatusTags(member);
 
                         return (
                           <motion.div
@@ -308,18 +360,17 @@ export default function MembersPage() {
                                 </div>
                               </div>
 
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2">
-                                  {(member.role === "administrator" || member.role === "staff") && (
-                                    <span className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-700">
-                                      <Award size={10} />
-                                      Staff
-                                    </span>
+                                <div className="min-w-0 flex-1">
+                                  {statusTags.length > 0 && (
+                                    <div className="mb-1 flex flex-wrap gap-1.5">
+                                      {statusTags.map((variant) => (
+                                        <StatusTag key={variant} variant={variant} />
+                                      ))}
+                                    </div>
                                   )}
                                   <h3 className="truncate text-base font-semibold text-[#111111]">
                                     {member.nickname}
                                   </h3>
-                                </div>
 
                                 <div className="mt-2 flex items-center gap-1.5">
                                   {(member.custom_email || member.email) && (
@@ -420,11 +471,12 @@ export default function MembersPage() {
                         </thead>
                           <tbody className="divide-y divide-neutral-200">
                           {filteredMembers.map((member, index) => {
-                            const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
-                            const hasBio = trimmedBio.length > 0;
-                            const memberId = member.user_id ?? member.id ?? index;
-                            const rowIsActive = activeBioId === memberId;
-                            const inlineOpen = hasBio && (rowIsActive || (!isMobile && hoveredBioId === memberId));
+                              const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
+                              const hasBio = trimmedBio.length > 0;
+                              const memberId = member.user_id ?? member.id ?? index;
+                              const rowIsActive = activeBioId === memberId;
+                              const inlineOpen = hasBio && (rowIsActive || (!isMobile && hoveredBioId === memberId));
+                              const statusTags = getMemberStatusTags(member);
                               const rowClassName = `group transition-colors hover:bg-neutral-50${
                                 hasBio ? " cursor-pointer" : ""
                               }${inlineOpen ? " bg-neutral-50" : ""}`;
@@ -485,25 +537,28 @@ export default function MembersPage() {
                                           )}
                                         </div>
 
-                                        <div className="flex items-center gap-2">
-                                          {(member.role === "administrator" || member.role === "staff") && (
-                                            <span className="inline-flex items-center gap-1 rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-700">
-                                              <Award size={10} />
-                                              Staff
-                                            </span>
-                                          )}
-                                          <span className="font-semibold text-[#111111]">{member.nickname}</span>
-                                          {(member.custom_email || member.email) && (
-                                            <a
-                                              href={`mailto:${member.custom_email || member.email}`}
-                                              title={member.custom_email || member.email}
-                                              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-                                              onClick={(e) => e.stopPropagation()}
-                                            >
-                                              <Mail size={13} />
-                                            </a>
-                                          )}
-                                        </div>
+                                          <div className="flex flex-col gap-1">
+                                            {statusTags.length > 0 && (
+                                              <div className="flex flex-wrap gap-1.5">
+                                                {statusTags.map((variant) => (
+                                                  <StatusTag key={variant} variant={variant} />
+                                                ))}
+                                              </div>
+                                            )}
+                                            <div className="flex items-center gap-2">
+                                              <span className="font-semibold text-[#111111]">{member.nickname}</span>
+                                              {(member.custom_email || member.email) && (
+                                                <a
+                                                  href={`mailto:${member.custom_email || member.email}`}
+                                                  title={member.custom_email || member.email}
+                                                  className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                                                  onClick={(e) => e.stopPropagation()}
+                                                >
+                                                  <Mail size={13} />
+                                                </a>
+                                              )}
+                                            </div>
+                                          </div>
                                       </div>
                                     </td>
 
