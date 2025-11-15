@@ -456,7 +456,7 @@ export default function MembersPage() {
                                       <img
                                         src={member.avatar_url}
                                         alt={member.nickname}
-                                        className="h-10 w-10 rounded-full object-cover ring-1 ring-neutral-200"
+                                        className="h-12 w-12 rounded-full object-cover ring-1 ring-neutral-200"
                                         onError={(e) => {
                                           e.currentTarget.style.display = "none";
                                           const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
@@ -464,7 +464,7 @@ export default function MembersPage() {
                                         }}
                                       />
                                     ) : (
-                                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white">
+                                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white">
                                         {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
                                       </div>
                                     )}
@@ -479,7 +479,7 @@ export default function MembersPage() {
                                         ))}
                                       </div>
                                     )}
-                                    <h3 className="truncate text-base font-semibold text-[#111111]">
+                                    <h3 className="truncate text-lg font-semibold text-[#111111]">
                                       {member.nickname}
                                     </h3>
                                   </div>
@@ -751,11 +751,11 @@ export default function MembersPage() {
                                                   e.stopPropagation();
                                                   toggleMemberLinks(memberId, hasLinks);
                                                 }}
-                                                className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#00749C] shadow-sm transition hover:bg-[#00749C]/10 cursor-pointer ${
-                                                  linksOpen ? "ring-2 ring-[#00749C]/40" : ""
+                                                className={`text-neutral-500 transition hover:text-[#00749C] ${
+                                                  linksOpen ? "text-[#00749C]" : ""
                                                 }`}
                                               >
-                                                <Link2 size={18} />
+                                                <MoreVertical size={18} />
                                                 <span className="sr-only">
                                                   {linksOpen ? "Hide links" : "Show links"}
                                                 </span>
