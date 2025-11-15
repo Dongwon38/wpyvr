@@ -118,6 +118,7 @@ export default function MembersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("default");
   const [filterSpecialty, setFilterSpecialty] = useState<string>("all");
+  const [statusFilters, setStatusFilters] = useState<StatusTagVariant[]>([]);
   const [activeBioId, setActiveBioId] = useState<number | null>(null);
   const [hoveredBioId, setHoveredBioId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -171,6 +172,14 @@ export default function MembersPage() {
     setOpenLinksId((current) => (current === memberId ? null : memberId));
   };
 
+  const toggleStatusFilter = (status: StatusTagVariant) => {
+    setStatusFilters((current) =>
+      current.includes(status)
+        ? current.filter((item) => item !== status)
+        : [...current, status]
+    );
+  };
+
   const allSpecialties = useMemo(() => {
     const specialtiesSet = new Set<string>();
     members.forEach(member => {
@@ -207,6 +216,14 @@ export default function MembersPage() {
       );
     }
 
+    // Status filter
+    if (statusFilters.length > 0) {
+      filtered = filtered.filter(member => {
+        const memberStatuses = getMemberStatusTags(member);
+        return memberStatuses.some((status) => statusFilters.includes(status));
+      });
+    }
+
     // Sort
     switch (sortBy) {
       case "name-asc":
@@ -234,8 +251,8 @@ export default function MembersPage() {
         break;
     }
 
-  return filtered;
-}, [members, searchQuery, sortBy, filterSpecialty]);
+    return filtered;
+  }, [members, searchQuery, sortBy, filterSpecialty, statusFilters]);
 
   const isTargetInsideBioSection = (
     target: EventTarget | null,
@@ -335,10 +352,32 @@ export default function MembersPage() {
                       </select>
                     </div>
                   </div>
-                </div>
+                  </div>
+
+                  {/* Status Filters */}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {ALLOWED_STATUS_VALUES.map((status) => {
+                      const label = STATUS_TAG_CONFIG[status].label;
+                      const isActive = statusFilters.includes(status);
+                      return (
+                        <button
+                          key={status}
+                          type="button"
+                          onClick={() => toggleStatusFilter(status)}
+                          className={`inline-flex items-center gap-1 rounded-sm px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] transition ${
+                            isActive
+                              ? "bg-[#00749C] text-white"
+                              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
 
                 {/* Active Filters Summary */}
-                  {(searchQuery || filterSpecialty !== "all") && (
+                    {(searchQuery || filterSpecialty !== "all" || statusFilters.length > 0) && (
                     <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-neutral-200 pt-3">
                       <span className="text-xs font-semibold text-neutral-500">
                         Active:
@@ -353,11 +392,20 @@ export default function MembersPage() {
                           {filterSpecialty}
                         </span>
                       )}
+                        {statusFilters.map((filter) => (
+                          <span
+                            key={filter}
+                            className="rounded-full border border-neutral-300 bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-700"
+                          >
+                            {STATUS_TAG_CONFIG[filter].label}
+                          </span>
+                        ))}
                       <button
                         onClick={() => {
                           setSearchQuery("");
                           setFilterSpecialty("all");
                           setSortBy("default");
+                          setStatusFilters([]);
                         }}
                         className="text-xs font-medium text-neutral-500 hover:text-neutral-900"
                       >
@@ -783,11 +831,16 @@ export default function MembersPage() {
                       </table>
                     </div>
 
-                      <div className="border-t border-neutral-200 bg-white px-6 py-3">
-                        <p className="text-xs text-neutral-500">
-                          <span className="font-semibold text-neutral-700">Note:</span> "—" indicates information is unavailable or private.
-                        </p>
-                      </div>
+                        <div className="border-t border-neutral-200 bg-white px-6 py-3">
+                          <div className="space-y-1 text-xs text-neutral-500">
+                            <p>
+                              <span className="font-semibold text-neutral-700">Note:</span> Some details may be hidden based on each member’s privacy preferences, so a “—” simply means they chose not to share that field.
+                            </p>
+                            <p>
+                              <span className="font-semibold text-neutral-700">Legend:</span> Seeking = looking for a job, Freelancing = taking on projects.
+                            </p>
+                          </div>
+                        </div>
                   </motion.div>
                 </>
               ) : (
@@ -809,6 +862,7 @@ export default function MembersPage() {
                         setSearchQuery("");
                         setFilterSpecialty("all");
                         setSortBy("default");
+                        setStatusFilters([]);
                       }}
                       className="rounded-full border border-neutral-900 px-6 py-2.5 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white"
                     >
