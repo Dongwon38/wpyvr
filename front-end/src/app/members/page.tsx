@@ -751,7 +751,7 @@ export default function MembersPage() {
                                                   e.stopPropagation();
                                                   toggleMemberLinks(memberId, hasLinks);
                                                 }}
-                                                className={`text-neutral-500 transition hover:text-[#00749C] ${
+                                                className={`text-neutral-500 w-8 transition hover:text-[#00749C] ${
                                                   linksOpen ? "text-[#00749C]" : ""
                                                 }`}
                                               >

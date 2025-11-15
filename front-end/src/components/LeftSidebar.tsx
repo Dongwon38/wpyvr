@@ -47,7 +47,7 @@ export default function LeftSidebar({ isOpen, onClose }: LeftSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 h-full w-64 flex-shrink-0 overflow-y-auto border-r border-[#00749C]/10 bg-white shadow-2xl transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:shadow-none",
+          "fixed left-0 top-0 z-50 h-full w-60 flex-shrink-0 overflow-y-auto border-r border-[#00749C]/10 bg-white shadow-2xl transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:shadow-none",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

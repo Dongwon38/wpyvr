@@ -34,9 +34,9 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
   const sectionIconClass =
     "flex h-10 w-10 items-center justify-center rounded-full border border-[#444140]/20 bg-[#F3EFE7] text-[#00749C]";
   const primaryButtonClass =
-    "inline-flex items-center justify-center gap-2 rounded-full bg-[#00749C] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#006282]";
+    "inline-flex items-center justify-center gap-2 rounded-sm bg-[#00749C] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#006282]";
   const secondaryButtonClass =
-    "inline-flex items-center justify-center gap-2 rounded-full border border-[#444140]/30 px-4 py-2 text-sm font-semibold text-[#444140] transition-colors hover:border-[#444140]/60";
+    "inline-flex items-center justify-center gap-2 rounded-sm border border-[#444140]/30 px-4 py-2 text-sm font-semibold text-[#444140] transition-colors hover:border-[#444140]/60";
   const textLinkClass =
     "inline-flex items-center gap-2 text-sm font-semibold text-[#00749C] transition-colors hover:text-[#005a79]";
   const labelClass =
@@ -88,7 +88,7 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto border-l border-[#00749C]/10 bg-gradient-to-b from-white via-[#FFFCF6] to-white shadow-2xl transition-transform duration-300 lg:relative lg:h-auto lg:w-80 lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none",
+            "fixed right-0 top-0 z-50 h-full w-80 flex-shrink-0 overflow-y-auto border-l border-[#00749C]/10 bg-gradient-to-b from-white via-[#FFFCF6] to-white shadow-2xl transition-transform duration-300 lg:relative lg:h-auto lg:w-72 lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:shadow-none",
             isOpen ? "translate-x-0" : "translate-x-full"
           )}
         >

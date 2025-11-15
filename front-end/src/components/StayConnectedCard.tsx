@@ -44,9 +44,9 @@ export default function StayConnectedCard({ className }: { className?: string })
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 py-3 text-[#444140] transition-colors hover:text-[#00749C]"
+              className="group flex items-center gap-3 py-2 text-[#444140] transition-colors hover:text-[#00749C]"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#444140]/15 bg-white">
+              <div className="flex h-10 w-10 items-center justify-center bg-white">
                 {link.name === "Slack" ? (
                   <Image src="/logo-slack.png" alt={link.name} width={20} height={20} />
                 ) : link.name === "Discord" ? (
@@ -58,9 +58,6 @@ export default function StayConnectedCard({ className }: { className?: string })
               <div className="flex-1">
                 <p className="text-sm font-semibold leading-tight group-hover:text-[#00749C]">
                   {link.name}
-                </p>
-                <p className="text-[11px] text-[#444140]/60">
-                  {link.description}
                 </p>
               </div>
               <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#00749C]/70 group-hover:text-[#00749C]">
