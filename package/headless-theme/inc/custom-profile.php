@@ -31,6 +31,7 @@ function custom_profile_create_table() {
         specialties JSON DEFAULT NULL,
         company VARCHAR(255) DEFAULT NULL,
         website VARCHAR(255) DEFAULT NULL,
+        status JSON DEFAULT NULL,
         profile_visibility ENUM('public', 'private') DEFAULT 'private',
         custom_email VARCHAR(255) DEFAULT NULL,
         social_links JSON DEFAULT NULL,
@@ -153,11 +154,15 @@ function custom_profile_get(WP_REST_Request $request) {
     $profile['privacy_settings'] = !empty($profile['privacy_settings']) 
         ? json_decode($profile['privacy_settings'], true) 
         : [];
+    $profile['status'] = !empty($profile['status']) 
+        ? json_decode($profile['status'], true) 
+        : [];
 
     // Ensure arrays
     if (!is_array($profile['specialties'])) $profile['specialties'] = [];
     if (!is_array($profile['social_links'])) $profile['social_links'] = [];
     if (!is_array($profile['privacy_settings'])) $profile['privacy_settings'] = [];
+    if (!is_array($profile['status'])) $profile['status'] = [];
 
     // Add WordPress user data
     $profile['email'] = $user_data->user_email;
@@ -205,6 +210,7 @@ function custom_profile_update(WP_REST_Request $request) {
     $custom_email = sanitize_email($request->get_param('custom_email'));
     $social_links = $request->get_param('social_links') ?? [];
     $privacy_settings = $request->get_param('privacy_settings') ?? [];
+    $status_values = $request->get_param('status') ?? [];
     
     error_log("📥 [UPDATE Profile] Received update request for user_id: $user_id");
     error_log("🖼️ [UPDATE Profile] Avatar URL received: " . ($avatar_url ?: 'EMPTY'));
@@ -266,10 +272,23 @@ function custom_profile_update(WP_REST_Request $request) {
         }
     }
 
+    // Sanitize status selections (allow predefined values only)
+    $sanitized_status = [];
+    $allowed_status_values = ['looking_for_job', 'taking_on_projects'];
+    if (is_array($status_values)) {
+        foreach ($status_values as $status_value) {
+            $clean = sanitize_key($status_value);
+            if (in_array($clean, $allowed_status_values, true) && !in_array($clean, $sanitized_status, true)) {
+                $sanitized_status[] = $clean;
+            }
+        }
+    }
+
     // Convert to JSON
     $specialties_json = !empty($sanitized_specialties) ? json_encode($sanitized_specialties) : null;
     $social_links_json = !empty($sanitized_social_links) ? json_encode($sanitized_social_links) : null;
     $privacy_json = !empty($sanitized_privacy) ? json_encode($sanitized_privacy) : null;
+    $status_json = !empty($sanitized_status) ? json_encode($sanitized_status) : null;
 
     // Insert or update profile in database
     $table_name = $wpdb->prefix . 'user_profiles';
@@ -283,6 +302,7 @@ function custom_profile_update(WP_REST_Request $request) {
         'specialties' => $specialties_json,
         'company' => $company,
         'website' => $website,
+        'status' => $status_json,
         'avatar_url' => $avatar_url,
         'profile_visibility' => $profile_visibility,
         'custom_email' => $custom_email,
@@ -292,7 +312,7 @@ function custom_profile_update(WP_REST_Request $request) {
         'updated_at' => $current_time,
     ];
 
-    $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'];
+    $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'];
 
     // Check if profile exists
     $existing = $wpdb->get_var(
@@ -364,7 +384,8 @@ function custom_profile_update(WP_REST_Request $request) {
             'profile_visibility' => $profile_visibility,
             'custom_email' => $custom_email,
             'social_links' => $sanitized_social_links,
-            'privacy_settings' => $sanitized_privacy,
+          'privacy_settings' => $sanitized_privacy,
+          'status' => $sanitized_status,
             'updated_at' => $current_time
         ]
     ], 200);
@@ -403,6 +424,13 @@ function custom_profile_get_all_members(WP_REST_Request $request) {
         $profile['privacy_settings'] = !empty($profile['privacy_settings']) 
             ? json_decode($profile['privacy_settings'], true) 
             : [];
+        $profile['status'] = !empty($profile['status'])
+            ? json_decode($profile['status'], true)
+            : [];
+
+        if (!is_array($profile['status'])) {
+            $profile['status'] = [];
+        }
 
         // Get user role
         $user_data = get_userdata($profile['user_id']);

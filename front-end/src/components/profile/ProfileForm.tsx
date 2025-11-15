@@ -8,12 +8,26 @@ import Switch from "@/components/ui/Switch"
 import { useAuth } from "@/context/AuthContext"
 import { updateUserProfile, type SocialLink, type ProfileUpdatePayload, type PrivacySettings } from "@/lib/profileApi"
 
+const STATUS_OPTIONS = [
+  {
+    value: "looking_for_job",
+    label: "Looking for a job",
+    description: "Show up in searches when teams are hiring.",
+  },
+  {
+    value: "taking_on_projects",
+    label: "Taking on projects",
+    description: "Let others know you’re open to freelance or collabs.",
+  },
+] as const
+
 interface ProfileFormProps {
   initialData?: {
     nickname: string
     bio: string
     position: string
     specialties: string[]
+    status?: string[]
     company: string
     website: string
     avatar_url: string
@@ -55,6 +69,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
   const [company, setCompany] = useState(initialData?.company || "")
   const [website, setWebsite] = useState(initialData?.website || "")
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url || "")
+  const [statusSelections, setStatusSelections] = useState<string[]>(initialData?.status || [])
 
   // Debug log for avatar URL changes
   useEffect(() => {
@@ -140,6 +155,15 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
     }))
   }
 
+  const handleStatusToggle = (value: string) => {
+    setStatusSelections(prev => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value)
+      }
+      return [...prev, value]
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -160,25 +184,26 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       setSaving(true)
       setMessage(null)
 
-      // Filter out empty social links
-      const validSocialLinks = socialLinks.filter(
-        (link) => link.type.trim() && link.url.trim()
-      )
+        // Filter out empty social links
+        const validSocialLinks = socialLinks.filter(
+          (link) => link.type.trim() && link.url.trim()
+        )
 
-      const payload: ProfileUpdatePayload = {
-        user_id: wpUser.wp_user_id,
-        nickname: nickname.trim(),
-        bio: bio.trim(),
-        position: position.trim(),
-        specialties: specialties,
-        company: company.trim(),
-        website: website.trim(),
-        avatar_url: avatarUrl,
-        profile_visibility: profileVisibility,
-        custom_email: useCustomEmail ? customEmail.trim() : '',
-        social_links: validSocialLinks,
-        privacy_settings: privacySettings,
-      }
+        const payload: ProfileUpdatePayload = {
+          user_id: wpUser.wp_user_id,
+          nickname: nickname.trim(),
+          bio: bio.trim(),
+          position: position.trim(),
+          specialties: specialties,
+          company: company.trim(),
+          website: website.trim(),
+          status: statusSelections,
+          avatar_url: avatarUrl,
+          profile_visibility: profileVisibility,
+          custom_email: useCustomEmail ? customEmail.trim() : "",
+          social_links: validSocialLinks,
+          privacy_settings: privacySettings,
+        }
       
       console.log("💾 ProfileForm - Submitting profile update:", {
         user_id: payload.user_id,
@@ -340,6 +365,40 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         <p className="mt-1 text-xs text-gray-500">
           {bio.length}/500 characters
         </p>
+      </div>
+
+      {/* Status Checkboxes */}
+      <div>
+        <label className="mb-1 block text-sm font-semibold text-[#444140]">
+          Availability Status
+        </label>
+        <p className="mb-3 text-xs text-gray-500">
+          Choose the tags that describe your current availability. Leave unchecked if you prefer not to display anything.
+        </p>
+        <div className="space-y-2">
+          {STATUS_OPTIONS.map((option) => {
+            const checked = statusSelections.includes(option.value)
+            return (
+              <label
+                key={option.value}
+                className={`flex cursor-pointer items-start gap-3 rounded-sm border p-3 transition-colors ${
+                  checked ? "border-[#00749C] bg-[#00749C]/5" : "border-gray-200 bg-white hover:border-gray-300"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 cursor-pointer rounded border-gray-300 text-[#00749C] focus:ring-2 focus:ring-[#00749C]/30"
+                  checked={checked}
+                  onChange={() => handleStatusToggle(option.value)}
+                />
+                <div>
+                  <span className="text-sm font-semibold text-[#444140]">{option.label}</span>
+                  <p className="text-xs text-gray-500">{option.description}</p>
+                </div>
+              </label>
+            )
+          })}
+        </div>
       </div>
 
       {/* Professional Info */}

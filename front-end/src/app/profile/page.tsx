@@ -118,10 +118,11 @@ export default function ProfilePage() {
                     bio: profile.bio || "",
                     position: profile.position || "",
                     specialties: profile.specialties || [],
+                    status: profile.status || [],
                     company: profile.company || "",
                     website: profile.website || "",
                     avatar_url: profile.avatar_url || "",
-                    profile_visibility: profile.profile_visibility || 'private',
+                    profile_visibility: profile.profile_visibility || "private",
                     custom_email: profile.custom_email || "",
                     social_links: profile.social_links || [],
                     privacy_settings: {
