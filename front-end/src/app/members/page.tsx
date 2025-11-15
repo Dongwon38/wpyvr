@@ -23,26 +23,26 @@ type SortOption = "default" | "name-asc" | "name-desc";
 type StatusTagVariant = "looking_for_job" | "taking_on_projects";
 
 const STATUS_TAG_BASE_CLASS =
-  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]";
+  "inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white";
 
 const STATUS_TAG_CONFIG: Record<
   StatusTagVariant,
   { label: string; icon: LucideIcon; className: string }
 > = {
   looking_for_job: {
-    label: "Looking for a job",
+    label: "Seeking",
     icon: Briefcase,
-    className: "border-amber-200 bg-amber-50 text-amber-700",
+    className: "bg-amber-600",
   },
   taking_on_projects: {
-    label: "Taking on projects",
+    label: "Freelancing",
     icon: Sparkles,
-    className: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    className: "bg-emerald-600",
   },
 };
 
 const STAFF_BADGE_CLASS =
-  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] border-violet-200 bg-violet-50 text-violet-700";
+  "inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white bg-violet-700";
 
 const StaffBadge = () => (
   <span className={STAFF_BADGE_CLASS}>
@@ -143,10 +143,18 @@ export default function MembersPage() {
     let filtered = [...members];
 
     // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(member =>
-        member.nickname?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    if (trimmedQuery) {
+      filtered = filtered.filter(member => {
+        const matchesName = member.nickname?.toLowerCase().includes(trimmedQuery);
+        const matchesStatus = getMemberStatusTags(member).some((variant) => {
+          const label = STATUS_TAG_CONFIG[variant].label.toLowerCase();
+          if (label.includes(trimmedQuery)) return true;
+          const slug = variant.replace(/_/g, " ");
+          return slug.includes(trimmedQuery);
+        });
+        return Boolean(matchesName) || matchesStatus;
+      });
     }
 
     // Specialty filter
@@ -351,7 +359,7 @@ export default function MembersPage() {
                                   <img
                                     src={member.avatar_url}
                                     alt={member.nickname}
-                                    className="h-14 w-14 rounded-full object-cover ring-1 ring-neutral-200"
+                                    className="h-10 w-10 rounded-full object-cover ring-1 ring-neutral-200"
                                     onError={(e) => {
                                       e.currentTarget.style.display = "none";
                                       const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
@@ -360,7 +368,7 @@ export default function MembersPage() {
                                   />
                                 ) : null}
                                 <div
-                                  className={`${member.avatar_url ? "hidden" : "flex"} h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white`}
+                                  className={`${member.avatar_url ? "hidden" : "flex"} h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white`}
                                 >
                                   {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
                                 </div>
@@ -423,19 +431,19 @@ export default function MembersPage() {
 
                             {member.specialties && member.specialties.length > 0 && (
                               <div className="mt-3 flex flex-wrap gap-1.5">
-                                {member.specialties.slice(0, 3).map((specialty) => (
-                                  <span
-                                    key={specialty}
-                                    className="rounded-full border border-neutral-300 bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700"
-                                  >
-                                    {specialty}
-                                  </span>
-                                ))}
-                                {member.specialties.length > 3 && (
-                                  <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs font-medium text-neutral-500">
-                                    +{member.specialties.length - 3}
-                                  </span>
-                                )}
+                                  {member.specialties.slice(0, 3).map((specialty) => (
+                                    <span
+                                      key={specialty}
+                                      className="rounded-sm border border-neutral-300 bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700"
+                                    >
+                                      {specialty}
+                                    </span>
+                                  ))}
+                                  {member.specialties.length > 3 && (
+                                    <span className="rounded-sm border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs font-medium text-neutral-500">
+                                      +{member.specialties.length - 3}
+                                    </span>
+                                  )}
                               </div>
                             )}
 
@@ -527,19 +535,19 @@ export default function MembersPage() {
                                               <img
                                                 src={member.avatar_url}
                                                 alt={member.nickname}
-                                                className="h-14 w-14 rounded-full object-cover ring-1 ring-neutral-200"
+                                              className="h-10 w-10 rounded-full object-cover ring-1 ring-neutral-200"
                                                 onError={(e) => {
                                                   e.currentTarget.style.display = "none";
                                                   const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
                                                   if (placeholder) placeholder.style.display = "flex";
                                                 }}
                                               />
-                                              <div className="hidden h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-base font-semibold uppercase text-white">
+                                              <div className="hidden h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-base font-semibold uppercase text-white">
                                                 {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
                                               </div>
                                             </>
                                           ) : (
-                                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-base font-semibold uppercase text-white">
+                                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-base font-semibold uppercase text-white">
                                               {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
                                             </div>
                                           )}
@@ -574,19 +582,19 @@ export default function MembersPage() {
                                     <td className="px-6 py-4">
                                       {member.specialties && member.specialties.length > 0 ? (
                                         <div className="flex flex-wrap gap-1.5">
-                                          {member.specialties.slice(0, 2).map((specialty) => (
-                                            <span
-                                              key={specialty}
-                                              className="rounded-full border border-neutral-300 bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-700"
-                                            >
-                                              {specialty}
-                                            </span>
-                                          ))}
-                                          {member.specialties.length > 2 && (
-                                            <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-500">
-                                              +{member.specialties.length - 2}
-                                            </span>
-                                          )}
+                                            {member.specialties.slice(0, 2).map((specialty) => (
+                                              <span
+                                                key={specialty}
+                                                className="rounded-sm border border-neutral-300 bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-700"
+                                              >
+                                                {specialty}
+                                              </span>
+                                            ))}
+                                            {member.specialties.length > 2 && (
+                                              <span className="rounded-sm border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-500">
+                                                +{member.specialties.length - 2}
+                                              </span>
+                                            )}
                                         </div>
                                       ) : (
                                         <span className="text-sm text-neutral-400">—</span>
