@@ -481,57 +481,11 @@ export default function MembersPage() {
                                     {member.nickname}
                                   </h3>
 
-                                  <div className="mt-2 flex items-center gap-1.5">
-                                  {(member.custom_email || member.email) && (
-                                    <a
-                                      href={`mailto:${member.custom_email || member.email}`}
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <Mail size={14} />
-                                    </a>
-                                  )}
-                                    {hasLinks && (
-                                      <button
-                                        type="button"
-                                        aria-expanded={linksOpen}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          toggleMemberLinks(memberId, hasLinks);
-                                        }}
-                                        className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#00749C] shadow-sm transition hover:bg-[#00749C]/10 cursor-pointer ${
-                                          linksOpen ? "ring-2 ring-[#00749C]/40" : ""
-                                        }`}
-                                      >
-                                        <Link2 size={16} />
-                                        <span className="sr-only">
-                                          {linksOpen ? "Hide links" : "Show links"}
-                                        </span>
-                                      </button>
-                                    )}
-                                </div>
-                                  {linksOpen && hasLinks && (
-                                    <div className="mt-2 space-y-1 rounded-sm border border-neutral-200 bg-white p-3 shadow-sm">
-                                      {memberLinks.map((link) => (
-                                        <a
-                                          key={`${memberId}-${link.href}`}
-                                          href={link.href}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="flex items-center justify-between text-sm font-medium text-[#111111] transition hover:text-[#00749C]"
-                                          onClick={(e) => e.stopPropagation()}
-                                        >
-                                          <span>{link.label}</span>
-                                          <ExternalLink size={14} />
-                                        </a>
-                                      ))}
-                                    </div>
-                                  )}
                               </div>
                             </div>
 
                             {(member.position || member.company) && (
-                              <div className="mt-3 space-y-1 border-t border-neutral-200 pt-3">
+                                <div className="mt-3 space-y-1">
                                 {member.position && (
                                   <div className="flex items-center gap-2 text-sm text-[#111111]">
                                     <Briefcase size={14} className="flex-shrink-0 text-neutral-500" />
@@ -562,6 +516,55 @@ export default function MembersPage() {
                                       +{member.specialties.length - 3}
                                     </span>
                                   )}
+
+                              {(member.custom_email || member.email || hasLinks) && (
+                                <div className="mt-3 flex flex-wrap items-center gap-2 rounded-sm bg-neutral-50 p-2">
+                                  {(member.custom_email || member.email) && (
+                                    <a
+                                      href={`mailto:${member.custom_email || member.email}`}
+                                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <Mail size={14} />
+                                    </a>
+                                  )}
+                                  {hasLinks && (
+                                    <button
+                                      type="button"
+                                      aria-expanded={linksOpen}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleMemberLinks(memberId, hasLinks);
+                                      }}
+                                      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#00749C] shadow-sm transition hover:bg-[#00749C]/10 cursor-pointer ${
+                                        linksOpen ? "ring-2 ring-[#00749C]/40" : ""
+                                      }`}
+                                    >
+                                      <Link2 size={15} />
+                                      <span className="sr-only">
+                                        {linksOpen ? "Hide links" : "Show links"}
+                                      </span>
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                              {linksOpen && hasLinks && (
+                                <div className="mt-2 space-y-1 rounded-sm border border-neutral-200 bg-white p-3 text-sm shadow-sm">
+                                  {memberLinks.map((link) => (
+                                    <a
+                                      key={`${memberId}-${link.href}`}
+                                      href={link.href}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center justify-between text-sm font-medium text-[#111111] transition hover:text-[#00749C]"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <span>{link.label}</span>
+                                      <ExternalLink size={14} />
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
                               </div>
                             )}
 
