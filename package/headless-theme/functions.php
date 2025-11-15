@@ -72,3 +72,6 @@ require_once get_template_directory() . '/inc/register-acf.php';
 
 // Include contact form functionality
 require_once get_template_directory() . '/inc/functions-contact.php';
+
+// Include hub integration endpoints
+require_once get_template_directory() . '/inc/hub-integration.php';
