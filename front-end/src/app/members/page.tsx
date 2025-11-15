@@ -14,7 +14,8 @@ import {
   Award,
   Sparkles,
   Link2,
-  ExternalLink
+  ExternalLink,
+  MoreVertical
 } from "lucide-react";
 import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -437,6 +438,7 @@ export default function MembersPage() {
                         const memberLinks = getMemberLinks(member);
                         const hasLinks = memberLinks.length > 0;
                         const linksOpen = openLinksId === memberId;
+                        const positionCompanyLine = [member.position, member.company].filter(Boolean).join(" • ");
                         const isStaff = member.role === "administrator" || member.role === "staff";
 
                         return (
@@ -447,59 +449,86 @@ export default function MembersPage() {
                             transition={{ duration: 0.3, delay: index * 0.03 }}
                             className="rounded-sm border border-neutral-200 bg-white p-4 shadow-sm"
                           >
-                            <div className="flex items-start gap-3">
-                              <div className="flex-shrink-0">
-                                {member.avatar_url ? (
-                                  <img
-                                    src={member.avatar_url}
-                                    alt={member.nickname}
-                                    className="h-10 w-10 rounded-full object-cover ring-1 ring-neutral-200"
-                                    onError={(e) => {
-                                      e.currentTarget.style.display = "none";
-                                      const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
-                                      if (placeholder) placeholder.style.display = "flex";
-                                    }}
-                                  />
-                                ) : null}
-                                <div
-                                  className={`${member.avatar_url ? "hidden" : "flex"} h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white`}
-                                >
-                                  {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
+                              <div className="flex items-start gap-3">
+                                <div className="flex flex-1 items-start gap-3">
+                                  <div className="flex-shrink-0">
+                                    {member.avatar_url ? (
+                                      <img
+                                        src={member.avatar_url}
+                                        alt={member.nickname}
+                                        className="h-10 w-10 rounded-full object-cover ring-1 ring-neutral-200"
+                                        onError={(e) => {
+                                          e.currentTarget.style.display = "none";
+                                          const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                                          if (placeholder) placeholder.style.display = "flex";
+                                        }}
+                                      />
+                                    ) : (
+                                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold uppercase text-white">
+                                        {member.nickname?.substring(0, 2).toUpperCase() || "UN"}
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  <div className="min-w-0 flex-1">
+                                    {(isStaff || statusTags.length > 0) && (
+                                      <div className="mb-1 flex flex-wrap gap-1.5">
+                                        {isStaff && <StaffBadge />}
+                                        {statusTags.map((variant) => (
+                                          <StatusTag key={variant} variant={variant} />
+                                        ))}
+                                      </div>
+                                    )}
+                                    <h3 className="truncate text-base font-semibold text-[#111111]">
+                                      {member.nickname}
+                                    </h3>
+                                  </div>
                                 </div>
-                              </div>
 
-                                <div className="min-w-0 flex-1">
-                                  {(isStaff || statusTags.length > 0) && (
-                                    <div className="mb-1 flex flex-wrap gap-1.5">
-                                      {isStaff && <StaffBadge />}
-                                      {statusTags.map((variant) => (
-                                        <StatusTag key={variant} variant={variant} />
-                                      ))}
-                                    </div>
-                                  )}
-                                  <h3 className="truncate text-base font-semibold text-[#111111]">
-                                    {member.nickname}
-                                  </h3>
-
-                              </div>
-                            </div>
-
-                            {(member.position || member.company) && (
-                                <div className="mt-3 space-y-1">
-                                {member.position && (
-                                  <div className="flex items-center gap-2 text-sm text-[#111111]">
-                                    <Briefcase size={14} className="flex-shrink-0 text-neutral-500" />
-                                    <span>{member.position}</span>
-                                  </div>
-                                )}
-                                {member.company && (
-                                  <div className="flex items-center gap-2 text-xs text-neutral-500">
-                                    <Building2 size={12} className="flex-shrink-0 text-neutral-400" />
-                                    <span>{member.company}</span>
-                                  </div>
+                                {hasLinks && (
+                                  <button
+                                    type="button"
+                                    aria-expanded={linksOpen}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleMemberLinks(memberId, hasLinks);
+                                    }}
+                                    className={`text-neutral-500 transition hover:text-[#00749C] ${
+                                      linksOpen ? "text-[#00749C]" : ""
+                                    }`}
+                                  >
+                                    <MoreVertical size={18} />
+                                    <span className="sr-only">
+                                      {linksOpen ? "Hide links" : "Show links"}
+                                    </span>
+                                  </button>
                                 )}
                               </div>
-                            )}
+
+                              {linksOpen && hasLinks && (
+                                <div className="mt-2 space-y-1 rounded-sm border border-neutral-200 bg-white p-3 text-sm shadow-sm">
+                                  {memberLinks.map((link) => (
+                                    <a
+                                      key={`${memberId}-${link.href}`}
+                                      href={link.href}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center justify-between text-sm font-medium text-[#111111] transition hover:text-[#00749C]"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <span>{link.label}</span>
+                                      <ExternalLink size={14} />
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+
+                              {positionCompanyLine && (
+                                <div className="mt-3 flex items-center gap-2 text-sm text-[#111111]">
+                                  <Briefcase size={14} className="flex-shrink-0 text-neutral-500" />
+                                  <span className="truncate text-neutral-700">{positionCompanyLine}</span>
+                                </div>
+                              )}
 
                             {member.specialties && member.specialties.length > 0 && (
                               <div className="mt-3 flex flex-wrap gap-1.5">
@@ -517,52 +546,16 @@ export default function MembersPage() {
                                     </span>
                                   )}
 
-                              {(member.custom_email || member.email || hasLinks) && (
-                                <div className="mt-3 flex flex-wrap items-center gap-2 rounded-sm bg-neutral-50 p-2">
-                                  {(member.custom_email || member.email) && (
-                                    <a
-                                      href={`mailto:${member.custom_email || member.email}`}
-                                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <Mail size={14} />
-                                    </a>
-                                  )}
-                                  {hasLinks && (
-                                    <button
-                                      type="button"
-                                      aria-expanded={linksOpen}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleMemberLinks(memberId, hasLinks);
-                                      }}
-                                      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#00749C] shadow-sm transition hover:bg-[#00749C]/10 cursor-pointer ${
-                                        linksOpen ? "ring-2 ring-[#00749C]/40" : ""
-                                      }`}
-                                    >
-                                      <Link2 size={15} />
-                                      <span className="sr-only">
-                                        {linksOpen ? "Hide links" : "Show links"}
-                                      </span>
-                                    </button>
-                                  )}
-                                </div>
-                              )}
-                              {linksOpen && hasLinks && (
-                                <div className="mt-2 space-y-1 rounded-sm border border-neutral-200 bg-white p-3 text-sm shadow-sm">
-                                  {memberLinks.map((link) => (
-                                    <a
-                                      key={`${memberId}-${link.href}`}
-                                      href={link.href}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center justify-between text-sm font-medium text-[#111111] transition hover:text-[#00749C]"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <span>{link.label}</span>
-                                      <ExternalLink size={14} />
-                                    </a>
-                                  ))}
+                              {(member.custom_email || member.email) && (
+                                <div className="mt-3">
+                                  <a
+                                    href={`mailto:${member.custom_email || member.email}`}
+                                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <Mail size={14} />
+                                    <span className="sr-only">Email {member.nickname}</span>
+                                  </a>
                                 </div>
                               )}
                               </div>
