@@ -29,8 +29,7 @@ export type UserProfile = {
   specialties: string[]
   company: string
   website: string
-  looking_for_job?: boolean
-  taking_on_projects?: boolean
+  status?: string[]
   profile_visibility: 'public' | 'private'
   custom_email: string
   social_links: SocialLink[]
@@ -50,8 +49,7 @@ export type ProfileUpdatePayload = {
   specialties: string[]
   company: string
   website: string
-  looking_for_job?: boolean
-  taking_on_projects?: boolean
+  status?: string[]
   avatar_url: string
   profile_visibility: 'public' | 'private'
   custom_email: string

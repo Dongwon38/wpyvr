@@ -20,31 +20,36 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 
 type SortOption = "default" | "name-asc" | "name-desc";
 
-type StatusTagVariant = "staff" | "lookingForJob" | "takingOnProjects";
+type StatusTagVariant = "looking_for_job" | "taking_on_projects";
 
 const STATUS_TAG_BASE_CLASS =
-  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.15em]";
+  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]";
 
 const STATUS_TAG_CONFIG: Record<
   StatusTagVariant,
   { label: string; icon: LucideIcon; className: string }
 > = {
-  staff: {
-    label: "Staff",
-    icon: Award,
-    className: "border-violet-200 bg-violet-50 text-violet-700",
-  },
-  lookingForJob: {
+  looking_for_job: {
     label: "Looking for a job",
     icon: Briefcase,
     className: "border-amber-200 bg-amber-50 text-amber-700",
   },
-  takingOnProjects: {
+  taking_on_projects: {
     label: "Taking on projects",
     icon: Sparkles,
     className: "border-emerald-200 bg-emerald-50 text-emerald-700",
   },
 };
+
+const STAFF_BADGE_CLASS =
+  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] border-violet-200 bg-violet-50 text-violet-700";
+
+const StaffBadge = () => (
+  <span className={STAFF_BADGE_CLASS}>
+    <Award className="h-3 w-3" strokeWidth={2} />
+    Staff
+  </span>
+);
 
 const StatusTag = ({ variant }: { variant: StatusTagVariant }) => {
   const { label, icon: Icon, className } = STATUS_TAG_CONFIG[variant];
@@ -56,18 +61,18 @@ const StatusTag = ({ variant }: { variant: StatusTagVariant }) => {
   );
 };
 
+const ALLOWED_STATUS_VALUES: StatusTagVariant[] = [
+  "looking_for_job",
+  "taking_on_projects",
+];
+
 const getMemberStatusTags = (member: UserProfile): StatusTagVariant[] => {
-  const tags: StatusTagVariant[] = [];
-  if (member.role === "administrator" || member.role === "staff") {
-    tags.push("staff");
+  if (!Array.isArray(member.status)) {
+    return [];
   }
-  if (member.looking_for_job) {
-    tags.push("lookingForJob");
-  }
-  if (member.taking_on_projects) {
-    tags.push("takingOnProjects");
-  }
-  return tags;
+  return member.status.filter((status): status is StatusTagVariant =>
+    ALLOWED_STATUS_VALUES.includes(status as StatusTagVariant)
+  );
 };
 
 export default function MembersPage() {
@@ -324,12 +329,13 @@ export default function MembersPage() {
                 <>
                   {/* Mobile Card View */}
                     <div className="space-y-4 md:hidden">
-                    {filteredMembers.map((member, index) => {
+                      {filteredMembers.map((member, index) => {
                         const trimmedBio = typeof member.bio === "string" ? member.bio.trim() : "";
                         const hasBio = trimmedBio.length > 0;
                         const memberId = member.user_id ?? member.id ?? index;
                         const isExpanded = activeBioId === memberId;
                         const statusTags = getMemberStatusTags(member);
+                        const isStaff = member.role === "administrator" || member.role === "staff";
 
                         return (
                           <motion.div
@@ -361,8 +367,9 @@ export default function MembersPage() {
                               </div>
 
                                 <div className="min-w-0 flex-1">
-                                  {statusTags.length > 0 && (
+                                  {(isStaff || statusTags.length > 0) && (
                                     <div className="mb-1 flex flex-wrap gap-1.5">
+                                      {isStaff && <StaffBadge />}
                                       {statusTags.map((variant) => (
                                         <StatusTag key={variant} variant={variant} />
                                       ))}
@@ -477,6 +484,7 @@ export default function MembersPage() {
                               const rowIsActive = activeBioId === memberId;
                               const inlineOpen = hasBio && (rowIsActive || (!isMobile && hoveredBioId === memberId));
                               const statusTags = getMemberStatusTags(member);
+                              const isStaff = member.role === "administrator" || member.role === "staff";
                               const rowClassName = `group transition-colors hover:bg-neutral-50${
                                 hasBio ? " cursor-pointer" : ""
                               }${inlineOpen ? " bg-neutral-50" : ""}`;
@@ -538,8 +546,9 @@ export default function MembersPage() {
                                         </div>
 
                                           <div className="flex flex-col gap-1">
-                                            {statusTags.length > 0 && (
+                                            {(isStaff || statusTags.length > 0) && (
                                               <div className="flex flex-wrap gap-1.5">
+                                                {isStaff && <StaffBadge />}
                                                 {statusTags.map((variant) => (
                                                   <StatusTag key={variant} variant={variant} />
                                                 ))}
