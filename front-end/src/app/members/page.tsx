@@ -11,9 +11,10 @@ import {
   Mail, 
   Briefcase, 
   Building2, 
-  Globe, 
   Award,
-  Sparkles
+  Sparkles,
+  Link2,
+  ExternalLink
 } from "lucide-react";
 import { fetchAllMembers, type UserProfile } from "@/lib/profileApi";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -21,6 +22,10 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 type SortOption = "default" | "name-asc" | "name-desc";
 
 type StatusTagVariant = "looking_for_job" | "taking_on_projects";
+type MemberLink = {
+  label: string;
+  href: string;
+};
 
 const STATUS_TAG_BASE_CLASS =
   "inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white";
@@ -66,6 +71,38 @@ const ALLOWED_STATUS_VALUES: StatusTagVariant[] = [
   "taking_on_projects",
 ];
 
+const SOCIAL_LABELS: Record<string, string> = {
+  github: "GitHub",
+  linkedin: "LinkedIn",
+  twitter: "Twitter",
+  facebook: "Facebook",
+  instagram: "Instagram",
+  youtube: "YouTube",
+  dribbble: "Dribbble",
+  behance: "Behance",
+  other: "Portfolio",
+};
+
+const getMemberLinks = (member: UserProfile): MemberLink[] => {
+  const links: MemberLink[] = [];
+  if (member.website) {
+    links.push({ label: "Website", href: member.website });
+  }
+  if (Array.isArray(member.social_links)) {
+    member.social_links.forEach((social) => {
+      if (!social?.url) return;
+      const typeKey = (social.type || "").toLowerCase();
+      const label =
+        SOCIAL_LABELS[typeKey] ||
+        (social.type
+          ? social.type.charAt(0).toUpperCase() + social.type.slice(1)
+          : "Link");
+      links.push({ label, href: social.url });
+    });
+  }
+  return links;
+};
+
 const getMemberStatusTags = (member: UserProfile): StatusTagVariant[] => {
   if (!Array.isArray(member.status)) {
     return [];
@@ -84,6 +121,7 @@ export default function MembersPage() {
   const [activeBioId, setActiveBioId] = useState<number | null>(null);
   const [hoveredBioId, setHoveredBioId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [openLinksId, setOpenLinksId] = useState<number | null>(null);
 
   useEffect(() => {
     function updateIsMobile() {
@@ -126,6 +164,11 @@ export default function MembersPage() {
       }
       return nextValue;
     });
+  };
+
+  const toggleMemberLinks = (memberId: number, hasLinks: boolean) => {
+    if (!hasLinks) return;
+    setOpenLinksId((current) => (current === memberId ? null : memberId));
   };
 
   const allSpecialties = useMemo(() => {
@@ -343,6 +386,9 @@ export default function MembersPage() {
                         const memberId = member.user_id ?? member.id ?? index;
                         const isExpanded = activeBioId === memberId;
                         const statusTags = getMemberStatusTags(member);
+                        const memberLinks = getMemberLinks(member);
+                        const hasLinks = memberLinks.length > 0;
+                        const linksOpen = openLinksId === memberId;
                         const isStaff = member.role === "administrator" || member.role === "staff";
 
                         return (
@@ -387,7 +433,7 @@ export default function MembersPage() {
                                     {member.nickname}
                                   </h3>
 
-                                <div className="mt-2 flex items-center gap-1.5">
+                                  <div className="mt-2 flex items-center gap-1.5">
                                   {(member.custom_email || member.email) && (
                                     <a
                                       href={`mailto:${member.custom_email || member.email}`}
@@ -397,18 +443,42 @@ export default function MembersPage() {
                                       <Mail size={14} />
                                     </a>
                                   )}
-                                  {member.website && (
-                                    <a
-                                      href={member.website}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <Globe size={14} />
-                                    </a>
-                                  )}
+                                    {hasLinks && (
+                                      <button
+                                        type="button"
+                                        aria-expanded={linksOpen}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleMemberLinks(memberId, hasLinks);
+                                        }}
+                                        className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition ${
+                                          linksOpen ? "bg-[#00749C]" : "bg-neutral-900 hover:bg-neutral-800"
+                                        }`}
+                                      >
+                                        <Link2 size={16} />
+                                        <span className="sr-only">
+                                          {linksOpen ? "Hide links" : "Show links"}
+                                        </span>
+                                      </button>
+                                    )}
                                 </div>
+                                  {linksOpen && hasLinks && (
+                                    <div className="mt-2 space-y-1 rounded-sm border border-neutral-200 bg-white p-3 shadow-sm">
+                                      {memberLinks.map((link) => (
+                                        <a
+                                          key={`${memberId}-${link.href}`}
+                                          href={link.href}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex items-center justify-between text-sm font-medium text-[#111111] transition hover:text-[#00749C]"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          <span>{link.label}</span>
+                                          <ExternalLink size={14} />
+                                        </a>
+                                      ))}
+                                    </div>
+                                  )}
                               </div>
                             </div>
 
@@ -481,7 +551,7 @@ export default function MembersPage() {
                               <th className="px-6 py-4">Member</th>
                               <th className="px-6 py-4">Specialties</th>
                               <th className="px-6 py-4">Position / Company</th>
-                              <th className="px-6 py-4 text-center">Website</th>
+                                <th className="px-6 py-4 text-center">Links</th>
                           </tr>
                         </thead>
                           <tbody className="divide-y divide-neutral-200">
@@ -493,6 +563,9 @@ export default function MembersPage() {
                               const inlineOpen = hasBio && (rowIsActive || (!isMobile && hoveredBioId === memberId));
                               const statusTags = getMemberStatusTags(member);
                               const isStaff = member.role === "administrator" || member.role === "staff";
+                              const memberLinks = getMemberLinks(member);
+                              const hasLinks = memberLinks.length > 0;
+                              const linksOpen = openLinksId === memberId;
                               const rowClassName = `group transition-colors hover:bg-neutral-50${
                                 hasBio ? " cursor-pointer" : ""
                               }${inlineOpen ? " bg-neutral-50" : ""}`;
@@ -624,24 +697,47 @@ export default function MembersPage() {
                                       )}
                                     </td>
 
-                                    <td className="px-6 py-4">
-                                      <div className="flex items-center justify-center">
-                                        {member.website ? (
-                                          <a
-                                            href={member.website}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={member.website}
-                                            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-                                            onClick={(e) => e.stopPropagation()}
-                                          >
-                                            <Globe size={18} />
-                                          </a>
+                                      <td className="px-6 py-4">
+                                        {hasLinks ? (
+                                          <div className="relative flex items-center justify-center">
+                                            <button
+                                              type="button"
+                                              aria-expanded={linksOpen}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleMemberLinks(memberId, hasLinks);
+                                              }}
+                                              className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition ${
+                                                linksOpen ? "bg-[#00749C]" : "bg-neutral-900 hover:bg-neutral-800"
+                                              }`}
+                                            >
+                                              <Link2 size={18} />
+                                              <span className="sr-only">
+                                                {linksOpen ? "Hide links" : "Show links"}
+                                              </span>
+                                            </button>
+                                            {linksOpen && (
+                                              <div className="absolute top-12 z-20 w-64 rounded-sm border border-neutral-200 bg-white p-3 text-sm shadow-lg">
+                                                {memberLinks.map((link) => (
+                                                  <a
+                                                    key={`${memberId}-${link.href}`}
+                                                    href={link.href}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-between rounded-sm px-2 py-1 text-[#111111] transition hover:bg-neutral-50 hover:text-[#00749C]"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                  >
+                                                    <span>{link.label}</span>
+                                                    <ExternalLink size={14} />
+                                                  </a>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
                                         ) : (
-                                          <span className="text-sm text-neutral-400">—</span>
+                                          <span className="flex justify-center text-sm text-neutral-400">—</span>
                                         )}
-                                      </div>
-                                    </td>
+                                      </td>
                                 </motion.tr>
 
                                 {hasBio && (
