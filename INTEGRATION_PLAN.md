@@ -24,3 +24,4 @@
 | 2025-11-08 | 초기 설계 및 스키마 확정 | AI Agent |  |
 | 2025-11-15 | 멤버 플러그인/허브 API/스키마 초안 구현 | AI Agent |  |
 | 2025-11-15 | Prompt 2: 멤버 플러그인 관리자 UI · 수동 푸시 기능 완성 | AI Agent | BiteBuddy Connect 플러그인 |
+| 2025-11-15 | Prompt 3: 허브 수신 API·로그/알림 고도화 | AI Agent | functions-hub-push.php |
