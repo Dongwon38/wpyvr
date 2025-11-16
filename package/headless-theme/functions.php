@@ -73,5 +73,10 @@ require_once get_template_directory() . '/inc/register-acf.php';
 // Include contact form functionality
 require_once get_template_directory() . '/inc/functions-contact.php';
 
-// Include hub integration endpoints
+// Hub integration stack
+require_once get_template_directory() . '/inc/logger.php';
+require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/functions-hub-push.php';
+require_once get_template_directory() . '/inc/admin-mapping.php';
+require_once get_template_directory() . '/inc/like-endpoints.php';
+require_once get_template_directory() . '/inc/trend-functions.php';
