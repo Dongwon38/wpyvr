@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function bitebuddy_hub_get_pending_posts(): array {
+function wpyvr_hub_get_pending_posts(): array {
     return get_posts(
         array(
             'post_type'      => 'post',
@@ -16,7 +16,7 @@ function bitebuddy_hub_get_pending_posts(): array {
     );
 }
 
-function bitebuddy_hub_decode_meta_array(int $post_id, string $meta_key): array {
+function wpyvr_hub_decode_meta_array(int $post_id, string $meta_key): array {
     $raw = get_post_meta($post_id, $meta_key, true);
     if (empty($raw)) {
         return array();
@@ -26,17 +26,17 @@ function bitebuddy_hub_decode_meta_array(int $post_id, string $meta_key): array 
     return is_array($decoded) ? $decoded : array();
 }
 
-function bitebuddy_hub_get_raw_terms(int $post_id, string $type = 'category'): array {
+function wpyvr_hub_get_raw_terms(int $post_id, string $type = 'category'): array {
     $meta_key = 'category' === $type ? 'hub_raw_categories' : 'hub_raw_tags';
-    return bitebuddy_hub_decode_meta_array($post_id, $meta_key);
+    return wpyvr_hub_decode_meta_array($post_id, $meta_key);
 }
 
-function bitebuddy_hub_similarity_score(string $a, string $b): float {
+function wpyvr_hub_similarity_score(string $a, string $b): float {
     similar_text(mb_strtolower($a), mb_strtolower($b), $percent);
     return (float) $percent;
 }
 
-function bitebuddy_hub_suggest_terms(array $raw_terms, string $taxonomy): array {
+function wpyvr_hub_suggest_terms(array $raw_terms, string $taxonomy): array {
     $results = array();
     if (empty($raw_terms)) {
         return $results;
@@ -57,7 +57,7 @@ function bitebuddy_hub_suggest_terms(array $raw_terms, string $taxonomy): array 
         $best = null;
         $best_score = 0;
         foreach ($terms as $term) {
-            $score = bitebuddy_hub_similarity_score($term_name, $term->name);
+            $score = wpyvr_hub_similarity_score($term_name, $term->name);
             if ($score > $best_score) {
                 $best_score = $score;
                 $best = $term;
@@ -76,11 +76,11 @@ function bitebuddy_hub_suggest_terms(array $raw_terms, string $taxonomy): array 
     return $results;
 }
 
-function bitebuddy_hub_get_source_site(int $post_id): string {
+function wpyvr_hub_get_source_site(int $post_id): string {
     return esc_url_raw(get_post_meta($post_id, 'hub_source_site', true)) ?: get_site_url();
 }
 
-function bitebuddy_hub_store_term_mapping(string $source_site, string $taxonomy, string $source_term, int $hub_term_id): void {
+function wpyvr_hub_store_term_mapping(string $source_site, string $taxonomy, string $source_term, int $hub_term_id): void {
     global $wpdb;
     $table = $wpdb->prefix . 'hub_term_map';
     if (empty($source_term) || !$hub_term_id || empty($source_site)) {
@@ -99,7 +99,7 @@ function bitebuddy_hub_store_term_mapping(string $source_site, string $taxonomy,
     );
 }
 
-function bitebuddy_hub_get_mapped_term_id(string $source_site, string $taxonomy, string $source_term): int {
+function wpyvr_hub_get_mapped_term_id(string $source_site, string $taxonomy, string $source_term): int {
     global $wpdb;
     $table = $wpdb->prefix . 'hub_term_map';
 
@@ -113,10 +113,10 @@ function bitebuddy_hub_get_mapped_term_id(string $source_site, string $taxonomy,
     );
 }
 
-function bitebuddy_hub_map_terms(array $source_terms, string $taxonomy, string $source_site): array {
+function wpyvr_hub_map_terms(array $source_terms, string $taxonomy, string $source_site): array {
     $mapped_ids = array();
     foreach ($source_terms as $term_name) {
-        $term_id = bitebuddy_hub_get_mapped_term_id($source_site, $taxonomy, $term_name);
+        $term_id = wpyvr_hub_get_mapped_term_id($source_site, $taxonomy, $term_name);
         if ($term_id) {
             $mapped_ids[] = $term_id;
         }
@@ -125,13 +125,13 @@ function bitebuddy_hub_map_terms(array $source_terms, string $taxonomy, string $
     return array_unique(array_filter($mapped_ids));
 }
 
-function bitebuddy_hub_reset_post_interactions(int $post_id): void {
+function wpyvr_hub_reset_post_interactions(int $post_id): void {
     update_post_meta($post_id, '_hub_likes_count', 0);
     update_post_meta($post_id, '_hub_comments_count', get_comments_number($post_id));
     update_post_meta($post_id, '_hub_hot_score', 0);
 }
 
-function bitebuddy_hub_get_term_options(string $taxonomy): array {
+function wpyvr_hub_get_term_options(string $taxonomy): array {
     $terms = get_terms(
         array(
             'taxonomy'   => $taxonomy,
@@ -146,7 +146,7 @@ function bitebuddy_hub_get_term_options(string $taxonomy): array {
     return $terms;
 }
 
-function bitebuddy_hub_table_exists(string $table): bool {
+function wpyvr_hub_table_exists(string $table): bool {
     global $wpdb;
     static $cache = array();
 
@@ -158,7 +158,7 @@ function bitebuddy_hub_table_exists(string $table): bool {
     return $cache[$table];
 }
 
-function bitebuddy_hub_log_event(array $args): void {
+function wpyvr_hub_log_event(array $args): void {
     global $wpdb;
     $table = $wpdb->prefix . 'hub_push_logs';
     $defaults = array(
@@ -171,7 +171,7 @@ function bitebuddy_hub_log_event(array $args): void {
     );
     $record = wp_parse_args($args, $defaults);
 
-    if (bitebuddy_hub_table_exists($table)) {
+    if (wpyvr_hub_table_exists($table)) {
         $wpdb->insert(
             $table,
             array(
@@ -186,8 +186,8 @@ function bitebuddy_hub_log_event(array $args): void {
         );
     }
 
-    if (function_exists('bitebuddy_hub_log_file')) {
-        bitebuddy_hub_log_file(
+    if (function_exists('wpyvr_hub_log_file')) {
+        wpyvr_hub_log_file(
             in_array($record['status'], array('failed', 'error'), true) ? 'error' : 'info',
             $record['message'] ?: 'hub_event',
             array(
@@ -200,7 +200,7 @@ function bitebuddy_hub_log_event(array $args): void {
     }
 }
 
-function bitebuddy_hub_hash_ip($request = null): string {
+function wpyvr_hub_hash_ip($request = null): string {
     $ip = '';
     if ($request instanceof WP_REST_Request) {
         $ip = $request->get_client_ip();

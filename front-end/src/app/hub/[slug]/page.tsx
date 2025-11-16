@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   }
 
   return {
-    title: `${post.title} | BiteBuddy Hub`,
+    title: `${post.title} | WPYVR Hub`,
     description: post.excerpt || "Hub post detail",
   }
 }

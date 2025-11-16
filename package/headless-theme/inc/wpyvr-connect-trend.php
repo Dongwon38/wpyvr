@@ -4,8 +4,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-add_action('init', 'bitebuddy_hub_register_meta_fields');
-function bitebuddy_hub_register_meta_fields(): void {
+add_action('init', 'wpyvr_hub_register_meta_fields');
+function wpyvr_hub_register_meta_fields(): void {
     $meta_fields = array(
         '_hub_likes_count'    => 'integer',
         '_hub_comments_count' => 'integer',
@@ -31,15 +31,15 @@ function bitebuddy_hub_register_meta_fields(): void {
     }
 }
 
-add_action('init', 'bitebuddy_hub_schedule_trend_cron');
-function bitebuddy_hub_schedule_trend_cron(): void {
-    if (!wp_next_scheduled('bitebuddy_hub_trend_event')) {
-        wp_schedule_event(time(), 'hourly', 'bitebuddy_hub_trend_event');
+add_action('init', 'wpyvr_hub_schedule_trend_cron');
+function wpyvr_hub_schedule_trend_cron(): void {
+    if (!wp_next_scheduled('wpyvr_hub_trend_event')) {
+        wp_schedule_event(time(), 'hourly', 'wpyvr_hub_trend_event');
     }
 }
 
-add_action('bitebuddy_hub_trend_event', 'bitebuddy_hub_run_trend_recalc');
-function bitebuddy_hub_run_trend_recalc(): void {
+add_action('wpyvr_hub_trend_event', 'wpyvr_hub_run_trend_recalc');
+function wpyvr_hub_run_trend_recalc(): void {
     $posts = get_posts(
         array(
             'post_type'      => 'post',
@@ -51,11 +51,11 @@ function bitebuddy_hub_run_trend_recalc(): void {
     );
 
     foreach ($posts as $post) {
-        bitebuddy_hub_recalc_hot_score($post->ID);
+        wpyvr_hub_recalc_hot_score($post->ID);
     }
 }
 
-function bitebuddy_hub_recalc_hot_score(int $post_id): float {
+function wpyvr_hub_recalc_hot_score(int $post_id): float {
     $likes = (int) get_post_meta($post_id, '_hub_likes_count', true);
     $comments = (int) get_post_meta($post_id, '_hub_comments_count', true);
     $post_time = get_post_time('U', true, $post_id);
@@ -68,42 +68,42 @@ function bitebuddy_hub_recalc_hot_score(int $post_id): float {
     return $score;
 }
 
-add_action('comment_post', 'bitebuddy_hub_update_comment_count', 20, 3);
-add_action('transition_comment_status', 'bitebuddy_hub_update_comment_count_on_transition', 20, 3);
-add_action('delete_comment', 'bitebuddy_hub_update_comment_count_on_delete', 20, 1);
+add_action('comment_post', 'wpyvr_hub_update_comment_count', 20, 3);
+add_action('transition_comment_status', 'wpyvr_hub_update_comment_count_on_transition', 20, 3);
+add_action('delete_comment', 'wpyvr_hub_update_comment_count_on_delete', 20, 1);
 
-function bitebuddy_hub_update_comment_count($comment_id, $comment_approved = null, $commentdata = null): void {
+function wpyvr_hub_update_comment_count($comment_id, $comment_approved = null, $commentdata = null): void {
     $comment = get_comment($comment_id);
     if (!$comment) {
         return;
     }
 
-    bitebuddy_hub_sync_comment_meta((int) $comment->comment_post_ID);
+    wpyvr_hub_sync_comment_meta((int) $comment->comment_post_ID);
 }
 
-function bitebuddy_hub_update_comment_count_on_transition($new_status, $old_status, $comment): void {
+function wpyvr_hub_update_comment_count_on_transition($new_status, $old_status, $comment): void {
     if ($new_status === $old_status) {
         return;
     }
 
-    bitebuddy_hub_sync_comment_meta((int) $comment->comment_post_ID);
+    wpyvr_hub_sync_comment_meta((int) $comment->comment_post_ID);
 }
 
-function bitebuddy_hub_update_comment_count_on_delete(int $comment_id): void {
+function wpyvr_hub_update_comment_count_on_delete(int $comment_id): void {
     $comment = get_comment($comment_id);
     if ($comment) {
-        bitebuddy_hub_sync_comment_meta((int) $comment->comment_post_ID);
+        wpyvr_hub_sync_comment_meta((int) $comment->comment_post_ID);
     }
 }
 
-function bitebuddy_hub_sync_comment_meta(int $post_id): void {
+function wpyvr_hub_sync_comment_meta(int $post_id): void {
     $count = get_comments_number($post_id);
     update_post_meta($post_id, '_hub_comments_count', $count);
-    bitebuddy_hub_recalc_hot_score($post_id);
+    wpyvr_hub_recalc_hot_score($post_id);
 }
 
-add_filter('preprocess_comment', 'bitebuddy_hub_attach_comment_user');
-function bitebuddy_hub_attach_comment_user(array $commentdata): array {
+add_filter('preprocess_comment', 'wpyvr_hub_attach_comment_user');
+function wpyvr_hub_attach_comment_user(array $commentdata): array {
     $token = $_POST['firebase_token'] ?? '';
     if (!$token && isset($_SERVER['HTTP_AUTHORIZATION']) && stripos($_SERVER['HTTP_AUTHORIZATION'], 'Bearer ') === 0) {
         $token = trim(substr($_SERVER['HTTP_AUTHORIZATION'], 7));
@@ -115,7 +115,7 @@ function bitebuddy_hub_attach_comment_user(array $commentdata): array {
 
     $fake_request = new WP_REST_Request();
     $fake_request->set_header('authorization', 'Bearer ' . $token);
-    $auth = bitebuddy_hub_validate_request_token($fake_request);
+    $auth = wpyvr_hub_validate_request_token($fake_request);
 
     if (is_wp_error($auth)) {
         return $commentdata;

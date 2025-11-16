@@ -1,4 +1,4 @@
-# BiteBuddy Hub Integration 개발 계획
+# WPYVR Hub Integration 개발 계획
 
 ## 개요
 - 멤버 개별 워드프레스 사이트에서 게시된 콘텐츠를 허브 워드프레스로 집결시켜 검수-퍼블리시 파이프라인을 자동화한다.
@@ -23,12 +23,12 @@
 |------|------------|------|------|
 | 2025-11-08 | 초기 설계 및 스키마 확정 | AI Agent |  |
 | 2025-11-15 | 멤버 플러그인/허브 API/스키마 초안 구현 | AI Agent |  |
-| 2025-11-15 | Prompt 2: 멤버 플러그인 관리자 UI · 수동 푸시 기능 완성 | AI Agent | BiteBuddy Connect 플러그인 |
-| 2025-11-15 | Prompt 3: 허브 수신 API·로그/알림 고도화 | AI Agent | functions-hub-push.php |
-| 2025-11-15 | Prompt 4: 허브 관리자 맵핑 UI 및 헬퍼 추가 | AI Agent | admin-mapping.php / helpers.php |
-| 2025-11-15 | Prompt 5: 좋아요·댓글·트렌드 시스템 통합 | AI Agent | like-endpoints.php / trend-functions.php |
+| 2025-11-15 | Prompt 2: 멤버 플러그인 관리자 UI · 수동 푸시 기능 완성 | AI Agent | WPYVR Connect 플러그인 |
+| 2025-11-15 | Prompt 3: 허브 수신 API·로그/알림 고도화 | AI Agent | wpyvr-connect-hub.php |
+| 2025-11-15 | Prompt 4: 허브 관리자 맵핑 UI 및 헬퍼 추가 | AI Agent | wpyvr-connect-admin.php / wpyvr-connect-helpers.php |
+| 2025-11-15 | Prompt 5: 좋아요·댓글·트렌드 시스템 통합 | AI Agent | wpyvr-connect-like.php / wpyvr-connect-trend.php |
 | 2025-11-15 | Prompt 6: 허브 프론트엔드 및 사용 가이드 | AI Agent | front-end hub components |
-| 2025-11-15 | Prompt 7: QA 체크리스트 · 모니터링 로거 | AI Agent | qa-checklist.md / logger.php |
+| 2025-11-15 | Prompt 7: QA 체크리스트 · 모니터링 로거 | AI Agent | qa-checklist.md / wpyvr-connect-logger.php |
 
 ## 사용 가이드
 - **수신 글 검수 & 퍼블리시 절차**  

@@ -1,4 +1,4 @@
--- BiteBuddy Hub Integration schema changes
+-- WPYVR Hub Integration schema changes
 START TRANSACTION;
 
 ALTER TABLE `wp_user_profiles`

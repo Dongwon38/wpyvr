@@ -4,13 +4,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function bitebuddy_connect_get_settings(): array {
-    $defaults = bitebuddy_connect_default_settings();
-    $stored = get_option(BITEBUDDY_CONNECT_OPTION_KEY, array());
+function wpyvr_connect_get_settings(): array {
+    $defaults = wpyvr_connect_default_settings();
+    $stored = get_option(WPYVR_CONNECT_OPTION_KEY, array());
     return wp_parse_args($stored, $defaults);
 }
 
-function bitebuddy_connect_prepare_payload(WP_Post $post, array $settings): array {
+function wpyvr_connect_prepare_payload(WP_Post $post, array $settings): array {
     $content = apply_filters('the_content', $post->post_content);
     $excerpt_source = $post->post_excerpt ?: wp_strip_all_tags($post->post_content);
 
@@ -42,11 +42,11 @@ function bitebuddy_connect_prepare_payload(WP_Post $post, array $settings): arra
     );
 }
 
-function bitebuddy_connect_send_payload(array $payload, string $endpoint, string $token) {
+function wpyvr_connect_send_payload(array $payload, string $endpoint, string $token) {
     if (empty($endpoint) || empty($token)) {
         return new WP_Error(
             'missing_settings',
-            __('Hub API URL 또는 Push Token이 비어 있습니다.', 'bitebuddy-connect')
+            __('Hub API URL 또는 Push Token이 비어 있습니다.', 'wpyvr-connect')
         );
     }
 
@@ -78,22 +78,22 @@ function bitebuddy_connect_send_payload(array $payload, string $endpoint, string
     );
 }
 
-function bitebuddy_connect_push_post(int $post_id) {
+function wpyvr_connect_push_post(int $post_id) {
     $post = get_post($post_id);
     if (!$post instanceof WP_Post) {
-        return new WP_Error('invalid_post', __('선택한 콘텐츠를 찾을 수 없습니다.', 'bitebuddy-connect'));
+        return new WP_Error('invalid_post', __('선택한 콘텐츠를 찾을 수 없습니다.', 'wpyvr-connect'));
     }
 
-    $settings = bitebuddy_connect_get_settings();
-    $payload = bitebuddy_connect_prepare_payload($post, $settings);
-    $result = bitebuddy_connect_send_payload($payload, $settings['hub_api_url'], $settings['push_token']);
+    $settings = wpyvr_connect_get_settings();
+    $payload = wpyvr_connect_prepare_payload($post, $settings);
+    $result = wpyvr_connect_send_payload($payload, $settings['hub_api_url'], $settings['push_token']);
 
-    bitebuddy_connect_store_push_log($post_id, $payload, $result);
+    wpyvr_connect_store_push_log($post_id, $payload, $result);
 
     return $result;
 }
 
-function bitebuddy_connect_store_push_log(int $post_id, array $payload, $result): void {
+function wpyvr_connect_store_push_log(int $post_id, array $payload, $result): void {
     $log = array(
         'post_id'   => $post_id,
         'title'     => get_the_title($post_id),
@@ -104,24 +104,24 @@ function bitebuddy_connect_store_push_log(int $post_id, array $payload, $result)
     if (is_wp_error($result)) {
         $log['status'] = 'error';
         $log['message'] = $result->get_error_message();
-        update_post_meta($post_id, '_bitebuddy_last_push_status', 'error');
-        update_post_meta($post_id, '_bitebuddy_last_push_message', $result->get_error_message());
+        update_post_meta($post_id, '_wpyvr_last_push_status', 'error');
+        update_post_meta($post_id, '_wpyvr_last_push_message', $result->get_error_message());
     } else {
         $log['status'] = 'success';
         $log['code'] = $result['code'];
         $log['response'] = $result['body'];
-        update_post_meta($post_id, '_bitebuddy_last_push_status', 'success');
-        update_post_meta($post_id, '_bitebuddy_last_push_message', $result['raw_body']);
+        update_post_meta($post_id, '_wpyvr_last_push_status', 'success');
+        update_post_meta($post_id, '_wpyvr_last_push_message', $result['raw_body']);
     }
 
-    update_post_meta($post_id, '_bitebuddy_last_push_log', $log);
+    update_post_meta($post_id, '_wpyvr_last_push_log', $log);
 
-    $settings = bitebuddy_connect_get_settings();
+    $settings = wpyvr_connect_get_settings();
     $settings['last_push_log'] = $log;
-    update_option(BITEBUDDY_CONNECT_OPTION_KEY, $settings);
+    update_option(WPYVR_CONNECT_OPTION_KEY, $settings);
 }
 
-function bitebuddy_connect_get_pushable_posts(): array {
+function wpyvr_connect_get_pushable_posts(): array {
     $posts = get_posts(
         array(
             'post_type'      => array('post', 'page'),
@@ -135,6 +135,6 @@ function bitebuddy_connect_get_pushable_posts(): array {
     return $posts ?: array();
 }
 
-function bitebuddy_connect_get_admin_url(): string {
-    return admin_url('admin.php?page=bitebuddy-connect');
+function wpyvr_connect_get_admin_url(): string {
+    return admin_url('admin.php?page=wpyvr-connect');
 }

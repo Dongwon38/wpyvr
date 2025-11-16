@@ -4,24 +4,24 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-add_action('rest_api_init', 'bitebuddy_hub_register_routes');
-function bitebuddy_hub_register_routes(): void {
+add_action('rest_api_init', 'wpyvr_hub_register_routes');
+function wpyvr_hub_register_routes(): void {
     register_rest_route(
         'hub/v1',
         '/receive-post',
         array(
             'methods'             => WP_REST_Server::CREATABLE,
-            'callback'            => 'bitebuddy_hub_receive_post',
+            'callback'            => 'wpyvr_hub_receive_post',
             'permission_callback' => '__return_true',
         )
     );
 
 }
 
-function bitebuddy_hub_receive_post(WP_REST_Request $request) {
-    $auth = bitebuddy_hub_validate_request_token($request);
+function wpyvr_hub_receive_post(WP_REST_Request $request) {
+    $auth = wpyvr_hub_validate_request_token($request);
     if (is_wp_error($auth)) {
-        bitebuddy_hub_log_event(
+        wpyvr_hub_log_event(
             array(
                 'status'  => 'failed',
                 'message' => $auth->get_error_message(),
@@ -34,8 +34,8 @@ function bitebuddy_hub_receive_post(WP_REST_Request $request) {
 
     $payload = $request->get_json_params();
     if (empty($payload) || !is_array($payload)) {
-        $error = new WP_Error('invalid_payload', __('JSON payload is missing or malformed.', 'bitebuddy'), array('status' => 400));
-        bitebuddy_hub_log_event(
+        $error = new WP_Error('invalid_payload', __('JSON payload is missing or malformed.', 'wpyvr'), array('status' => 400));
+        wpyvr_hub_log_event(
             array(
                 'status'  => 'failed',
                 'message' => $error->get_error_message(),
@@ -46,9 +46,9 @@ function bitebuddy_hub_receive_post(WP_REST_Request $request) {
         return $error;
     }
 
-    $postarr = bitebuddy_hub_prepare_post_array($payload, $auth['user_id']);
+    $postarr = wpyvr_hub_prepare_post_array($payload, $auth['user_id']);
     if (is_wp_error($postarr)) {
-        bitebuddy_hub_log_event(
+        wpyvr_hub_log_event(
             array(
                 'status'      => 'failed',
                 'message'     => $postarr->get_error_message(),
@@ -61,9 +61,9 @@ function bitebuddy_hub_receive_post(WP_REST_Request $request) {
         return $postarr;
     }
 
-    $post_id = bitebuddy_hub_upsert_post($postarr, $payload);
+    $post_id = wpyvr_hub_upsert_post($postarr, $payload);
     if (is_wp_error($post_id)) {
-        bitebuddy_hub_log_event(
+        wpyvr_hub_log_event(
             array(
                 'status'      => 'failed',
                 'message'     => $post_id->get_error_message(),
@@ -76,11 +76,11 @@ function bitebuddy_hub_receive_post(WP_REST_Request $request) {
         return $post_id;
     }
 
-    bitebuddy_hub_store_meta($post_id, $payload, $auth['firebase_uid']);
-    bitebuddy_hub_assign_terms($post_id, $payload);
-    bitebuddy_hub_notify_admin($post_id, $payload);
+    wpyvr_hub_store_meta($post_id, $payload, $auth['firebase_uid']);
+    wpyvr_hub_assign_terms($post_id, $payload);
+    wpyvr_hub_notify_admin($post_id, $payload);
 
-    bitebuddy_hub_log_event(
+    wpyvr_hub_log_event(
         array(
             'post_id'     => $post_id,
             'source_site' => esc_url_raw($payload['source'] ?? ''),
@@ -95,31 +95,31 @@ function bitebuddy_hub_receive_post(WP_REST_Request $request) {
         array(
             'post_id' => $post_id,
             'status'  => get_post_status($post_id),
-            'message' => __('Post saved as pending and logged.', 'bitebuddy'),
+            'message' => __('Post saved as pending and logged.', 'wpyvr'),
         ),
         201
     );
 }
 
-function bitebuddy_hub_validate_request_token(WP_REST_Request $request) {
+function wpyvr_hub_validate_request_token(WP_REST_Request $request) {
     $auth_header = $request->get_header('authorization');
     if (empty($auth_header) || stripos($auth_header, 'bearer ') !== 0) {
-        return new WP_Error('missing_token', __('Authorization header is missing.', 'bitebuddy'), array('status' => 401));
+        return new WP_Error('missing_token', __('Authorization header is missing.', 'wpyvr'), array('status' => 401));
     }
 
     $token = trim(substr($auth_header, 7));
     if (empty($token)) {
-        return new WP_Error('invalid_token', __('Bearer token is empty.', 'bitebuddy'), array('status' => 401));
+        return new WP_Error('invalid_token', __('Bearer token is empty.', 'wpyvr'), array('status' => 401));
     }
 
-    $firebase = bitebuddy_hub_verify_token_with_firebase($token);
+    $firebase = wpyvr_hub_verify_token_with_firebase($token);
     if (is_wp_error($firebase)) {
         return $firebase;
     }
 
-    $user_id = bitebuddy_hub_get_user_id_by_firebase_uid($firebase['firebase_uid']);
+    $user_id = wpyvr_hub_get_user_id_by_firebase_uid($firebase['firebase_uid']);
     if (!$user_id) {
-        return new WP_Error('user_not_mapped', __('Firebase UID is not linked to any WordPress user.', 'bitebuddy'), array('status' => 403));
+        return new WP_Error('user_not_mapped', __('Firebase UID is not linked to any WordPress user.', 'wpyvr'), array('status' => 403));
     }
 
     return array(
@@ -128,10 +128,10 @@ function bitebuddy_hub_validate_request_token(WP_REST_Request $request) {
     );
 }
 
-function bitebuddy_hub_verify_token_with_firebase(string $token) {
-    $api_key = defined('BITEBUDDY_FIREBASE_API_KEY') ? BITEBUDDY_FIREBASE_API_KEY : getenv('BITEBUDDY_FIREBASE_API_KEY');
+function wpyvr_hub_verify_token_with_firebase(string $token) {
+    $api_key = defined('WPYVR_FIREBASE_API_KEY') ? WPYVR_FIREBASE_API_KEY : getenv('WPYVR_FIREBASE_API_KEY');
     if (empty($api_key)) {
-        return new WP_Error('missing_api_key', __('Firebase API key is not configured.', 'bitebuddy'), array('status' => 500));
+        return new WP_Error('missing_api_key', __('Firebase API key is not configured.', 'wpyvr'), array('status' => 500));
     }
 
     $response = wp_remote_post(
@@ -149,7 +149,7 @@ function bitebuddy_hub_verify_token_with_firebase(string $token) {
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
     if (empty($body['users'][0]['localId'])) {
-        return new WP_Error('firebase_rejected', __('Firebase token verification failed.', 'bitebuddy'), array('status' => 403));
+        return new WP_Error('firebase_rejected', __('Firebase token verification failed.', 'wpyvr'), array('status' => 403));
     }
 
     return array(
@@ -158,7 +158,7 @@ function bitebuddy_hub_verify_token_with_firebase(string $token) {
     );
 }
 
-function bitebuddy_hub_get_user_id_by_firebase_uid(string $firebase_uid): int {
+function wpyvr_hub_get_user_id_by_firebase_uid(string $firebase_uid): int {
     global $wpdb;
     $table = $wpdb->prefix . 'user_profiles';
     $user_id = (int) $wpdb->get_var(
@@ -175,7 +175,7 @@ function bitebuddy_hub_get_user_id_by_firebase_uid(string $firebase_uid): int {
     return (int) get_option('default_post_user', 0);
 }
 
-function bitebuddy_hub_prepare_post_array(array $payload, int $user_id) {
+function wpyvr_hub_prepare_post_array(array $payload, int $user_id) {
     $title_raw = $payload['title'] ?? '';
     $content_raw = $payload['content'] ?? '';
     $slug_raw = $payload['slug'] ?? '';
@@ -186,7 +186,7 @@ function bitebuddy_hub_prepare_post_array(array $payload, int $user_id) {
     $slug = sanitize_title($slug_raw ?: $title);
 
     if (empty($title) || empty($content) || empty($slug)) {
-        return new WP_Error('missing_fields', __('title, content, and slug are required.', 'bitebuddy'), array('status' => 422));
+        return new WP_Error('missing_fields', __('title, content, and slug are required.', 'wpyvr'), array('status' => 422));
     }
 
     return array(
@@ -200,17 +200,17 @@ function bitebuddy_hub_prepare_post_array(array $payload, int $user_id) {
     );
 }
 
-function bitebuddy_hub_upsert_post(array $postarr, array $payload) {
+function wpyvr_hub_upsert_post(array $postarr, array $payload) {
     $source_site = esc_url_raw($payload['source'] ?? ($payload['origin_site'] ?? ''));
     $source_slug = sanitize_title($payload['slug'] ?? $postarr['post_name']);
-    $existing_id = bitebuddy_hub_find_existing_post($source_site, $source_slug);
+    $existing_id = wpyvr_hub_find_existing_post($source_site, $source_slug);
 
     if ($existing_id) {
         $postarr['ID'] = $existing_id;
-        $postarr['post_name'] = bitebuddy_hub_resolve_unique_slug($postarr['post_name'], $existing_id);
+        $postarr['post_name'] = wpyvr_hub_resolve_unique_slug($postarr['post_name'], $existing_id);
         $result = wp_update_post($postarr, true);
     } else {
-        $postarr['post_name'] = bitebuddy_hub_resolve_unique_slug($postarr['post_name']);
+        $postarr['post_name'] = wpyvr_hub_resolve_unique_slug($postarr['post_name']);
         $result = wp_insert_post($postarr, true);
         $existing_id = is_wp_error($result) ? 0 : $result;
     }
@@ -222,7 +222,7 @@ function bitebuddy_hub_upsert_post(array $postarr, array $payload) {
     return $existing_id;
 }
 
-function bitebuddy_hub_find_existing_post(string $source_site, string $source_slug): int {
+function wpyvr_hub_find_existing_post(string $source_site, string $source_slug): int {
     if (empty($source_site) || empty($source_slug)) {
         return 0;
     }
@@ -253,12 +253,12 @@ function bitebuddy_hub_find_existing_post(string $source_site, string $source_sl
     return $post_id;
 }
 
-function bitebuddy_hub_resolve_unique_slug(string $desired_slug, int $post_id = 0): string {
+function wpyvr_hub_resolve_unique_slug(string $desired_slug, int $post_id = 0): string {
     $unique = wp_unique_post_slug($desired_slug, $post_id, 'pending', 'post', 0);
     return $unique ?: sanitize_title($desired_slug . '-' . wp_generate_password(4, false));
 }
 
-function bitebuddy_hub_store_meta(int $post_id, array $payload, string $firebase_uid): void {
+function wpyvr_hub_store_meta(int $post_id, array $payload, string $firebase_uid): void {
     $source_site = esc_url_raw($payload['source'] ?? ($payload['origin_site'] ?? ''));
     $source_slug = sanitize_title($payload['slug'] ?? '');
     $source_author = sanitize_text_field($payload['author'] ?? '');
@@ -287,23 +287,23 @@ function bitebuddy_hub_store_meta(int $post_id, array $payload, string $firebase
     }
 }
 
-function bitebuddy_hub_assign_terms(int $post_id, array $payload): void {
+function wpyvr_hub_assign_terms(int $post_id, array $payload): void {
     if (!empty($payload['categories']) && is_array($payload['categories'])) {
-        $category_ids = bitebuddy_hub_map_terms($payload['categories'], 'category', $payload['source'] ?? '');
+        $category_ids = wpyvr_hub_map_terms($payload['categories'], 'category', $payload['source'] ?? '');
         if (!empty($category_ids)) {
             wp_set_post_terms($post_id, $category_ids, 'category');
         }
     }
 
     if (!empty($payload['tags']) && is_array($payload['tags'])) {
-        $tag_ids = bitebuddy_hub_map_terms($payload['tags'], 'post_tag', $payload['source'] ?? '');
+        $tag_ids = wpyvr_hub_map_terms($payload['tags'], 'post_tag', $payload['source'] ?? '');
         if (!empty($tag_ids)) {
             wp_set_post_terms($post_id, $tag_ids, 'post_tag');
         }
     }
 }
 
-function bitebuddy_hub_notify_admin(int $post_id, array $payload): void {
+function wpyvr_hub_notify_admin(int $post_id, array $payload): void {
     $admin_email = get_option('admin_email');
     if (empty($admin_email)) {
         return;
@@ -314,7 +314,7 @@ function bitebuddy_hub_notify_admin(int $post_id, array $payload): void {
     $author = sanitize_text_field($payload['author'] ?? '');
     $edit_link = get_edit_post_link($post_id, '');
 
-    $subject = sprintf('[BiteBuddy Hub] 새 글 대기 - %s', $title);
+    $subject = sprintf('[WPYVR Hub] 새 글 대기 - %s', $title);
     $body_lines = array(
         '새 글이 허브에 등록되어 검수를 기다리고 있습니다.',
         '',

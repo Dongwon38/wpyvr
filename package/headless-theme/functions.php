@@ -74,9 +74,9 @@ require_once get_template_directory() . '/inc/register-acf.php';
 require_once get_template_directory() . '/inc/functions-contact.php';
 
 // Hub integration stack
-require_once get_template_directory() . '/inc/logger.php';
-require_once get_template_directory() . '/inc/helpers.php';
-require_once get_template_directory() . '/inc/functions-hub-push.php';
-require_once get_template_directory() . '/inc/admin-mapping.php';
-require_once get_template_directory() . '/inc/like-endpoints.php';
-require_once get_template_directory() . '/inc/trend-functions.php';
+require_once get_template_directory() . '/inc/wpyvr-connect-logger.php';
+require_once get_template_directory() . '/inc/wpyvr-connect-helpers.php';
+require_once get_template_directory() . '/inc/wpyvr-connect-hub.php';
+require_once get_template_directory() . '/inc/wpyvr-connect-admin.php';
+require_once get_template_directory() . '/inc/wpyvr-connect-like.php';
+require_once get_template_directory() . '/inc/wpyvr-connect-trend.php';
