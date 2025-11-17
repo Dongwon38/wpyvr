@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import HubPostDetail from "@/components/hub/HubPostDetail"
-import { fetchHubPostBySlug } from "@/lib/hubApi"
+import { fetchHubPostBySlug, fetchHubPosts } from "@/lib/hubApi"
 
 type Props = {
   params: { slug: string }
@@ -18,6 +18,11 @@ export async function generateMetadata({ params }: Props) {
     title: `${post.title} | WPYVR Hub`,
     description: post.excerpt || "Hub post detail",
   }
+}
+
+export async function generateStaticParams() {
+  const posts = await fetchHubPosts("latest", 20)
+  return posts.map((post) => ({ slug: post.slug }))
 }
 
 export default async function HubPostPage({ params }: Props) {
