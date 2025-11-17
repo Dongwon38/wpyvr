@@ -1,122 +1,25 @@
-"use client";
+import HubTabs from "@/components/hub/HubTabs"
+import { fetchHubPosts } from "@/lib/hubApi"
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import PostListItem from "@/components/PostListItem";
-import { mockPosts, getAllTags } from "@/lib/mockData";
-import { TrendingUp, Clock } from "lucide-react";
+export const metadata = {
+  title: "Community Hub",
+  description: "멤버 사이트에서 검수 완료된 실시간 커뮤니티 글을 탐색하세요.",
+}
 
-export default function CommunityPage() {
-  const [selectedTag, setSelectedTag] = useState<string>("All");
-  const [sortBy, setSortBy] = useState<"newest" | "popular">("newest");
-  
-  const tags = ["All", ...getAllTags()];
-
-  // Filter by tag
-  let filteredPosts = selectedTag === "All"
-    ? mockPosts
-    : mockPosts.filter(post => post.tags.includes(selectedTag));
-
-  // Sort posts
-  filteredPosts = [...filteredPosts].sort((a, b) => {
-    if (sortBy === "popular") {
-      return b.upvotes - a.upvotes;
-    }
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+export default async function CommunityPage() {
+  const latestPosts = await fetchHubPosts("latest", 9)
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
-      <section className="border-b border-gray-200 px-4 py-8 dark:border-gray-800 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h1 className="mb-3 text-3xl font-normal text-gray-900 dark:text-white">
-              Community
-            </h1>
-            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
-              Insights, experiences, and projects from our community
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+      <header className="space-y-4 text-center">
+        <p className="text-xs uppercase tracking-wide text-sky-500">WPYVR Community</p>
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white">커뮤니티 하이라이트</h1>
+        <p className="text-base text-slate-600 dark:text-slate-300">
+          각 멤버 사이트에서 푸시된 최신 글을 탭으로 탐색하고, 핫한 콘텐츠를 한 번에 확인하세요.
+        </p>
+      </header>
 
-      {/* Content */}
-      <section className="px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          {/* Toolbar - Filters and Sort */}
-          <div className="mb-4 flex flex-col gap-4 border-b border-gray-200 pb-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
-            {/* Tag Filter */}
-            <div className="flex flex-wrap items-center gap-2">
-              {tags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag)}
-                  className={`text-sm font-normal transition-colors ${
-                    selectedTag === tag
-                      ? "text-gray-900 underline decoration-orange-500 decoration-2 underline-offset-4 dark:text-white"
-                      : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
-                  }`}
-                >
-                  {tag === "All" ? tag : `#${tag}`}
-                </button>
-              ))}
-            </div>
-
-            {/* Sort Options */}
-            <div className="flex items-center gap-3 text-sm">
-              <button
-                onClick={() => setSortBy("newest")}
-                className={`inline-flex items-center gap-1.5 font-normal transition-colors ${
-                  sortBy === "newest"
-                    ? "text-gray-900 dark:text-white"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
-                }`}
-              >
-                <Clock size={14} />
-                Newest
-              </button>
-              <span className="text-gray-300 dark:text-gray-700">|</span>
-              <button
-                onClick={() => setSortBy("popular")}
-                className={`inline-flex items-center gap-1.5 font-normal transition-colors ${
-                  sortBy === "popular"
-                    ? "text-gray-900 dark:text-white"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
-                }`}
-              >
-                <TrendingUp size={14} />
-                Popular
-              </button>
-            </div>
-          </div>
-
-          {/* Results Count */}
-          <p className="mb-4 text-sm font-normal text-gray-500 dark:text-gray-500">
-            {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
-          </p>
-
-          {/* Posts Grid */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPosts.map((post, index) => (
-              <PostListItem key={post.slug} post={post} index={index} />
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {filteredPosts.length === 0 && (
-            <div className="py-12 text-center">
-              <p className="text-base text-gray-500 dark:text-gray-500">
-                No posts found with this tag.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+      <HubTabs initialPosts={latestPosts} />
     </div>
-  );
+  )
 }

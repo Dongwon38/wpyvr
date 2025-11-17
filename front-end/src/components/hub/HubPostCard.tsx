@@ -12,7 +12,7 @@ const HubPostCard = ({ post }: Props) => {
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
       {post.featuredImage ? (
-        <Link href={`/hub/${post.slug}`} className="relative block h-56 w-full">
+        <Link href={`/community/${post.slug}`} className="relative block h-56 w-full">
           <Image
             src={post.featuredImage}
             alt={post.title}
@@ -31,7 +31,7 @@ const HubPostCard = ({ post }: Props) => {
           {post.sourceSite && <span>{post.sourceSite.replace(/^https?:\/\//, "")}</span>}
         </div>
 
-        <Link href={`/hub/${post.slug}`} className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
+        <Link href={`/community/${post.slug}`} className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
           {post.title}
         </Link>
 
