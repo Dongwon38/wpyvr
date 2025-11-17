@@ -71,15 +71,25 @@ function stripHtml(value: string): string {
   return value.replace(/<[^>]+>/g, "").trim()
 }
 
+function normalizeRenderedField(field: string | { rendered: string } | undefined): string {
+  if (!field) return ""
+  if (typeof field === "string") return field
+  return field.rendered ?? ""
+}
+
 function transformPost(data: WPPost): HubPost {
   const meta = data.meta || (data as any).meta
+  const rawTitle = normalizeRenderedField(data.title)
+  const rawExcerpt = normalizeRenderedField(data.excerpt)
+  const rawContent = normalizeRenderedField(data.content)
+
   return {
     id: data.id,
     slug: data.slug,
     date: data.date,
-    title: stripHtml(data.title?.rendered || data.title),
-    excerpt: stripHtml(data.excerpt?.rendered || ""),
-    content: data.content?.rendered || "",
+    title: stripHtml(rawTitle),
+    excerpt: stripHtml(rawExcerpt),
+    content: rawContent,
     author: data._embedded?.author?.[0]?.name,
     featuredImage: data._embedded?.["wp:featuredmedia"]?.[0]?.source_url || meta?.hub_featured_image_url || "",
     sourceSite: meta?.hub_source_site || "",
