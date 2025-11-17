@@ -200,6 +200,64 @@ function wpyvr_hub_log_event(array $args): void {
     }
 }
 
+function wpyvr_hub_get_profile_by_push_token(string $token): ?array {
+    $token = trim($token);
+    if ('' === $token) {
+        return null;
+    }
+
+    global $wpdb;
+    $table = $wpdb->prefix . 'user_profiles';
+
+    if (!wpyvr_hub_table_exists($table)) {
+        return null;
+    }
+
+    $row = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT user_id, firebase_uid FROM {$table} WHERE push_token = %s LIMIT 1",
+            $token
+        ),
+        ARRAY_A
+    );
+
+    if (empty($row['user_id'])) {
+        return null;
+    }
+
+    return array(
+        'user_id'      => (int) $row['user_id'],
+        'firebase_uid' => sanitize_text_field($row['firebase_uid'] ?? ''),
+    );
+}
+
+function wpyvr_hub_mark_profile_connected(int $user_id): void {
+    if ($user_id <= 0) {
+        return;
+    }
+
+    global $wpdb;
+    $table = $wpdb->prefix . 'user_profiles';
+
+    if (!wpyvr_hub_table_exists($table)) {
+        return;
+    }
+
+    $now = current_time('mysql');
+
+    $wpdb->update(
+        $table,
+        array(
+            'hub_connected' => 1,
+            'last_push_at'  => $now,
+            'updated_at'    => $now,
+        ),
+        array('user_id' => $user_id),
+        array('%d', '%s', '%s'),
+        array('%d')
+    );
+}
+
 function wpyvr_hub_hash_ip($request = null): string {
     $ip = '';
     if ($request instanceof WP_REST_Request) {

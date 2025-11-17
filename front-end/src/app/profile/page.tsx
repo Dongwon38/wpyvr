@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation"
 import { ArrowLeft, User } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import ProfileForm from "@/components/profile/ProfileForm"
-import { fetchUserProfile, type UserProfile } from "@/lib/profileApi"
+import {
+  fetchUserProfile,
+  fetchPushTokenInfo,
+  generatePushToken,
+  revokePushToken,
+  type UserProfile,
+  type PushTokenInfo,
+} from "@/lib/profileApi"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -13,6 +20,12 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [pushTokenInfo, setPushTokenInfo] = useState<PushTokenInfo | null>(null)
+  const [pushTokenLoading, setPushTokenLoading] = useState(true)
+  const [pushTokenError, setPushTokenError] = useState<string | null>(null)
+  const [originSiteUrl, setOriginSiteUrl] = useState("")
+  const [isTokenUpdating, setIsTokenUpdating] = useState(false)
+  const [copyFeedback, setCopyFeedback] = useState<"idle" | "copied">("idle")
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -37,6 +50,88 @@ export default function ProfilePage() {
 
     loadProfile()
   }, [user, wpUser, authLoading, router])
+
+  useEffect(() => {
+    const loadPushToken = async () => {
+      if (authLoading) return
+      if (!user || !wpUser) {
+        setPushTokenLoading(false)
+        return
+      }
+
+      try {
+        setPushTokenLoading(true)
+        const info = await fetchPushTokenInfo(wpUser.jwt)
+        setPushTokenInfo(info)
+        if (info.origin_site_url) {
+          setOriginSiteUrl(info.origin_site_url)
+        } else if (profile?.website) {
+          setOriginSiteUrl(profile.website)
+        }
+        setPushTokenError(null)
+      } catch (err) {
+        console.error("Failed to load push token:", err)
+        setPushTokenError("푸시 토큰 정보를 불러오지 못했습니다.")
+      } finally {
+        setPushTokenLoading(false)
+      }
+    }
+
+    loadPushToken()
+  }, [authLoading, user, wpUser, profile?.website])
+
+  const handleGenerateOrRegenerateToken = async () => {
+    if (!wpUser) return
+    const origin = originSiteUrl?.trim() || undefined
+
+    try {
+      setIsTokenUpdating(true)
+      const info = await generatePushToken(wpUser.jwt, origin)
+      setPushTokenInfo(info)
+      setPushTokenError(null)
+      setCopyFeedback("idle")
+    } catch (err) {
+      console.error("Failed to generate push token:", err)
+      setPushTokenError(
+        err instanceof Error ? err.message : "푸시 토큰 생성에 실패했습니다."
+      )
+    } finally {
+      setIsTokenUpdating(false)
+    }
+  }
+
+  const handleRevokeToken = async () => {
+    if (!wpUser) return
+
+    try {
+      setIsTokenUpdating(true)
+      const info = await revokePushToken(wpUser.jwt)
+      setPushTokenInfo(info)
+      setPushTokenError(null)
+      setCopyFeedback("idle")
+    } catch (err) {
+      console.error("Failed to revoke push token:", err)
+      setPushTokenError(
+        err instanceof Error ? err.message : "푸시 토큰 삭제에 실패했습니다."
+      )
+    } finally {
+      setIsTokenUpdating(false)
+    }
+  }
+
+  const handleCopyToken = async () => {
+    if (!pushTokenInfo?.token) return
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(pushTokenInfo.token)
+        setCopyFeedback("copied")
+        setTimeout(() => setCopyFeedback("idle"), 2000)
+      }
+    } catch (err) {
+      console.error("Failed to copy push token:", err)
+      setPushTokenError("클립보드 복사에 실패했습니다.")
+    }
+  }
 
   // Show loading state
   if (authLoading || loadingProfile) {
@@ -136,6 +231,109 @@ export default function ProfilePage() {
                 : undefined
             }
           />
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#00749C]/10 text-[#00749C]">
+              <User size={18} />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-[#444140]">Hub Push Token</h2>
+              <p className="text-sm text-gray-600">
+                WPYVR Connect 플러그인에 붙여넣을 토큰을 발급하거나 재발급할 수 있습니다.
+              </p>
+            </div>
+          </div>
+
+          {pushTokenLoading ? (
+            <p className="mt-4 text-sm text-gray-600">토큰 정보를 불러오는 중...</p>
+          ) : (
+            <div className="mt-4 space-y-4">
+              {pushTokenError && (
+                <p className="text-sm text-red-600">{pushTokenError}</p>
+              )}
+
+              {pushTokenInfo?.token ? (
+                <>
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <p className="text-xs font-medium uppercase text-gray-500">
+                      현재 토큰
+                    </p>
+                    <p className="mt-2 break-all font-mono text-sm text-gray-800">
+                      {pushTokenInfo.token}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCopyToken}
+                      disabled={isTokenUpdating}
+                      className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {copyFeedback === "copied" ? "복사 완료!" : "토큰 복사"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGenerateOrRegenerateToken}
+                      disabled={isTokenUpdating}
+                      className="rounded-lg bg-[#00749C] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#005a7a] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {isTokenUpdating ? "재발급 중..." : "토큰 재발급"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleRevokeToken}
+                      disabled={isTokenUpdating}
+                      className="rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      토큰 삭제
+                    </button>
+                  </div>
+
+                  <div className="text-xs text-gray-500">
+                    {pushTokenInfo.origin_site_url && (
+                      <p>연결된 사이트: {pushTokenInfo.origin_site_url}</p>
+                    )}
+                    <p>
+                      마지막 푸시:{" "}
+                      {pushTokenInfo.last_push_at
+                        ? pushTokenInfo.last_push_at
+                        : "아직 기록이 없습니다."}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label
+                      htmlFor="origin-site-url"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Origin Site URL (선택)
+                    </label>
+                    <input
+                      id="origin-site-url"
+                      type="url"
+                      value={originSiteUrl}
+                      onChange={(event) => setOriginSiteUrl(event.target.value)}
+                      placeholder="https://membersite.com"
+                      className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:border-[#00749C] focus:outline-none focus:ring-1 focus:ring-[#00749C]"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleGenerateOrRegenerateToken}
+                    disabled={isTokenUpdating}
+                    className="inline-flex rounded-lg bg-[#00749C] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#005a7a] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isTokenUpdating ? "발급 중..." : "토큰 발급"}
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Help Text */}

@@ -141,6 +141,7 @@ function custom_auth_sync_user(WP_REST_Request $request) {
     if ($wpdb->get_var("SHOW TABLES LIKE '$table'") === $table) {
         $wpdb->replace($table, [
             'user_id' => $user_id,
+            'firebase_uid' => $firebase_uid,
             'website' => $website,
             'job_title' => $job_title,
             'social_links' => maybe_serialize($social_links),
