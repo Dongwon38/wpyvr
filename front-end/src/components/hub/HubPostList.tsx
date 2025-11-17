@@ -9,7 +9,7 @@ type Props = {
 
 const HubPostList = ({ posts }: Props) => {
   if (!posts.length) {
-    return <p className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500 dark:border-slate-800">표시할 글이 없습니다. 다른 탭을 선택하거나 나중에 다시 시도하세요.</p>
+    return <p className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500 dark:border-slate-800">No posts available. Try another tab or check back later.</p>
   }
 
   return (

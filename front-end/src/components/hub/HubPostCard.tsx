@@ -35,7 +35,7 @@ const HubPostCard = ({ post }: Props) => {
           {post.title}
         </Link>
 
-        <p className="flex-1 text-sm text-slate-600 dark:text-slate-300">{post.excerpt || "원문에서 제공된 요약이 없습니다."}</p>
+        <p className="flex-1 text-sm text-slate-600 dark:text-slate-300">{post.excerpt || "No summary was provided for this post."}</p>
 
         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>

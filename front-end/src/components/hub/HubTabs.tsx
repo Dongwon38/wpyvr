@@ -7,15 +7,16 @@ import { fetchHubPosts } from "@/lib/hubApi"
 
 type Props = {
   initialPosts: HubPost[]
+  onlyPushed?: boolean
 }
 
 const tabs: { label: string; value: HubPostOrder }[] = [
-  { label: "최신", value: "latest" },
-  { label: "인기", value: "popular" },
-  { label: "트렌딩", value: "trending" },
+  { label: "Latest", value: "latest" },
+  { label: "Popular", value: "popular" },
+  { label: "Trending", value: "trending" },
 ]
 
-const HubTabs = ({ initialPosts }: Props) => {
+const HubTabs = ({ initialPosts, onlyPushed }: Props) => {
   const [activeTab, setActiveTab] = useState<HubPostOrder>("latest")
   const [data, setData] = useState<Record<HubPostOrder, HubPost[]>>({
     latest: initialPosts,
@@ -34,7 +35,7 @@ const HubTabs = ({ initialPosts }: Props) => {
 
       setLoading(true)
       try {
-        const posts = await fetchHubPosts(activeTab, 9)
+          const posts = await fetchHubPosts(activeTab, 9, 1, { onlyPushed })
         if (!ignore) {
           setData((prev) => ({ ...prev, [activeTab]: posts }))
         }
@@ -68,8 +69,8 @@ const HubTabs = ({ initialPosts }: Props) => {
         ))}
       </div>
 
-      {loading && !data[activeTab].length ? (
-        <p className="text-sm text-slate-500">불러오는 중…</p>
+        {loading && !data[activeTab].length ? (
+          <p className="text-sm text-slate-500">Loading...</p>
       ) : (
         <HubPostList posts={data[activeTab]} />
       )}

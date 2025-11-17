@@ -13,6 +13,8 @@ import { fetchLatestBlogPosts, type BlogPost as ApiBlogPost } from "@/lib/blogAp
 import { FileText, Users, ArrowRight, Calendar, Sparkles, TrendingUp, Clock, Mail } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import HubPostCard from "@/components/hub/HubPostCard";
+import { fetchHubPosts, type HubPost } from "@/lib/hubApi";
 
 // Blog post format for component
 interface BlogPost {
@@ -34,10 +36,11 @@ export default function Home() {
   const [eventsLoading, setEventsLoading] = useState(true);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [blogLoading, setBlogLoading] = useState(true);
+  const [recentCommunityPosts, setRecentCommunityPosts] = useState<HubPost[]>([]);
+  const [recentCommunityLoading, setRecentCommunityLoading] = useState(true);
   
-  // Get trending posts and recent posts
+    // Get trending posts
     const trendingPosts = [...mockPosts].sort((a, b) => b.upvotes - a.upvotes);
-    const recentPosts = [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
   useEffect(() => {
     async function loadEvents() {
@@ -74,8 +77,20 @@ export default function Home() {
       }
     }
 
+    async function loadRecentCommunityPosts() {
+      try {
+        const posts = await fetchHubPosts("latest", 6, 1, { onlyPushed: true });
+        setRecentCommunityPosts(posts);
+      } catch (error) {
+        console.error("Failed to load community posts:", error);
+      } finally {
+        setRecentCommunityLoading(false);
+      }
+    }
+
     loadEvents();
     loadBlogPosts();
+    loadRecentCommunityPosts();
   }, []);
 
     return (
@@ -170,14 +185,31 @@ export default function Home() {
             />
           </div>
 
-          {/* Recent Posts Slider */}
-          <div>
-            <PostSlider
-              posts={recentPosts}
-              title="Recent Posts"
-              icon={<Clock className="text-[#00749C]" size={20} />}
-            />
-          </div>
+            {/* Recent Posts (Live) */}
+            <div>
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="text-[#00749C]" size={20} />
+                <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  Recent Posts
+                </h3>
+              </div>
+              {recentCommunityLoading ? (
+                <LoadingSpinner />
+              ) : recentCommunityPosts.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {recentCommunityPosts.map((post) => (
+                    <HubPostCard key={post.id} post={post} />
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-[#00749C]/15 bg-[#FFFDF9] p-12 text-center shadow-md">
+                  <Clock className="mx-auto mb-4 h-12 w-12 text-[#00749C]/40" />
+                  <p className="text-[#444140]/70">
+                    No community posts have been pushed yet. Check back soon!
+                  </p>
+                </div>
+              )}
+            </div>
         </div>
       </section>
 

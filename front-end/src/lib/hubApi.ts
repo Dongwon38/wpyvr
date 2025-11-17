@@ -110,18 +110,32 @@ async function safeFetch<T>(input: RequestInfo, init?: RequestInit): Promise<T> 
   return response.json()
 }
 
-export async function fetchHubPosts(order: HubPostOrder = "latest", perPage = 12, page = 1): Promise<HubPost[]> {
+function filterPushedPosts(posts: HubPost[]): HubPost[] {
+  return posts.filter((post) => Boolean(post.sourceSite))
+}
+
+type FetchOptions = {
+  onlyPushed?: boolean
+}
+
+export async function fetchHubPosts(
+  order: HubPostOrder = "latest",
+  perPage = 12,
+  page = 1,
+  options?: FetchOptions
+): Promise<HubPost[]> {
   try {
     const url = buildQuery(order, perPage, page)
     const data: WPPost[] = await safeFetch(url.toString(), { cache: "no-store" })
-    return data.map(transformPost)
+    const posts = data.map(transformPost)
+    return options?.onlyPushed ? filterPushedPosts(posts) : posts
   } catch (error) {
     console.error("Failed to fetch hub posts", error)
     return []
   }
 }
 
-export async function fetchHubPostBySlug(slug: string): Promise<HubPost | null> {
+export async function fetchHubPostBySlug(slug: string, options?: FetchOptions): Promise<HubPost | null> {
   try {
     const url = new URL(`${HUB_BASE_URL}/wp-json/wp/v2/posts`)
     url.searchParams.set("slug", slug)
@@ -132,7 +146,12 @@ export async function fetchHubPostBySlug(slug: string): Promise<HubPost | null> 
       return null
     }
 
-    return transformPost(data[0])
+    const post = transformPost(data[0])
+    if (options?.onlyPushed && !post.sourceSite) {
+      return null
+    }
+
+    return post
   } catch (error) {
     console.error("Failed to fetch hub post", error)
     return null
