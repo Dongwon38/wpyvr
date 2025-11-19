@@ -5,15 +5,236 @@ if (!defined('ABSPATH')) {
 }
 
 function wpyvr_hub_get_pending_posts(): array {
-    return get_posts(
-        array(
-            'post_type'      => 'post',
-            'post_status'    => 'pending',
-            'orderby'        => 'date',
-            'order'          => 'DESC',
-            'posts_per_page' => 50,
-        )
+    global $wpdb;
+    $table = wpyvr_hub_get_incoming_table_name();
+
+    if (!wpyvr_hub_table_exists($table)) {
+        return array();
+    }
+
+    $results = $wpdb->get_results(
+        "SELECT * FROM {$table}
+         WHERE status IN ('pending','mapped')
+         ORDER BY received_at DESC
+         LIMIT 50",
+        ARRAY_A
     );
+
+    return $results ?: array();
+}
+
+function wpyvr_hub_get_incoming_post(int $incoming_id): ?array {
+    global $wpdb;
+    $table = wpyvr_hub_get_incoming_table_name();
+
+    if ($incoming_id <= 0 || !wpyvr_hub_table_exists($table)) {
+        return null;
+    }
+
+    $row = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM {$table} WHERE id = %d LIMIT 1", $incoming_id),
+        ARRAY_A
+    );
+
+    return $row ?: null;
+}
+
+function wpyvr_hub_find_incoming_post(string $source_site, string $source_slug): ?array {
+    global $wpdb;
+    $table = wpyvr_hub_get_incoming_table_name();
+
+    if (empty($source_site) || empty($source_slug) || !wpyvr_hub_table_exists($table)) {
+        return null;
+    }
+
+    $row = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT * FROM {$table}
+             WHERE source_site = %s AND source_slug = %s AND status != %s
+             ORDER BY id DESC
+             LIMIT 1",
+            $source_site,
+            $source_slug,
+            'published'
+        ),
+        ARRAY_A
+    );
+
+    return $row ?: null;
+}
+
+function wpyvr_hub_decode_json_column($value): array {
+    if (empty($value)) {
+        return array();
+    }
+
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return array();
+    }
+
+    return array_values(array_filter($decoded, static function ($item) {
+        return '' !== trim((string) $item);
+    }));
+}
+
+function wpyvr_hub_normalize_term_ids(array $ids): array {
+    $normalized = array();
+    foreach ($ids as $id) {
+        $id = absint($id);
+        if ($id > 0) {
+            $normalized[] = $id;
+        }
+    }
+
+    return array_values(array_unique($normalized));
+}
+
+function wpyvr_hub_save_incoming_post(array $payload, array $auth) {
+    global $wpdb;
+
+    wpyvr_hub_maybe_install_tables();
+    $table = wpyvr_hub_get_incoming_table_name();
+
+    if (!wpyvr_hub_table_exists($table)) {
+        return new WP_Error('missing_table', __('Incoming posts table is not available.', 'wpyvr'), array('status' => 500));
+    }
+
+    $title = sanitize_text_field($payload['title'] ?? '');
+    $content = wp_kses_post($payload['content'] ?? '');
+    $slug = sanitize_title($payload['slug'] ?? $title);
+    $excerpt_source = $payload['excerpt'] ?? wp_trim_words(wp_strip_all_tags($content), 55);
+    $excerpt = wp_strip_all_tags($excerpt_source);
+    $source_site = esc_url_raw($payload['source'] ?? ($payload['origin_site'] ?? ''));
+
+    if (empty($title) || empty($content) || empty($slug)) {
+        return new WP_Error('missing_fields', __('title, content, and slug are required.', 'wpyvr'), array('status' => 422));
+    }
+
+    $source_host = '';
+    if (!empty($source_site)) {
+        $parts = wp_parse_url($source_site);
+        if (!empty($parts['host'])) {
+            $source_host = strtolower($parts['host']);
+            if (!empty($parts['port'])) {
+                $source_host .= ':' . $parts['port'];
+            }
+        }
+    }
+
+    $categories = array();
+    if (!empty($payload['categories']) && is_array($payload['categories'])) {
+        $categories = array_map('sanitize_text_field', $payload['categories']);
+    }
+
+    $tags = array();
+    if (!empty($payload['tags']) && is_array($payload['tags'])) {
+        $tags = array_map('sanitize_text_field', $payload['tags']);
+    }
+
+    $data = array(
+        'firebase_uid'           => sanitize_text_field($auth['firebase_uid'] ?? ''),
+        'user_id'                => isset($auth['user_id']) ? (int) $auth['user_id'] : 0,
+        'source_site'            => $source_site,
+        'source_site_host'       => $source_host,
+        'source_slug'            => $slug,
+        'source_post_id'         => sanitize_text_field($payload['source_post_id'] ?? ''),
+        'source_permalink'       => $source_site,
+        'original_title'         => $title,
+        'original_content'       => $content,
+        'original_excerpt'       => $excerpt,
+        'original_author'        => sanitize_text_field($payload['author'] ?? ''),
+        'original_featured_image'=> esc_url_raw($payload['featured_image'] ?? ''),
+        'original_categories'    => wp_json_encode($categories, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        'original_tags'          => wp_json_encode($tags, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        'status'                 => 'pending',
+        'mapped_category_ids'    => wp_json_encode(array(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        'mapped_tag_ids'         => wp_json_encode(array(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        'editor_user_id'         => 0,
+        'published_post_id'      => 0,
+        'raw_payload'            => wp_json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    );
+
+    $existing = wpyvr_hub_find_incoming_post($source_site, $slug);
+    if ($existing) {
+        $wpdb->update($table, $data, array('id' => (int) $existing['id']));
+        return (int) $existing['id'];
+    }
+
+    $data['received_at'] = current_time('mysql');
+
+    $result = $wpdb->insert($table, $data);
+    if (false === $result) {
+        return new WP_Error('db_insert_failed', __('Unable to store incoming post.', 'wpyvr'));
+    }
+
+    return (int) $wpdb->insert_id;
+}
+
+function wpyvr_hub_update_incoming_post(int $incoming_id, array $data): bool {
+    global $wpdb;
+    $table = wpyvr_hub_get_incoming_table_name();
+
+    if ($incoming_id <= 0 || !wpyvr_hub_table_exists($table) || empty($data)) {
+        return false;
+    }
+
+    $updated = $wpdb->update($table, $data, array('id' => $incoming_id));
+    return false !== $updated;
+}
+
+function wpyvr_hub_assign_terms_to_post(int $post_id, array $category_ids, array $tag_ids): void {
+    $category_ids = wpyvr_hub_normalize_term_ids($category_ids);
+    $tag_ids = wpyvr_hub_normalize_term_ids($tag_ids);
+
+    if (!empty($category_ids)) {
+        wp_set_post_terms($post_id, $category_ids, 'category', false);
+    }
+
+    if (!empty($tag_ids)) {
+        wp_set_post_terms($post_id, $tag_ids, 'post_tag', false);
+    }
+}
+
+function wpyvr_hub_publish_incoming_post(array $incoming, array $category_ids = array(), array $tag_ids = array()) {
+    $title = $incoming['original_title'] ?? '';
+    $content = $incoming['original_content'] ?? '';
+
+    if (empty($title) || empty($content)) {
+        return new WP_Error('invalid_incoming', __('Incoming record is missing required fields.', 'wpyvr'), array('status' => 400));
+    }
+
+    $post_author = !empty($incoming['user_id']) ? (int) $incoming['user_id'] : (int) get_option('default_post_user', 0);
+    $post_data = array(
+        'post_type'    => 'post',
+        'post_status'  => 'publish',
+        'post_author'  => $post_author,
+        'post_title'   => sanitize_text_field($title),
+        'post_content' => $content,
+        'post_excerpt' => wp_strip_all_tags($incoming['original_excerpt'] ?? ''),
+        'post_name'    => sanitize_title($incoming['source_slug'] ?? $title),
+    );
+
+    $post_id = wp_insert_post($post_data, true);
+    if (is_wp_error($post_id)) {
+        return $post_id;
+    }
+
+    $raw_categories = wpyvr_hub_decode_json_column($incoming['original_categories'] ?? '');
+    $raw_tags = wpyvr_hub_decode_json_column($incoming['original_tags'] ?? '');
+
+    if (empty($category_ids)) {
+        $category_ids = wpyvr_hub_map_terms($raw_categories, 'category', $incoming['source_site'] ?? '');
+    }
+    if (empty($tag_ids)) {
+        $tag_ids = wpyvr_hub_map_terms($raw_tags, 'tag', $incoming['source_site'] ?? '');
+    }
+
+    wpyvr_hub_assign_terms_to_post($post_id, $category_ids, $tag_ids);
+    wpyvr_hub_store_meta($post_id, $incoming);
+    wpyvr_hub_reset_post_interactions($post_id);
+
+    return $post_id;
 }
 
 function wpyvr_hub_decode_meta_array(int $post_id, string $meta_key): array {
@@ -150,12 +371,16 @@ function wpyvr_hub_table_exists(string $table): bool {
     global $wpdb;
     static $cache = array();
 
-    if (isset($cache[$table])) {
-        return $cache[$table];
+    if (isset($cache[$table]) && true === $cache[$table]) {
+        return true;
     }
 
-    $cache[$table] = ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table);
-    return $cache[$table];
+    $exists = ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table);
+    if ($exists) {
+        $cache[$table] = true;
+    }
+
+    return $exists;
 }
 
 function wpyvr_hub_log_event(array $args): void {

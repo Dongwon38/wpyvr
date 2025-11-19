@@ -31,45 +31,58 @@ function wpyvr_hub_render_incoming_posts(): void {
         wp_die(__('권한이 없습니다.', 'wpyvr'));
     }
 
-    $pending_posts = wpyvr_hub_get_pending_posts();
+    $incoming_posts = wpyvr_hub_get_pending_posts();
     $category_terms = wpyvr_hub_get_term_options('category');
     $tag_terms = wpyvr_hub_get_term_options('post_tag');
+    $error_param = isset($_GET['hub_error']) ? wp_unslash($_GET['hub_error']) : '';
+    $notice_param = isset($_GET['hub_notice']) ? wp_unslash($_GET['hub_notice']) : '';
+    $error_message = $error_param ? sanitize_text_field(rawurldecode($error_param)) : '';
+    $notice_message = $notice_param ? sanitize_text_field(rawurldecode($notice_param)) : '';
     ?>
     <div class="wrap">
         <h1><?php esc_html_e('허브 검수 대기 글', 'wpyvr'); ?></h1>
         <p><?php esc_html_e('원본 사이트에서 전달된 글의 카테고리/태그를 허브 표준 분류에 맵핑한 뒤 퍼블리시하세요.', 'wpyvr'); ?></p>
-        <?php if (empty($pending_posts)) : ?>
+        <?php if (!empty($error_message)) : ?>
+            <div class="notice notice-error"><p><?php echo esc_html($error_message); ?></p></div>
+        <?php endif; ?>
+        <?php if (!empty($notice_message)) : ?>
+            <div class="notice notice-success"><p><?php echo esc_html($notice_message); ?></p></div>
+        <?php endif; ?>
+        <?php if (empty($incoming_posts)) : ?>
             <div class="notice notice-success"><p><?php esc_html_e('현재 검수 대기 글이 없습니다.', 'wpyvr'); ?></p></div>
         <?php else : ?>
-            <?php foreach ($pending_posts as $post) : ?>
+            <?php foreach ($incoming_posts as $incoming) : ?>
                 <?php
-                $raw_categories = wpyvr_hub_get_raw_terms($post->ID, 'category');
-                $raw_tags = wpyvr_hub_get_raw_terms($post->ID, 'tag');
-                $source_site = wpyvr_hub_get_source_site($post->ID);
+                $incoming_id = (int) ($incoming['id'] ?? 0);
+                $raw_categories = wpyvr_hub_decode_json_column($incoming['original_categories'] ?? '');
+                $raw_tags = wpyvr_hub_decode_json_column($incoming['original_tags'] ?? '');
+                $source_site = esc_url($incoming['source_site'] ?? '');
                 $category_suggestions = wpyvr_hub_suggest_terms($raw_categories, 'category');
                 $tag_suggestions = wpyvr_hub_suggest_terms($raw_tags, 'post_tag');
+                $excerpt = !empty($incoming['original_excerpt']) ? $incoming['original_excerpt'] : wp_trim_words(wp_strip_all_tags($incoming['original_content'] ?? ''), 40);
                 ?>
-                <div class="postbox">
+                <div class="postbox" id="<?php echo esc_attr('incoming-' . $incoming_id); ?>">
                     <h2 class="hndle">
-                        <?php echo esc_html(get_the_title($post)); ?>
+                        <?php echo esc_html($incoming['original_title'] ?? __('(untitled)', 'wpyvr')); ?>
                         <span class="dashicons dashicons-external"></span>
                         <small><?php echo esc_html($source_site); ?></small>
                     </h2>
                     <div class="inside">
+                        <p><em><?php echo esc_html($excerpt); ?></em></p>
                         <p><strong><?php esc_html_e('Raw Categories', 'wpyvr'); ?>:</strong>
-                            <?php echo $raw_categories ? esc_html(implode(', ', $raw_categories)) : esc_html__('(없음)', 'wpyvr'); ?>
+                            <?php echo !empty($raw_categories) ? esc_html(implode(', ', $raw_categories)) : esc_html__('(없음)', 'wpyvr'); ?>
                         </p>
                         <p><strong><?php esc_html_e('Raw Tags', 'wpyvr'); ?>:</strong>
-                            <?php echo $raw_tags ? esc_html(implode(', ', $raw_tags)) : esc_html__('(없음)', 'wpyvr'); ?>
+                            <?php echo !empty($raw_tags) ? esc_html(implode(', ', $raw_tags)) : esc_html__('(없음)', 'wpyvr'); ?>
                         </p>
 
                         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                            <?php wp_nonce_field('wpyvr_hub_map_' . $post->ID); ?>
+                            <?php wp_nonce_field('wpyvr_hub_map_' . $incoming_id); ?>
                             <input type="hidden" name="action" value="wpyvr_hub_map_terms" />
-                            <input type="hidden" name="post_id" value="<?php echo esc_attr($post->ID); ?>" />
+                            <input type="hidden" name="incoming_id" value="<?php echo esc_attr($incoming_id); ?>" />
 
-                            <?php wpyvr_hub_render_mapping_table($post->ID, $raw_categories, $category_terms, $category_suggestions, 'category'); ?>
-                            <?php wpyvr_hub_render_mapping_table($post->ID, $raw_tags, $tag_terms, $tag_suggestions, 'post_tag'); ?>
+                            <?php wpyvr_hub_render_mapping_table($incoming_id, $source_site, $raw_categories, $category_terms, $category_suggestions, 'category'); ?>
+                            <?php wpyvr_hub_render_mapping_table($incoming_id, $source_site, $raw_tags, $tag_terms, $tag_suggestions, 'post_tag'); ?>
 
                             <p>
                                 <button type="submit" class="button button-primary"><?php esc_html_e('맵핑 저장', 'wpyvr'); ?></button>
@@ -86,7 +99,7 @@ function wpyvr_hub_render_incoming_posts(): void {
     <?php
 }
 
-function wpyvr_hub_render_mapping_table(int $post_id, array $raw_terms, array $options, array $suggestions, string $taxonomy): void {
+function wpyvr_hub_render_mapping_table(int $incoming_id, string $source_site, array $raw_terms, array $options, array $suggestions, string $taxonomy): void {
     $label = 'category' === $taxonomy ? __('카테고리 맵핑', 'wpyvr') : __('태그 맵핑', 'wpyvr');
     ?>
     <h3><?php echo esc_html($label); ?></h3>
@@ -107,7 +120,7 @@ function wpyvr_hub_render_mapping_table(int $post_id, array $raw_terms, array $o
             <?php foreach ($raw_terms as $raw_term) : ?>
                 <?php
                 $field_key = base64_encode($raw_term);
-                $mapped_id = wpyvr_hub_get_mapped_term_id(wpyvr_hub_get_source_site($post_id), $taxonomy, $raw_term);
+                $mapped_id = wpyvr_hub_get_mapped_term_id($source_site, $taxonomy, $raw_term);
                 $suggestion = $suggestions[$raw_term] ?? null;
                 $selected = $mapped_id ?: ($suggestion['id'] ?? 0);
                 ?>
@@ -152,45 +165,76 @@ function wpyvr_hub_handle_mapping_submission(): void {
         wp_die(__('권한이 없습니다.', 'wpyvr'));
     }
 
-    $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
-    if (!$post_id) {
-        wp_die(__('포스트가 유효하지 않습니다.', 'wpyvr'));
+    $incoming_id = isset($_POST['incoming_id']) ? absint($_POST['incoming_id']) : 0;
+    if (!$incoming_id) {
+        wp_die(__('Incoming 포스트가 유효하지 않습니다.', 'wpyvr'));
     }
 
-    check_admin_referer('wpyvr_hub_map_' . $post_id);
+    check_admin_referer('wpyvr_hub_map_' . $incoming_id);
 
-    $source_site = wpyvr_hub_get_source_site($post_id);
+    $incoming = wpyvr_hub_get_incoming_post($incoming_id);
+    if (empty($incoming)) {
+        wp_die(__('대상 레코드를 찾을 수 없습니다.', 'wpyvr'));
+    }
+
+    $source_site = $incoming['source_site'] ?? '';
     $mapped_categories = wpyvr_hub_process_term_submission($source_site, 'category', $_POST['mapped_category'] ?? array(), $_POST['new_category'] ?? array());
     $mapped_tags = wpyvr_hub_process_term_submission($source_site, 'tag', $_POST['mapped_post_tag'] ?? array(), $_POST['new_post_tag'] ?? array());
 
-    if (!empty($mapped_categories)) {
-        wp_set_post_terms($post_id, $mapped_categories, 'category', false);
+    $update_payload = array(
+        'mapped_category_ids' => wp_json_encode($mapped_categories, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        'mapped_tag_ids'      => wp_json_encode($mapped_tags, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    );
+
+    $publish_now = !empty($_POST['publish_now']);
+    if (!$publish_now) {
+        $update_payload['status'] = 'mapped';
     }
 
-    if (!empty($mapped_tags)) {
-        wp_set_post_terms($post_id, $mapped_tags, 'post_tag', false);
-    }
+    wpyvr_hub_update_incoming_post($incoming_id, $update_payload);
 
-    if (!empty($_POST['publish_now'])) {
-        wp_update_post(
+    if ($publish_now) {
+        $post_id = wpyvr_hub_publish_incoming_post($incoming, $mapped_categories, $mapped_tags);
+        if (is_wp_error($post_id)) {
+            wp_safe_redirect(add_query_arg('hub_error', rawurlencode($post_id->get_error_message()), menu_page_url('wpyvr-hub', false)));
+            exit;
+        }
+
+        wpyvr_hub_update_incoming_post(
+            $incoming_id,
             array(
-                'ID'          => $post_id,
-                'post_status' => 'publish',
+                'status'           => 'published',
+                'published_post_id'=> $post_id,
+                'published_at'     => current_time('mysql'),
+                'editor_user_id'   => get_current_user_id(),
             )
         );
-        wpyvr_hub_reset_post_interactions($post_id);
+
+        wpyvr_hub_log_event(
+            array(
+                'post_id'     => $post_id,
+                'source_site' => $source_site,
+                'source_slug' => sanitize_title($incoming['source_slug'] ?? ''),
+                'status'      => 'published',
+                'message'     => 'Incoming post published',
+            )
+        );
+
+        wp_safe_redirect(add_query_arg('hub_notice', rawurlencode(__('포스트가 발행되었습니다.', 'wpyvr')), menu_page_url('wpyvr-hub', false)));
+        exit;
     }
 
     wpyvr_hub_log_event(
         array(
-            'post_id'     => $post_id,
+            'post_id'     => null,
             'source_site' => $source_site,
-            'status'      => empty($_POST['publish_now']) ? 'mapped' : 'published',
-            'message'     => empty($_POST['publish_now']) ? 'Terms mapped' : 'Mapped and published',
+            'source_slug' => sanitize_title($incoming['source_slug'] ?? ''),
+            'status'      => 'mapped',
+            'message'     => 'Terms mapped for incoming post',
         )
     );
 
-    wp_safe_redirect(add_query_arg('updated', 'true', menu_page_url('wpyvr-hub', false)));
+    wp_safe_redirect(add_query_arg('hub_notice', rawurlencode(__('맵핑이 저장되었습니다.', 'wpyvr')), menu_page_url('wpyvr-hub', false)));
     exit;
 }
 
