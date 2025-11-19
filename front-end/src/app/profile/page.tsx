@@ -70,8 +70,8 @@ export default function ProfilePage() {
         }
         setPushTokenError(null)
       } catch (err) {
-        console.error("Failed to load push token:", err)
-        setPushTokenError("푸시 토큰 정보를 불러오지 못했습니다.")
+          console.error("Failed to load push token:", err)
+          setPushTokenError("Unable to load token info.")
       } finally {
         setPushTokenLoading(false)
       }
@@ -91,10 +91,10 @@ export default function ProfilePage() {
       setPushTokenError(null)
       setCopyFeedback("idle")
     } catch (err) {
-      console.error("Failed to generate push token:", err)
-      setPushTokenError(
-        err instanceof Error ? err.message : "푸시 토큰 생성에 실패했습니다."
-      )
+        console.error("Failed to generate push token:", err)
+        setPushTokenError(
+          err instanceof Error ? err.message : "Token generation failed."
+        )
     } finally {
       setIsTokenUpdating(false)
     }
@@ -110,10 +110,10 @@ export default function ProfilePage() {
       setPushTokenError(null)
       setCopyFeedback("idle")
     } catch (err) {
-      console.error("Failed to revoke push token:", err)
-      setPushTokenError(
-        err instanceof Error ? err.message : "푸시 토큰 삭제에 실패했습니다."
-      )
+        console.error("Failed to revoke push token:", err)
+        setPushTokenError(
+          err instanceof Error ? err.message : "Token deletion failed."
+        )
     } finally {
       setIsTokenUpdating(false)
     }
@@ -128,8 +128,8 @@ export default function ProfilePage() {
         setTimeout(() => setCopyFeedback("idle"), 2000)
       }
     } catch (err) {
-      console.error("Failed to copy push token:", err)
-      setPushTokenError("클립보드 복사에 실패했습니다.")
+        console.error("Failed to copy push token:", err)
+        setPushTokenError("Failed to copy token to clipboard.")
     }
   }
 
@@ -238,16 +238,16 @@ export default function ProfilePage() {
             <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#00749C]/10 text-[#00749C]">
               <User size={18} />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-[#444140]">Hub Push Token</h2>
-              <p className="text-sm text-gray-600">
-                WPYVR Connect 플러그인에 붙여넣을 토큰을 발급하거나 재발급할 수 있습니다.
-              </p>
-            </div>
+              <div>
+                <h2 className="text-lg font-semibold text-[#444140]">Hub Push Token</h2>
+                <p className="text-sm text-gray-600">
+                  Generate a long-lived token for the WPYVR Connect plugin. Use this token in the member site settings.
+                </p>
+              </div>
           </div>
 
           {pushTokenLoading ? (
-            <p className="mt-4 text-sm text-gray-600">토큰 정보를 불러오는 중...</p>
+              <p className="mt-4 text-sm text-gray-600">Loading token info...</p>
           ) : (
             <div className="mt-4 space-y-4">
               {pushTokenError && (
@@ -311,7 +311,7 @@ export default function ProfilePage() {
                       htmlFor="origin-site-url"
                       className="text-sm font-medium text-gray-700"
                     >
-                      Origin Site URL (선택)
+                        Origin Site URL (optional)
                     </label>
                     <input
                       id="origin-site-url"

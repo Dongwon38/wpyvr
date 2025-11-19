@@ -328,14 +328,14 @@ function wpyvr_hub_notify_admin(int $post_id, array $payload): void {
     $author = sanitize_text_field($payload['author'] ?? '');
     $edit_link = get_edit_post_link($post_id, '');
 
-    $subject = sprintf('[WPYVR Hub] 새 글 대기 - %s', $title);
+    $subject = sprintf('[WPYVR Hub] New submission awaiting review – %s', $title);
     $body_lines = array(
-        '새 글이 허브에 등록되어 검수를 기다리고 있습니다.',
+        'A new post has arrived on the hub and is waiting for moderation.',
         '',
-        '제목: ' . $title,
-        '원본 사이트: ' . $source_site,
-        '작성자: ' . $author,
-        '검수 링크: ' . $edit_link,
+        'Title: ' . $title,
+        'Source site: ' . $source_site,
+        'Author: ' . $author,
+        'Review link: ' . $edit_link,
     );
 
     wp_mail($admin_email, $subject, implode("\n", $body_lines));
