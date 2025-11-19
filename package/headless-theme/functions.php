@@ -74,6 +74,7 @@ require_once get_template_directory() . '/inc/register-acf.php';
 require_once get_template_directory() . '/inc/functions-contact.php';
 
 // Hub integration stack
+require_once get_template_directory() . '/inc/wpyvr-connect-schema.php';
 require_once get_template_directory() . '/inc/wpyvr-connect-logger.php';
 require_once get_template_directory() . '/inc/wpyvr-connect-helpers.php';
 require_once get_template_directory() . '/inc/wpyvr-connect-hub.php';

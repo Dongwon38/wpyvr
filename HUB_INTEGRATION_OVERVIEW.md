@@ -9,15 +9,15 @@
 | 레이어 | 주요 책임 | 핵심 파일/디렉터리 |
 |--------|-----------|--------------------|
 | 멤버 워드프레스 (보내는 쪽) | 관리자 UI에서 허브 API URL/토큰 설정, 게시물 선택 푸시, 테스트 호출, publish 훅 기반 자동 푸시 | `package/plugins/wpyvr-connect/` |
-| 허브 워드프레스 (받는 쪽) | Firebase 토큰 검증, pending 저장, raw term 보존, 분류 맵핑, 좋아요/댓글/트렌드, 로깅/알림 | `package/headless-theme/inc/wpyvr-connect-*.php` |
+| 허브 워드프레스 (받는 쪽) | Firebase 토큰 검증, incoming 테이블 저장, raw term 보존, 분류 맵핑, 좋아요/댓글/트렌드, 로깅/알림 | `package/headless-theme/inc/wpyvr-connect-*.php` |
 | 프런트엔드 (Next.js) | 커뮤니티 최신/인기/트렌딩 뷰, 상세 페이지 좋아요/댓글 UI, 허브 REST 호출 | `front-end/src/app/community/`, `front-end/src/components/hub/`, `front-end/src/lib/hubApi.ts` |
 | 문서·테스트 | 변경 이력 및 체크리스트, QA/모니터링 시나리오 | `INTEGRATION_PLAN.md`, `qa-checklist.md`, 현재 문서 |
 
 데이터 플로우:
 
 1. 멤버 사이트에서 관리자가 `WPYVR Connect` 플러그인 페이지에서 포스트를 선택하거나 publish 시 자동 푸시 → 허브 API `/wp-json/hub/v1/receive-post`.
-2. 허브는 Firebase 토큰 검증 → UID ↔ WordPress user_id 매핑 → 포스트를 `pending`으로 생성하고 raw 분류/작성자/썸네일 정보를 메타로 저장.
-3. 관리자 `Hub → Incoming Posts` 화면에서 raw category/tag를 허브 표준 분류에 매핑 후 Publish Now 실행.
+2. 허브는 Firebase 토큰 검증 → UID ↔ WordPress user_id 매핑 → `wpyvr_hub_save_incoming_post()`로 `wp_hub_incoming_posts`에 원본 payload/카테고리/태그/썸네일을 저장하고 로그를 적재한다(이 단계에서는 `wp_posts` 변경 없음).
+3. 관리자 `Hub → Incoming Posts` 화면에서 해당 레코드를 불러와 raw category/tag를 허브 표준 분류에 매핑 후 `Publish Now` 시 `wpyvr_hub_publish_incoming_post()`가 실제 `wp_posts` 글을 생성하고 `hub_incoming_posts` 상태를 `published`로 전환한다.
 4. 좋아요/댓글/트렌드 지표는 `/wp-json/hub/v1/like`, WP 댓글, 크론(`wpyvr_hub_trend_event`)을 통해 update → 프런트엔드가 `hubApi.ts`로 조회.
 5. 모든 실패 이벤트는 `/wp-content/logs/hub.log`에 기록되고, 3회 연속 실패 시 관리자에게 이메일 알림 전송.
 
@@ -43,9 +43,10 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
 
 | 파일 | 기능 |
 |------|------|
-| `wpyvr-connect-hub.php` | `/wp-json/hub/v1/receive-post` 수신, Firebase 검증(`WPYVR_FIREBASE_API_KEY`), pending 저장, 메타+로그 기록 |
-| `wpyvr-connect-admin.php` | 관리자 `Hub → Incoming Posts` 화면, raw term 노출, 추천, term 생성/맵핑 저장, Publish Now |
-| `wpyvr-connect-helpers.php` | pending 쿼리, raw/meta decode, term 추천·맵핑(`hub_term_map`), 로그 래퍼, IP hash |
+| `wpyvr-connect-schema.php` | `dbDelta()` 기반으로 `hub_incoming_posts` 등 허브 통합 전용 테이블 생성 |
+| `wpyvr-connect-hub.php` | `/wp-json/hub/v1/receive-post` 수신, Firebase 검증(`WPYVR_FIREBASE_API_KEY`), `hub_incoming_posts` 저장, 메타+로그 기록 |
+| `wpyvr-connect-admin.php` | 관리자 `Hub → Incoming Posts` 화면, incoming 테이블 조회, raw term 노출/추천, term 생성·맵핑 저장, Publish Now |
+| `wpyvr-connect-helpers.php` | incoming 테이블 쿼리, raw/meta decode, term 추천·맵핑(`hub_term_map`), 로그 래퍼, IP hash |
 | `wpyvr-connect-like.php` | `/wp-json/hub/v1/like` (POST/DELETE), `/wp-json/hub/v1/posts/<id>/stats`, Firebase or 익명 actor 식별 |
 | `wpyvr-connect-trend.php` | 포스트 메타 REST 노출, 댓글 hook로 `comments_count` 갱신, `wpyvr_hub_trend_event` 크론으로 hot score 공식 적용 |
 | `wpyvr-connect-logger.php` | `/wp-content/logs/` 생성, `wpyvr_hub_log_file()`, 3회 실패 시 관리자 이메일 경고 |
@@ -89,11 +90,53 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
 
 ---
 
+### 2.6 (Legacy) Storage Model & Limitations
+
+_2025-11-19 커스텀 테이블 도입 이전 구조 기록용._
+
+**How incoming posts were stored (legacy)**
+- `rest_api_init`에서 등록된 `wpyvr_hub_receive_post()` (`wpyvr-connect-hub.php`)가 `/wp-json/hub/v1/receive-post` 요청을 처리한다. Firebase/Push Token 검증을 통과한 뒤 `wpyvr_hub_prepare_post_array()`를 통해 `post_type = post`, `post_status = pending`, `post_author = $user_id`인 배열을 구성한다.
+- `wpyvr_hub_upsert_post()`가 항상 코어 `wp_posts` 테이블을 대상으로 `wp_insert_post()`/`wp_update_post()`를 호출해 “검수 대기” 글을 작성한다. 슬러그 충돌 시 `wp_unique_post_slug()`를 통해 강제로 고유 슬러그를 만들어 코어 테이블 내에서 관리한다.
+- 원본 사이트 정보와 정규화 전 데이터를 `wpyvr_hub_store_meta()`가 `wp_postmeta`에 기록한다. 저장되는 메타는 `hub_source_site`, `hub_source_slug`, `hub_source_author`, `hub_featured_image_url`, `hub_raw_categories`, `hub_raw_tags`, `hub_firebase_uid`, `_hub_likes_count`, `_hub_comments_count`, `_hub_hot_score` 등이다.
+
+**Why this is a problem**
+- 허브의 공식 Blog/Guides도 동일한 `wp_posts`를 사용하므로, 외부 멤버 글이 모두 `post` 타입 `pending` 상태로 섞여 버린다. 관리자 화면/REST 응답/쿼리에서 허브 공식 글과 멤버 글을 구분하기가 어려워지고, 실수로 발행·삭제될 위험이 있다.
+- 메타 데이터가 사실상 “허브 통합 전용 스키마” 역할을 하지만 `wp_postmeta`에 분산되어 있어 대량 쿼리 비용이 높고, 카테고리 맵핑/상태 추적/로그 분석 시 join·meta_query에 의존해야 한다.
+- 장기적으로 member→hub 파이프라인이 늘어나면 `pending` 글 수가 폭발하고, 슬러그 충돌/고유성 해결 로직 때문에 정상적인 허브 편집 워크플로우에도 영향을 미칠 수 있다.
+
+**What really belongs in a hub-integration data model**
+- 식별 정보: origin site slug/URL (`hub_source_site`, `hub_source_slug`), Firebase UID, push token/프로필 ID, 원본 post ID.
+- 원본 콘텐츠 스냅샷: 제목/본문/요약, 썸네일, 작성자, 원문 permalink, 원본 카테고리/태그(`hub_raw_categories`, `hub_raw_tags`).
+- 허브 처리 상태: pending/approved/rejected, 매핑된 카테고리·태그, 배정된 hub editor, publish 시각, publish된 `wp_posts.ID`.
+- 운영 데이터: 맵핑 로그, 알림 상황, 추가 검수 메모 등.
+
+위와 같은 데이터는 전용 허브 테이블 (`hub_incoming_posts`, `hub_normalized_posts` 등)로 분리되어야 하며, `wp_posts`에는 최종 승인된 게시물만 반영되도록 리팩터링이 필요하다.
+
+---
+
+### 2.7 Custom Incoming Tables & Publish Flow (2025-11-19)
+
+- `wpyvr_connect_schema.php`가 테마 초기화 시 `{$wpdb->prefix}hub_incoming_posts` 테이블을 생성한다. 핵심 컬럼:
+  - 식별자: `firebase_uid`, `user_id`, `source_site`, `source_site_host`, `source_slug`
+  - 원본 스냅샷: `original_title`, `original_content`, `original_excerpt`, `original_author`, `original_featured_image`, `original_categories`, `original_tags`, `raw_payload`
+  - 허브 처리 상태: `status` (`pending`/`mapped`/`published`/`rejected`), `mapped_category_ids`, `mapped_tag_ids`, `editor_user_id`, `published_post_id`, `published_at`, `timestamps`
+- `/wp-json/hub/v1/receive-post`는 더 이상 `wp_insert_post()`를 호출하지 않는다. `wpyvr_hub_save_incoming_post()`가 모든 payload를 `hub_incoming_posts`에 저장하고, `wpyvr_hub_log_event()`은 `post_id` 없이 소스/슬러그만 기록한다.
+- 관리자 UI(`Hub → Incoming Posts`)는 `hub_incoming_posts`에서 `pending`/`mapped` 상태 레코드를 읽어 Raw terms, 추천 매핑, 최근 맵핑 결과를 표시한다. 저장 시 `hub_term_map`과 `hub_incoming_posts.mapped_*` 컬럼이 동시에 갱신된다.
+- `Publish Now` 클릭 시 `wpyvr_hub_publish_incoming_post()`가 호출되어:
+  1. `wp_posts`에 최종 본문을 `publish` 상태로 생성
+  2. 맵핑된 분류(또는 `hub_term_map` 기반 auto-map)를 적용
+  3. `wpyvr_hub_store_meta()`와 `wpyvr_hub_reset_post_interactions()`로 기존 `_hub_*` 메타를 초기화
+  4. `hub_incoming_posts`에 `status=published`, `published_post_id`, `published_at`, `editor_user_id` 기록
+- 디버깅 순서:
+  1. `wp_hub_incoming_posts`에서 `source_site`+`source_slug`로 레코드 확인 (`status`/`raw_payload`)
+  2. 맵핑 저장 시 `mapped_*` JSON과 `hub_term_map` 모두 업데이트됐는지 검사
+  3. Publish 후 실제 `wp_posts` ID와 `hub_log`/`hub_push_logs` 상태를 동기화해 문제가 없는지 확인
+
 ## 3. 주요 REST Endpoints
 
 | Method | Endpoint | 설명 |
 |--------|----------|------|
-| POST | `/wp-json/hub/v1/receive-post` | Firebase Bearer 토큰 검증 후 post를 pending으로 저장 |
+| POST | `/wp-json/hub/v1/receive-post` | Firebase Bearer 토큰 검증 후 payload를 `hub_incoming_posts`에 저장 |
 | POST / DELETE | `/wp-json/hub/v1/like` | 좋아요 추가/취소 (Firebase 또는 익명 IP hash) |
 | GET | `/wp-json/hub/v1/posts/{id}/stats` | likes/comments/hot score 조회 |
 | GET / POST / DELETE | `/wp-json/custom-profile/v1/push-token` | Hub 프로필에서 Push Token 조회/발급/삭제 (JWT + CORS 필수) |
@@ -127,12 +170,12 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
    - `콘텐츠 목록 및 수동 푸시`에서 선택해 전송(로그 확인 가능).
 
 2. **허브 Incoming Posts 검수**
-   - `Hub → Incoming Posts` 메뉴에서 pending 글/Raw terms 확인.
+   - `Hub → Incoming Posts` 메뉴에서 `hub_incoming_posts`의 `pending`/`mapped` 레코드를 불러 Raw terms를 확인한다.
    - 추천 분류 자동 채워짐(50% 이상 유사도) → 수동 선택/신규 생성 가능.
    - `Publish Now` 클릭 시:
-     - 허브 분류를 적용하고 `post_status=publish`.
-     - `_hub_*` 지표 초기화.
-     - 로그 테이블(`hub_push_logs`) 및 파일(`hub.log`) 기록.
+      - 허브 분류를 적용하고 `wp_posts`에 `post_status=publish` 글 생성.
+      - `_hub_*` 지표 초기화, `hub_incoming_posts`에는 `published_post_id`/`published_at`/`editor_user_id`가 저장된다.
+      - 로그 테이블(`hub_push_logs`) 및 파일(`hub.log`) 기록.
 
 3. **좋아요/댓글/트렌드**
    - 프런트엔드가 `/hub/v1/like`(POST/DELETE) 및 `/posts/{id}/stats` 호출. 허브 서버 CORS 설정에 `DELETE` 허용이 포함돼야 unlike가 정상 동작한다.
@@ -153,7 +196,7 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
    - 프런트엔드: `NEXT_PUBLIC_HUB_WORDPRESS_URL`.
 
 2. **QA 체크리스트 (`qa-checklist.md`)**  
-   - 푸시 → pending 저장, raw 메타 검증  
+   - 푸시 → `wp_hub_incoming_posts` 적재, raw 메타 검증  
    - 잘못된 토큰 → 403 + 로그  
    - 맵핑 UI에서 저장/Publish flow 확인  
    - 좋아요 중복 방지, hot score 공식 검증  

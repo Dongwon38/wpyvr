@@ -5,6 +5,8 @@
 - Firebase 기반 인증 체계와 push token을 이용해 멤버 사이트와 허브 간 신뢰할 수 있는 연결을 수립한다.
 - 허브에서는 원본 분류 정보를 메타로 보관하고, 표준 분류 UI를 통해 정규화 후 발행한다.
 - 향후 좋아요, 댓글, 트렌드 지표까지 확장 가능한 데이터 스키마를 구축한다.
+- **진단 메모 (2025-11-19):** 현재 `wpyvr_hub_receive_post()`가 모든 멤버 콘텐츠를 `wp_posts` (`post_type=post`, `status=pending`)에 직접 적재하고, 원본·상태 메타(`hub_source_site`, `hub_raw_*`, `_hub_hot_score` 등)를 `wp_postmeta`에 흩어 저장한다. 이로 인해 허브 공식 글과 검수 대기 글이 같은 테이블에 섞이며, 장기적으로 구분·정리·스케일링이 어려운 구조다. 원본 사이트 식별자, raw 카테고리/태그, 승인 상태 등은 전용 허브 테이블로 이전해야 한다.
+- **업데이트 (2025-11-19):** `wp_hub_incoming_posts` 커스텀 테이블이 도입되어 `/hub/v1/receive-post` 데이터는 전용 테이블에 저장되고, `Publish Now` 시점에만 실제 `wp_posts`가 생성된다. 관리자 UI와 로그는 새 테이블을 기준으로 동작한다.
 
 ## 개발 단계별 체크리스트
 - [x] 인증/보안: Firebase 토큰 검증 및 push_token 발급
@@ -34,6 +36,7 @@
 | 2025-11-15 | Prompt 7: QA 체크리스트 · 모니터링 로거 | AI Agent | qa-checklist.md / wpyvr-connect-logger.php |
 | 2025-11-17 | Frontend Community 통합 및 플러그인 영문화/기본값 업데이트 | AI Agent | `/community` 실데이터 연동, WPYVR Connect 기본값/툴팁 정비 |
 | 2025-11-19 | custom-auth CORS 확장 및 QA 메모 업데이트 | AI Agent | DELETE 허용(프로필 Push Token revoke / Hub unlike) + 문서 동기화 |
+| 2025-11-19 | Hub incoming posts custom table + Publish flow refactor | AI Agent | `wp_hub_incoming_posts`, `wpyvr_connect_schema/hub/admin` |
 
 ## 사용 가이드
 - **수신 글 검수 & 퍼블리시 절차**  

@@ -48,4 +48,35 @@ CREATE TABLE IF NOT EXISTS `wp_hub_push_logs` (
     CONSTRAINT `fk_hub_push_logs_post` FOREIGN KEY (`post_id`) REFERENCES `wp_posts` (`ID`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `wp_hub_incoming_posts` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `firebase_uid` VARCHAR(128) NOT NULL DEFAULT '',
+    `user_id` BIGINT UNSIGNED NULL,
+    `source_site` VARCHAR(255) NOT NULL DEFAULT '',
+    `source_site_host` VARCHAR(191) NOT NULL DEFAULT '',
+    `source_slug` VARCHAR(255) NOT NULL DEFAULT '',
+    `source_post_id` VARCHAR(64) NULL,
+    `source_permalink` TEXT NULL,
+    `original_title` TEXT NOT NULL,
+    `original_content` LONGTEXT NOT NULL,
+    `original_excerpt` TEXT NULL,
+    `original_author` VARCHAR(255) NULL,
+    `original_featured_image` TEXT NULL,
+    `original_categories` LONGTEXT NULL,
+    `original_tags` LONGTEXT NULL,
+    `status` VARCHAR(20) NOT NULL DEFAULT 'pending',
+    `mapped_category_ids` LONGTEXT NULL,
+    `mapped_tag_ids` LONGTEXT NULL,
+    `editor_user_id` BIGINT UNSIGNED NULL,
+    `published_post_id` BIGINT UNSIGNED NULL,
+    `received_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `published_at` DATETIME NULL,
+    `raw_payload` LONGTEXT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_incoming_status` (`status`, `received_at`),
+    KEY `idx_incoming_source` (`source_site`, `source_slug`),
+    KEY `idx_incoming_post` (`published_post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 COMMIT;
