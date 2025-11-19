@@ -2,6 +2,8 @@
 
 A modern, elegant, content-driven community website built with **Next.js 16**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**.
 
+> **Note:** The legacy `/guides` section has been retired. Community features now live entirely under `/community`.
+
 ## 🌟 Features
 
 - ✨ **Modern Design** - Clean, spacious layout with smooth animations
@@ -44,10 +46,6 @@ src/
 │   ├── page.tsx                    # Home page
 │   ├── layout.tsx                  # Root layout with Navbar & Footer
 │   ├── globals.css                 # Global styles
-│   ├── guides/
-│   │   ├── page.tsx               # Guides listing page
-│   │   └── [slug]/
-│   │       └── page.tsx           # Individual guide page
 │   ├── community/
 │   │   ├── page.tsx               # Community posts listing
 │   │   └── [slug]/
@@ -63,7 +61,7 @@ src/
 │   ├── TagChip.tsx                # Tag component
 │   └── Sidebar.tsx                # Sidebar for detail pages
 └── lib/
-    ├── mockData.ts                # Mock data for guides and posts
+    ├── mockData.ts                # Mock data for posts
     └── utils.ts                   # Utility functions
 ```
 
@@ -94,14 +92,9 @@ src/
 
 ### Home (`/`)
 - Hero section with animated elements
-- Latest guides showcase
-- Trending community posts
-- Feature highlights
-
-### Guides (`/guides`)
-- Grid layout of editorial articles
-- Category filtering
-- Individual guide detail pages (`/guides/[slug]`)
+- Recent community highlights
+- Feature callouts
+- CTA blocks driving to events and members
 
 ### Community (`/community`)
 - Community posts with user avatars
@@ -132,12 +125,6 @@ src/
 - Gradient text effects
 - Two CTA buttons
 - Statistics display
-
-### ArticleCard
-- Category badge
-- Image placeholder
-- Title, excerpt, and metadata
-- Hover effects
 
 ### PostCard
 - Author avatar
@@ -171,23 +158,7 @@ This allows easy deployment to static hosting services.
 
 The project uses mock data from `src/lib/mockData.ts`. This structure is designed to easily integrate with a headless CMS (like WordPress REST API) later.
 
-### Data Structure
-
-**Guides:**
-```typescript
-{
-  slug: string;
-  title: string;
-  author: string;
-  category: string;
-  excerpt: string;
-  date: string;
-  content?: string;
-  image?: string;
-}
-```
-
-**Posts:**
+### Community Posts
 ```typescript
 {
   slug: string;
