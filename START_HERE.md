@@ -300,6 +300,18 @@ module.exports = {
 | Find API endpoints | BACKEND_QUICK_REFERENCE.md |
 | Understand all docs | README_BACKEND_ALIGNMENT.md |
 
+## 🔗 Hub Integration Track
+- **INTEGRATION_PLAN.md** – daily source of truth for WPYVR Connect ↔ Hub milestones, QA status, and change log.
+- **HUB_INTEGRATION_OVERVIEW.md** – engineering diagram + file map for the receiver API, trend calculators, likes, and profile token flows.
+- **qa-checklist.md** – smoke + monitoring list used before deploying plugin/theme/frontend changes.
+- **FIREBASE_STORAGE_UPDATE.md / AVATAR_* guides** – cross-reference when profile uploads or Firebase credentials change.
+
+## 🧭 Documentation Workflow
+1. **Before coding**, confirm the relevant spec (mapping, integration, QA, or feature guide) matches reality. If not, update the doc first.
+2. **While implementing**, note any schema/endpoint/type changes directly in the doc you are touching.
+3. **After testing**, record results in `INTEGRATION_PLAN.md` (status table) and check items off in `qa-checklist.md`.
+4. **When handing off**, point teammates to this `START_HERE.md` flow plus the updated spec so future work starts from the same baseline.
+
 ---
 
 ## 🎉 Summary

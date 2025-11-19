@@ -53,19 +53,32 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
 메타 키:  
 `hub_source_site`, `hub_source_slug`, `hub_source_author`, `hub_featured_image_url`, `hub_raw_categories`, `hub_raw_tags`, `_hub_likes_count`, `_hub_comments_count`, `_hub_hot_score`.
 
-### 2.3 프런트엔드 — `front-end`
+### 2.3 프로필 & Push Token — `package/headless-theme/inc/custom-profile.php`
+
+- `wp_user_profiles` 테이블을 생성/업데이트( firebase_uid, push_token, hub_connected, origin_site_url, last_push_at 등).
+- REST Routes:
+  - `GET /wp-json/custom-profile/v1/push-token` → 현재 토큰/Origin/Hub 연결 여부 조회.
+  - `POST /wp-json/custom-profile/v1/push-token` → 새 토큰 발급 + origin_site_url 저장.
+  - `DELETE /wp-json/custom-profile/v1/push-token` → 토큰 삭제, `hub_connected=0`, `push_token=NULL`.
+- 인증/보안:
+  - `custom-auth.php`가 JWT Bearer 토큰을 검증하고, 허용된 오리진(`http://localhost:3000`, `https://wpyvr.bitebuddy.ca`)에서만 `Access-Control-Allow-Methods: GET, POST, DELETE, PUT, PATCH, OPTIONS` 헤더를 반환한다.
+  - 이 CORS 구성이 프로필 페이지의 토큰 revoke와 `/hub/v1/like` DELETE(unlike) 모두에 필요하다.
+
+### 2.4 프런트엔드 — `front-end`
 
 - `src/lib/hubApi.ts`: 허브 포스트/통계/좋아요/댓글 REST 래퍼 (`fetchHubPosts`, `fetchHubPost`, `likeHubPost`, `submitHubComment` 등). slug가 비어 있는 포스트는 ID fallback을 사용.
+- `src/lib/profileApi.ts`: 프로필 및 Push Token(`fetchPushTokenInfo`, `generatePushToken`, `revokePushToken`)을 호출하며, DELETE 실패 시 CORS 헤더를 확인한다.
 - 컴포넌트:
   - `components/hub/HubTabs.tsx`, `HubPostList.tsx`, `HubPostCard.tsx` — 최신/인기/트렌딩 탭 UI(placeholder 이미지/작성자 표기 포함).
   - `components/hub/HubPostDetail.tsx` — 상세 페이지 본문 + `HubLikeButton`, `HubCommentForm`, 원문 링크.
   - `components/hub/HubLikeButton.tsx`, `HubCommentForm.tsx` — 실시간 좋아요/댓글 제출 UI(영문 카피).
 - 페이지:
+    - `app/profile/page.tsx` → Push Token 발급/재발급/삭제 UI.
   - `app/community/page.tsx` → 목록 탭 (홈페이지 Recent Posts 섹션과 동일 데이터를 사용하며 “View All Posts” CTA 제공).
   - `app/community/[slug]/page.tsx` → 상세.
   - `/hub` 라우트는 제거 → 기존 링크는 `/community`로 리디렉션.
 
-### 2.4 데이터 스키마 & 문서
+### 2.5 데이터 스키마 & 문서
 
 | 파일 | 내용 |
 |------|------|
@@ -83,6 +96,7 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
 | POST | `/wp-json/hub/v1/receive-post` | Firebase Bearer 토큰 검증 후 post를 pending으로 저장 |
 | POST / DELETE | `/wp-json/hub/v1/like` | 좋아요 추가/취소 (Firebase 또는 익명 IP hash) |
 | GET | `/wp-json/hub/v1/posts/{id}/stats` | likes/comments/hot score 조회 |
+| GET / POST / DELETE | `/wp-json/custom-profile/v1/push-token` | Hub 프로필에서 Push Token 조회/발급/삭제 (JWT + CORS 필수) |
 | POST | `/wp-json/wp/v2/comments` | 프런트엔드에서 댓글 등록 (`firebase_token` 지원) |
 | GET | `/wp-json/wp/v2/posts` | `_hub_*` 메타가 REST로 노출되므로 정렬/필터 가능 |
 
@@ -108,6 +122,7 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
 1. **WPYVR Connect 플러그인 설정**
    - `Hub API URL`, `Push Token`, `Origin Site URL`, `Automatic Push` 여부 입력 (기본값은 허브 본서버 & `home_url()`).
    - Push Token은 허브 웹사이트 프로필 페이지(<https://wpyvr.bitebuddy.ca/profile>)에서 발급 → 발급 후 플러그인에 붙여넣는다.
+   - 프로필 페이지에서 `Generate` / `Regenerate` / `Revoke` 버튼이 `custom-profile/v1/push-token`을 호출한다. Revoke는 `DELETE` 메서드를 사용하므로 허브 서버 CORS가 `DELETE`를 허용해야 한다.
    - `연결 테스트` 버튼으로 Firebase/허브 인증 확인.
    - `콘텐츠 목록 및 수동 푸시`에서 선택해 전송(로그 확인 가능).
 
@@ -148,7 +163,8 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
    - **푸시 실패**: 멤버 플러그인 `_wpyvr_last_*` 메타 & 관리자 UI 로그 → 허브 `hub.log`/`hub_push_logs` 확인.
    - **Firebase 인증 오류**: 허브 `.env` 또는 `wp-config.php`에 `WPYVR_FIREBASE_API_KEY` 설정 여부 체크.
    - **분류 미적용**: `hub_term_map`에 매핑 기록 (source_site/tax/term) 존재 여부, Publish 전후 `wp_set_post_terms` 호출 확인.
-    - **좋아요/트렌드 문제**: `wp_hub_likes` 데이터, `_hub_*` 메타 값, 크론 `wpyvr_hub_trend_event` 스케줄 상태 `wp cron event list`. DELETE 요청이 CORS로 차단되면 허브 서버의 `Access-Control-Allow-Methods`에 `DELETE`를 추가해야 unlike가 동작.
+   - **좋아요/트렌드 문제**: `wp_hub_likes` 데이터, `_hub_*` 메타 값, 크론 `wpyvr_hub_trend_event` 스케줄 상태 `wp cron event list`. DELETE 요청이 CORS로 차단되면 허브 서버의 `Access-Control-Allow-Methods`에 `DELETE`를 추가해야 unlike가 동작.
+   - **Push Token revoke 실패**: `custom-auth.php`가 허용하는 오리진/메서드를 확인하고, `wp_user_profiles` 테이블에서 `push_token`이 NULL로 변경되는지 살핀다.
    - **프런트 표시 오류**: `hubApi.ts` 호출 URL, REST 응답에 `_hub_*` 메타 노출되는지 확인 (`register_post_meta` 참고).
 
 4. **명령형 디버깅 스니펫**
@@ -172,8 +188,8 @@ Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://w
 ## 7. 참고 링크 / 파일 맵
 
 - 멤버 플러그인: `package/plugins/wpyvr-connect/`
-- 허브 인클루드: `package/headless-theme/inc/wpyvr-connect-*.php`
-- 프런트 커뮤니티 페이지: `front-end/src/app/community/` + `front-end/src/components/hub/`
+- 허브 인클루드: `package/headless-theme/inc/wpyvr-connect-*.php`, `custom-auth.php`, `custom-profile.php`
+- 프런트 커뮤니티/프로필 페이지: `front-end/src/app/community/`, `front-end/src/app/profile/`, `front-end/src/components/hub/`
 - 문서: `INTEGRATION_PLAN.md`, `qa-checklist.md`, `HUB_INTEGRATION_OVERVIEW.md`
 - 스키마: `package/hub-integration-schema.sql`
 
