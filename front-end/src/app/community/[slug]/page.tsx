@@ -1,9 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import HubPostDetail from "@/components/hub/HubPostDetail"
-import { fetchHubPost } from "@/lib/hubApi"
-
-export const dynamic = "force-dynamic"
+import { fetchHubPost, fetchHubPosts } from "@/lib/hubApi"
 
 type Props = {
   params: { slug: string }
@@ -21,6 +19,11 @@ export async function generateMetadata({ params }: Props) {
     title: `${post.title} | Community`,
     description: post.excerpt || "Community post detail",
   }
+}
+
+export async function generateStaticParams() {
+  const posts = await fetchHubPosts("latest", 20, 1, { onlyPushed: true })
+  return posts.map((post) => ({ slug: post.slug && post.slug.trim() ? post.slug : post.id.toString() }))
 }
 
 export default async function CommunityPostPage({ params }: Props) {
