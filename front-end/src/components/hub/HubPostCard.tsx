@@ -10,9 +10,10 @@ type Props = {
 
 const HubPostCard = ({ post }: Props) => {
   const author = post.sourceAuthor || post.author || "Unknown member"
+  const identifier = post.slug?.trim() ? post.slug : post.id.toString()
 
   return (
-    <Link href={`/community/${post.slug}`} className="block group">
+    <Link href={`/community/${identifier}`} className="block group">
       <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
         {post.featuredImage ? (
           <div className="relative h-56 w-full">

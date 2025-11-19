@@ -25,6 +25,16 @@ const HubPostDetail = ({ post }: Props) => {
           )}
           </p>
         <HubLikeButton postId={post.id} initialLikes={post.likesCount} initialComments={post.commentsCount} initialHotScore={post.hotScore} />
+          {post.sourceSite && (
+            <a
+              href={post.sourceSite}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-200"
+            >
+              Visit original post ↗
+            </a>
+          )}
       </div>
 
       <div className="prose max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: post.content }} />

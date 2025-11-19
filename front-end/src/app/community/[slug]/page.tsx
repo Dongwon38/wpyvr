@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import HubPostDetail from "@/components/hub/HubPostDetail"
-import { fetchHubPostBySlug } from "@/lib/hubApi"
+import { fetchHubPost } from "@/lib/hubApi"
 
 export const dynamic = "force-dynamic"
 
@@ -10,7 +10,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const post = await fetchHubPostBySlug(params.slug, { onlyPushed: true })
+  const post = await fetchHubPost(params.slug, { onlyPushed: true })
   if (!post) {
     return {
       title: "Community Post",
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function CommunityPostPage({ params }: Props) {
-  const post = await fetchHubPostBySlug(params.slug, { onlyPushed: true })
+  const post = await fetchHubPost(params.slug, { onlyPushed: true })
   if (!post) {
     notFound()
   }
