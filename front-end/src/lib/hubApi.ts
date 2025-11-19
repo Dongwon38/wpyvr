@@ -82,10 +82,12 @@ function transformPost(data: WPPost): HubPost {
   const rawTitle = normalizeRenderedField(data.title)
   const rawExcerpt = normalizeRenderedField(data.excerpt)
   const rawContent = normalizeRenderedField(data.content)
+  const normalizedSlug = typeof data.slug === "string" ? data.slug.trim() : ""
+  const fallbackSlug = String(data.id)
 
   return {
     id: data.id,
-    slug: data.slug,
+    slug: normalizedSlug || fallbackSlug,
     date: data.date,
     title: stripHtml(rawTitle),
     excerpt: stripHtml(rawExcerpt),
@@ -110,19 +112,37 @@ async function safeFetch<T>(input: RequestInfo, init?: RequestInit): Promise<T> 
   return response.json()
 }
 
-export async function fetchHubPosts(order: HubPostOrder = "latest", perPage = 12, page = 1): Promise<HubPost[]> {
+function filterPushedPosts(posts: HubPost[]): HubPost[] {
+  return posts.filter((post) => Boolean(post.sourceSite))
+}
+
+type FetchOptions = {
+  onlyPushed?: boolean
+}
+
+export async function fetchHubPosts(
+  order: HubPostOrder = "latest",
+  perPage = 12,
+  page = 1,
+  options?: FetchOptions
+): Promise<HubPost[]> {
   try {
     const url = buildQuery(order, perPage, page)
     const data: WPPost[] = await safeFetch(url.toString(), { cache: "no-store" })
-    return data.map(transformPost)
+    const posts = data.map(transformPost)
+    return options?.onlyPushed ? filterPushedPosts(posts) : posts
   } catch (error) {
     console.error("Failed to fetch hub posts", error)
     return []
   }
 }
 
-export async function fetchHubPostBySlug(slug: string): Promise<HubPost | null> {
+export async function fetchHubPostBySlug(slug: string, options?: FetchOptions): Promise<HubPost | null> {
   try {
+    if (!slug) {
+      return null
+    }
+
     const url = new URL(`${HUB_BASE_URL}/wp-json/wp/v2/posts`)
     url.searchParams.set("slug", slug)
     url.searchParams.set("_embed", "true")
@@ -132,11 +152,48 @@ export async function fetchHubPostBySlug(slug: string): Promise<HubPost | null> 
       return null
     }
 
-    return transformPost(data[0])
+    const post = transformPost(data[0])
+    if (options?.onlyPushed && !post.sourceSite) {
+      return null
+    }
+
+    return post
   } catch (error) {
     console.error("Failed to fetch hub post", error)
     return null
   }
+}
+
+export async function fetchHubPostById(id: number, options?: FetchOptions): Promise<HubPost | null> {
+  try {
+    if (!id) {
+      return null
+    }
+
+    const data: WPPost = await safeFetch(`${HUB_BASE_URL}/wp-json/wp/v2/posts/${id}?_embed=true`, { cache: "no-store" })
+    const post = transformPost(data)
+    if (options?.onlyPushed && !post.sourceSite) {
+      return null
+    }
+
+    return post
+  } catch (error) {
+    console.error("Failed to fetch hub post by ID", error)
+    return null
+  }
+}
+
+export async function fetchHubPost(identifier: string, options?: FetchOptions): Promise<HubPost | null> {
+  const bySlug = await fetchHubPostBySlug(identifier, options)
+  if (bySlug) {
+    return bySlug
+  }
+
+  if (/^\d+$/.test(identifier)) {
+    return fetchHubPostById(Number(identifier), options)
+  }
+
+  return null
 }
 
 async function mutateLike(method: "POST" | "DELETE", postId: number, token?: string): Promise<HubPostStats> {

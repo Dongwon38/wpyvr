@@ -28,15 +28,15 @@ const HubLikeButton = ({ postId, initialLikes, initialComments = 0, initialHotSc
 
     startTransition(async () => {
       setError(null)
-      try {
-        const token = user ? await user.getIdToken() : undefined
-        const nextStats = liked ? await unlikeHubPost(postId, token) : await likeHubPost(postId, token)
-        setStats(nextStats)
-        setLiked(!liked)
-      } catch (err) {
-        console.error(err)
-        setError("좋아요 상태를 업데이트하지 못했습니다.")
-      }
+        try {
+          const token = user ? await user.getIdToken() : undefined
+          const nextStats = liked ? await unlikeHubPost(postId, token) : await likeHubPost(postId, token)
+          setStats(nextStats)
+          setLiked(!liked)
+        } catch (err) {
+          console.error(err)
+          setError("Unable to update like status.")
+        }
     })
   }
 
@@ -49,11 +49,11 @@ const HubLikeButton = ({ postId, initialLikes, initialComments = 0, initialHotSc
         className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
           liked ? "bg-rose-600 text-white hover:bg-rose-700" : "bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-800 dark:text-white"
         }`}
-      >
-        {liked ? "❤️ 좋아요 취소" : "🤍 좋아요"}
-        <span className="text-xs">({stats.likes_count})</span>
-      </button>
-      {error && <p className="text-xs text-rose-500">{error}</p>}
+        >
+          {liked ? "❤️ Unlike" : "🤍 Like"}
+          <span className="text-xs">({stats.likes_count})</span>
+        </button>
+        {error && <p className="text-xs text-rose-500">{error}</p>}
     </div>
   )
 }

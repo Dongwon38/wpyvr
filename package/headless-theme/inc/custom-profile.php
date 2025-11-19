@@ -24,10 +24,16 @@ function custom_profile_create_table() {
     $sql = "CREATE TABLE $table_name (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         user_id BIGINT(20) UNSIGNED NOT NULL,
+        firebase_uid VARCHAR(128) DEFAULT NULL,
+        push_token VARCHAR(255) DEFAULT NULL,
+        hub_connected TINYINT(1) NOT NULL DEFAULT 0,
+        origin_site_url VARCHAR(255) DEFAULT NULL,
+        last_push_at DATETIME DEFAULT NULL,
         nickname VARCHAR(100) DEFAULT NULL,
         bio TEXT DEFAULT NULL,
         avatar_url VARCHAR(255) DEFAULT NULL,
         position VARCHAR(255) DEFAULT NULL,
+        job_title VARCHAR(255) DEFAULT NULL,
         specialties JSON DEFAULT NULL,
         company VARCHAR(255) DEFAULT NULL,
         website VARCHAR(255) DEFAULT NULL,
@@ -41,9 +47,12 @@ function custom_profile_create_table() {
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         UNIQUE KEY user_id_unique (user_id),
+        UNIQUE KEY firebase_uid_unique (firebase_uid),
+        UNIQUE KEY push_token_unique (push_token),
         FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE,
         INDEX idx_last_active (last_active_at),
-        INDEX idx_profile_visibility (profile_visibility)
+        INDEX idx_profile_visibility (profile_visibility),
+        INDEX idx_hub_connected (hub_connected)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -89,6 +98,24 @@ add_action('rest_api_init', function () {
         'callback' => 'custom_profile_get_all_members',
         'permission_callback' => '__return_true',
     ]);
+
+    register_rest_route('custom-profile/v1', '/push-token', [
+        [
+            'methods'  => WP_REST_Server::READABLE,
+            'callback' => 'custom_profile_get_push_token',
+            'permission_callback' => '__return_true',
+        ],
+        [
+            'methods'  => WP_REST_Server::CREATABLE,
+            'callback' => 'custom_profile_generate_push_token',
+            'permission_callback' => '__return_true',
+        ],
+        [
+            'methods'  => WP_REST_Server::DELETABLE,
+            'callback' => 'custom_profile_revoke_push_token',
+            'permission_callback' => '__return_true',
+        ],
+    ]);
 });
 
 // ========================
@@ -112,6 +139,17 @@ function verify_jwt_token($auth_header) {
     }
 
     return $decoded['data']['user']['id'];
+}
+
+function custom_profile_require_authenticated_user(WP_REST_Request $request) {
+    $auth_header = $request->get_header('authorization');
+    $user_id = verify_jwt_token($auth_header);
+
+    if (!$user_id) {
+        return new WP_Error('unauthorized', 'Invalid or missing authentication token', ['status' => 401]);
+    }
+
+    return $user_id;
 }
 
 // ========================
@@ -509,3 +547,137 @@ function update_user_last_active($user_id) {
 add_action('wp_login', function($user_login, $user) {
     update_user_last_active($user->ID);
 }, 10, 2);
+
+// ========================
+// 🔑 8. PUSH TOKEN ENDPOINTS
+// ========================
+function custom_profile_get_push_token(WP_REST_Request $request) {
+    $user_id = custom_profile_require_authenticated_user($request);
+    if (is_wp_error($user_id)) {
+        return $user_id;
+    }
+
+    global $wpdb;
+    $table = $wpdb->prefix . 'user_profiles';
+
+    $profile = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT push_token, origin_site_url, hub_connected, last_push_at FROM $table WHERE user_id = %d",
+            $user_id
+        ),
+        ARRAY_A
+    );
+
+    if (!$profile) {
+        return new WP_REST_Response([
+            'token' => null,
+            'origin_site_url' => '',
+            'hub_connected' => false,
+            'last_push_at' => null,
+        ], 200);
+    }
+
+    return new WP_REST_Response([
+        'token' => $profile['push_token'] ?: null,
+        'origin_site_url' => $profile['origin_site_url'] ?: '',
+        'hub_connected' => (bool) $profile['hub_connected'],
+        'last_push_at' => $profile['last_push_at'],
+    ], 200);
+}
+
+function custom_profile_generate_push_token(WP_REST_Request $request) {
+    $user_id = custom_profile_require_authenticated_user($request);
+    if (is_wp_error($user_id)) {
+        return $user_id;
+    }
+
+    global $wpdb;
+    $table = $wpdb->prefix . 'user_profiles';
+
+    $origin_param = $request->get_param('origin_site_url');
+    $origin_site_url = $origin_param ? esc_url_raw($origin_param) : '';
+    $token = wp_generate_password(48, false, false);
+    $now = current_time('mysql');
+
+    $data = [
+        'push_token' => $token,
+        'hub_connected' => 1,
+        'origin_site_url' => $origin_site_url,
+        'updated_at' => $now,
+    ];
+    $formats = ['%s', '%d', '%s', '%s'];
+
+    $exists = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table WHERE user_id = %d", $user_id)
+    );
+
+    if ($exists) {
+        $result = $wpdb->update(
+            $table,
+            $data,
+            ['user_id' => $user_id],
+            $formats,
+            ['%d']
+        );
+
+        if ($result === false) {
+            return new WP_Error('db_error', 'Failed to update push token', ['status' => 500]);
+        }
+    } else {
+        $insert_data = array_merge(
+            ['user_id' => $user_id, 'created_at' => $now],
+            $data
+        );
+
+        $result = $wpdb->insert(
+            $table,
+            $insert_data,
+            ['%d', '%s', '%s', '%d', '%s', '%s']
+        );
+
+        if ($result === false) {
+            return new WP_Error('db_error', 'Failed to create profile for push token', ['status' => 500]);
+        }
+    }
+
+    return new WP_REST_Response([
+        'token' => $token,
+        'origin_site_url' => $origin_site_url,
+        'hub_connected' => true,
+        'last_push_at' => null,
+    ], 201);
+}
+
+function custom_profile_revoke_push_token(WP_REST_Request $request) {
+    $user_id = custom_profile_require_authenticated_user($request);
+    if (is_wp_error($user_id)) {
+        return $user_id;
+    }
+
+    global $wpdb;
+    $table = $wpdb->prefix . 'user_profiles';
+    $now = current_time('mysql');
+
+    $result = $wpdb->update(
+        $table,
+        [
+            'push_token' => null,
+            'hub_connected' => 0,
+            'updated_at' => $now,
+        ],
+        ['user_id' => $user_id],
+        ['%s', '%d', '%s'],
+        ['%d']
+    );
+
+    if ($result === false) {
+        return new WP_Error('db_error', 'Failed to revoke push token', ['status' => 500]);
+    }
+
+    return new WP_REST_Response([
+        'token' => null,
+        'origin_site_url' => '',
+        'hub_connected' => false,
+        'last_push_at' => null,
+    ], 200);
+}

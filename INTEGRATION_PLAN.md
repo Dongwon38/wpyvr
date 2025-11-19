@@ -15,7 +15,10 @@
 - [x] 테스트/로그/모니터링 구성
 
 ## 진행 현황
-- **현재 진행 중:** 허브 UI/UX 미세 조정 및 프론트-워드프레스 데이터 정합성 점검
+- **현재 상태:**  
+  - WPYVR Connect 플러그인이 영어 UI로 정리되었고, Hub API URL 기본값/Origin Site 자동 감지가 활성화됨.  
+  - Push Token은 허브 프로필 페이지(<https://wpyvr.bitebuddy.ca/profile>)에서 발급 → 플러그인 툴팁으로 안내.  
+  - 프런트엔드 `/community` 페이지가 실시간 허브 데이터를 직접 소비하며 `/hub` 라우트는 제거됨.  
 - **다음 단계:** QA 시나리오 실행, 알림 정책 튜닝, 배포 전 통합 리허설
 
 ## 변경 기록
@@ -29,6 +32,7 @@
 | 2025-11-15 | Prompt 5: 좋아요·댓글·트렌드 시스템 통합 | AI Agent | wpyvr-connect-like.php / wpyvr-connect-trend.php |
 | 2025-11-15 | Prompt 6: 허브 프론트엔드 및 사용 가이드 | AI Agent | front-end hub components |
 | 2025-11-15 | Prompt 7: QA 체크리스트 · 모니터링 로거 | AI Agent | qa-checklist.md / wpyvr-connect-logger.php |
+| 2025-11-17 | Frontend Community 통합 및 플러그인 영문화/기본값 업데이트 | AI Agent | `/community` 실데이터 연동, WPYVR Connect 기본값/툴팁 정비 |
 
 ## 사용 가이드
 - **수신 글 검수 & 퍼블리시 절차**  
@@ -47,11 +51,11 @@
 ## 테스트 진행 현황
 | 테스트 | 상태 | 메모 |
 |--------|------|------|
-| 멤버 플러그인 → 허브 수신 파이프라인 | ☐ 예정 | 선택 푸시 → pending + raw meta 저장 확인 |
+| 멤버 플러그인 → 허브 수신 파이프라인 | ✅ 완료 | 수동 푸시 → pending + raw meta 저장 확인 |
 | Firebase 토큰 검증 실패 403 | ☐ 예정 | 잘못된 토큰으로 receive/like API 호출 |
 | Hub Incoming Posts 맵핑/Publish 플로우 | ☐ 예정 | 저장/Publish Now 두 경로 모두 수행 |
 | 좋아요/댓글/트렌드 지표 | ☐ 예정 | 동일 사용자 중복 방지 및 hot score 공식 확인 |
-| 프론트엔드 허브 페이지 (탭/상세/좋아요) | ☐ 예정 | Next.js 페이지 빌드 및 실시간 카운트 갱신 확인 |
+| 프런트엔드 허브/커뮤니티 페이지 | ✅ 완료 | `/community` 탭/상세/좋아요 실데이터 연동 |
 | 모니터링 & 알림 | ☐ 예정 | `/wp-content/logs/hub.log` 생성, 3회 연속 실패 이메일 전송 |
 
 세부 QA 시나리오 및 모니터링 절차는 `qa-checklist.md` 문서를 참고하여 각 체크 항목을 실행한다.

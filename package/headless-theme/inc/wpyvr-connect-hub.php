@@ -78,6 +78,7 @@ function wpyvr_hub_receive_post(WP_REST_Request $request) {
 
     wpyvr_hub_store_meta($post_id, $payload, $auth['firebase_uid']);
     wpyvr_hub_assign_terms($post_id, $payload);
+    wpyvr_hub_mark_profile_connected($auth['user_id']);
     wpyvr_hub_notify_admin($post_id, $payload);
 
     wpyvr_hub_log_event(
@@ -110,6 +111,19 @@ function wpyvr_hub_validate_request_token(WP_REST_Request $request) {
     $token = trim(substr($auth_header, 7));
     if (empty($token)) {
         return new WP_Error('invalid_token', __('Bearer token is empty.', 'wpyvr'), array('status' => 401));
+    }
+
+    $profile = wpyvr_hub_get_profile_by_push_token($token);
+    if ($profile) {
+        $firebase_uid = $profile['firebase_uid'];
+        if (empty($firebase_uid)) {
+            $firebase_uid = sanitize_text_field(get_user_meta($profile['user_id'], 'firebase_uid', true));
+        }
+
+        return array(
+            'firebase_uid' => $firebase_uid,
+            'user_id'      => $profile['user_id'],
+        );
     }
 
     $firebase = wpyvr_hub_verify_token_with_firebase($token);
@@ -314,14 +328,14 @@ function wpyvr_hub_notify_admin(int $post_id, array $payload): void {
     $author = sanitize_text_field($payload['author'] ?? '');
     $edit_link = get_edit_post_link($post_id, '');
 
-    $subject = sprintf('[WPYVR Hub] 새 글 대기 - %s', $title);
+    $subject = sprintf('[WPYVR Hub] New submission awaiting review – %s', $title);
     $body_lines = array(
-        '새 글이 허브에 등록되어 검수를 기다리고 있습니다.',
+        'A new post has arrived on the hub and is waiting for moderation.',
         '',
-        '제목: ' . $title,
-        '원본 사이트: ' . $source_site,
-        '작성자: ' . $author,
-        '검수 링크: ' . $edit_link,
+        'Title: ' . $title,
+        'Source site: ' . $source_site,
+        'Author: ' . $author,
+        'Review link: ' . $edit_link,
     );
 
     wp_mail($admin_email, $subject, implode("\n", $body_lines));

@@ -4,6 +4,8 @@
 
 A fully functional, modern community website prototype built with Next.js 16, TypeScript, Tailwind CSS, and Framer Motion.
 
+> **Update:** The `/guides` route has been retired. Historical notes remain below for context, but the live site now focuses on the community, events, and about experiences.
+
 ---
 
 ## 📦 What's Been Built

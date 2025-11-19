@@ -32,7 +32,7 @@ function wpyvr_connect_load_textdomain(): void {
 
 function wpyvr_connect_default_settings(): array {
     return array(
-        'hub_api_url'   => '',
+        'hub_api_url'   => 'https://wpyvr.bitebuddy.ca/backend/wp-json/hub/v1/receive-post',
         'push_token'    => '',
         'origin_site'   => home_url(),
         'auto_push'     => 0,

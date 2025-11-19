@@ -41,6 +41,13 @@ export type UserProfile = {
   updated_at: string
 }
 
+export type PushTokenInfo = {
+  token: string | null
+  origin_site_url: string
+  hub_connected: boolean
+  last_push_at: string | null
+}
+
 export type ProfileUpdatePayload = {
   user_id: number
   nickname: string
@@ -136,6 +143,87 @@ export async function updateUserProfile(
     return data
   } catch (error) {
     console.error("❌ Error updating user profile:", error)
+    throw error
+  }
+}
+
+/**
+ * Fetch current push token info for the authenticated user
+ */
+export async function fetchPushTokenInfo(token: string): Promise<PushTokenInfo> {
+  try {
+    const response = await fetch(`${PROFILE_API_URL}/push-token`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || "Failed to load push token")
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error("❌ Error fetching push token:", error)
+    throw error
+  }
+}
+
+/**
+ * Generate or regenerate a push token for the authenticated user
+ */
+export async function generatePushToken(
+  token: string,
+  originSiteUrl?: string
+): Promise<PushTokenInfo> {
+  try {
+    const response = await fetch(`${PROFILE_API_URL}/push-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        origin_site_url: originSiteUrl,
+      }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || "Failed to generate push token")
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error("❌ Error generating push token:", error)
+    throw error
+  }
+}
+
+/**
+ * Revoke the existing push token
+ */
+export async function revokePushToken(token: string): Promise<PushTokenInfo> {
+  try {
+    const response = await fetch(`${PROFILE_API_URL}/push-token`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}))
+      throw new Error(error.message || "Failed to revoke push token")
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error("❌ Error revoking push token:", error)
     throw error
   }
 }

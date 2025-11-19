@@ -215,32 +215,25 @@ export default function RightSidebar({ isOpen, onClose }: RightSidebarProps) {
               <StayConnectedCard className={cn(sectionBaseClass, "lg:hidden")} />
 
               {/* Need Help Section */}
-              <div className={cn(sectionBaseClass)}>
-                <div>
-                  <p className={labelClass}>Support</p>
-                  <h3 className="text-lg font-semibold tracking-tight">
-                    Need a hand?
-                  </h3>
+                <div className={cn(sectionBaseClass)}>
+                  <div>
+                    <p className={labelClass}>Support</p>
+                    <h3 className="text-lg font-semibold tracking-tight">
+                      Need a hand?
+                    </h3>
+                  </div>
+                  <p className={bodyCopyClass}>
+                    Send a note to our volunteer organizers for quick WordPress tips,
+                    freelancer leads, or community questions. We typically reply within
+                    24 hours.
+                  </p>
+                  <button
+                    onClick={handleSupportClick}
+                    className={cn(primaryButtonClass, "w-full")}
+                  >
+                    Ask the Team
+                  </button>
                 </div>
-                <p className={bodyCopyClass}>
-                  Send a note to our volunteer organizers for quick WordPress tips,
-                  freelancer leads, or community questions. We typically reply within
-                  24 hours.
-                </p>
-                <button
-                  onClick={handleSupportClick}
-                  className={cn(primaryButtonClass, "w-full")}
-                >
-                  Ask the Team
-                </button>
-                <button
-                  onClick={() => handleNavigate("/guides")}
-                  className={textLinkClass}
-                >
-                  Browse quick guides
-                  <ArrowRight size={16} />
-                </button>
-              </div>
             </div>
 
             <div className="pt-6 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#444140]/50">

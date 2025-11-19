@@ -1,5 +1,7 @@
 # Getting Started with Community Hub
 
+> **Note:** The legacy `/guides` section has been sunset. All user-facing content now flows through the home, community, events, and about pages.
+
 ## 🎯 Quick Start (Under 2 Minutes)
 
 ### 1. Install Dependencies
@@ -23,9 +25,8 @@ npm run dev
 
 **What you'll see:**
 - Animated hero section with gradient text
-- Latest guides section with 3 featured articles
-- Trending community posts with 3 featured posts
-- Feature highlights section
+- Recent community highlights with live data
+- Feature callouts and CTA blocks
 - Smooth animations and transitions
 
 ---
@@ -36,14 +37,9 @@ npm run dev
 
 **Home** (`/`)
 - Hero with call-to-action buttons
-- Latest guides preview
-- Trending community posts
-- Feature highlights
-
-**Guides** (`/guides`)
-- Browse all 6 editorial guides
-- Filter by category: All, Beginner, Plugins, Design, Tutorials
-- Click any card to view full guide
+- Community highlights
+- Feature callouts
+- Event/member CTAs
 
 **Community** (`/community`)
 - View all 6 community posts
@@ -67,14 +63,12 @@ npm run build
 **Expected output:**
 ```
 ✓ Compiled successfully
-✓ Generating static pages (19/19)
+✓ Generating static pages
 Route (app)
 ├ ○ /
 ├ ○ /about
 ├ ○ /community
-├ ● /community/[slug] (6 pages)
-├ ○ /guides
-└ ● /guides/[slug] (6 pages)
+└ ● /community/[slug] (dynamic)
 ```
 
 **Output location:** `/workspace/front-end/out/`
@@ -100,9 +94,6 @@ src/
 │   ├── page.tsx                 # Home page
 │   ├── layout.tsx               # Root layout
 │   ├── globals.css              # Global styles
-│   ├── guides/
-│   │   ├── page.tsx            # Guides list
-│   │   └── [slug]/page.tsx     # Guide detail
 │   ├── community/
 │   │   ├── page.tsx            # Community list
 │   │   └── [slug]/page.tsx     # Post detail
@@ -113,7 +104,6 @@ src/
 │   ├── Navbar.tsx               # Site navigation
 │   ├── Footer.tsx               # Site footer
 │   ├── HeroSection.tsx          # Hero component
-│   ├── ArticleCard.tsx          # Guide card
 │   ├── PostCard.tsx             # Post card
 │   ├── TagChip.tsx              # Tag badge
 │   └── Sidebar.tsx              # Detail page sidebar
@@ -155,7 +145,6 @@ src/
 - ✅ Verify smooth hover effects
 
 ### Filtering & Sorting
-- ✅ Filter guides by category
 - ✅ Filter posts by tag
 - ✅ Sort posts by newest/popular
 
@@ -241,14 +230,6 @@ npx netlify-cli deploy --prod --dir=out
 ---
 
 ## 📖 Content Overview
-
-### Guides (6 Editorial Articles)
-1. Start Your First Website
-2. Top 10 Plugin Recommendations for 2025
-3. Design Trends in Modern Web
-4. Mastering Responsive Design
-5. WordPress Security Essentials
-6. Complete Speed Optimization Guide
 
 ### Community Posts (6 User Posts)
 1. My First Custom Theme (12 upvotes)

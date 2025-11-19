@@ -44,7 +44,7 @@ add_action('rest_api_init', function() {
 add_action('init', function() {
     // CORS 허용 (React, Next.js 등에서 호출 가능)
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Authorization, Content-Type");
 });
 
