@@ -257,7 +257,7 @@ add_action('init', function () {
     if (in_array($origin, $allowed_origins, true)) {
         header("Access-Control-Allow-Origin: $origin");
     }
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT, PATCH, OPTIONS');
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Allow-Headers: Authorization, Content-Type, X-WP-Nonce');
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
