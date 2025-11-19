@@ -26,7 +26,15 @@ const HubPostCard = ({ post }: Props) => {
             />
           </div>
         ) : (
-          <div className="h-56 bg-slate-100 dark:bg-slate-800" />
+          <div className="relative h-56 w-full bg-slate-100 dark:bg-slate-800">
+            <Image
+              src="/images/img1.jpg"
+              alt="Community placeholder"
+              fill
+              className="object-cover opacity-70"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          </div>
         )}
 
         <div className="flex flex-1 flex-col gap-4 p-6">
