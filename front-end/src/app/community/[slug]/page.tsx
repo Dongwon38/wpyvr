@@ -3,10 +3,16 @@ import { notFound } from "next/navigation"
 import HubPostDetail from "@/components/hub/HubPostDetail"
 import { fetchHubPost, fetchHubPosts } from "@/lib/hubApi"
 
-type RouteParams = { slug: string }
+type RawParams = { slug: string }
+type RouteParams = RawParams | Promise<RawParams>
+
+async function resolveParams(params: RouteParams): Promise<RawParams> {
+  return await params
+}
 
 async function getPostFromParams(params: RouteParams) {
-  return fetchHubPost(params.slug, { onlyPushed: true })
+  const { slug } = await resolveParams(params)
+  return fetchHubPost(slug, { onlyPushed: true })
 }
 
 export async function generateMetadata({ params }: { params: RouteParams }) {
