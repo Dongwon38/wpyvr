@@ -54,7 +54,7 @@ function wpyvr_connect_render_admin_page(): void {
 
         <div class="wpyvr-connect__grid">
             <div class="wpyvr-card">
-                <h2><?php esc_html_e('허브 연결 설정', 'wpyvr-connect'); ?></h2>
+                <h2><?php esc_html_e('Hub Connection Settings', 'wpyvr-connect'); ?></h2>
                 <form method="post" action="options.php">
                     <?php
                     settings_fields('wpyvr_connect_settings_group');
@@ -74,6 +74,23 @@ function wpyvr_connect_render_admin_page(): void {
                             </th>
                             <td>
                                 <input type="text" id="wpyvr_push_token" name="<?php echo esc_attr(WPYVR_CONNECT_OPTION_KEY); ?>[push_token]" class="regular-text" value="<?php echo esc_attr($settings['push_token']); ?>" placeholder="xxxx.yyyy.zzzz" required />
+                                <p class="description">
+                                    <?php
+                                    printf(
+                                        wp_kses(
+                                            __('Generate a long-lived token from your Hub <a href="%s" target="_blank" rel="noopener noreferrer">profile page</a>.', 'wpyvr-connect'),
+                                            array(
+                                                'a' => array(
+                                                    'href'   => array(),
+                                                    'target' => array(),
+                                                    'rel'    => array(),
+                                                ),
+                                            )
+                                        ),
+                                        esc_url('https://wpyvr.bitebuddy.ca/profile')
+                                    );
+                                    ?>
+                                </p>
                             </td>
                         </tr>
                         <tr>
@@ -85,32 +102,32 @@ function wpyvr_connect_render_admin_page(): void {
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row"><?php esc_html_e('자동 푸시', 'wpyvr-connect'); ?></th>
+                            <th scope="row"><?php esc_html_e('Automatic Push', 'wpyvr-connect'); ?></th>
                             <td>
                                 <label>
                                     <input type="checkbox" name="<?php echo esc_attr(WPYVR_CONNECT_OPTION_KEY); ?>[auto_push]" value="1" <?php checked((bool) $settings['auto_push'], true); ?> />
-                                    <?php esc_html_e('게시물이 발행되면 자동으로 허브에 전송합니다.', 'wpyvr-connect'); ?>
+                                    <?php esc_html_e('Automatically push posts to the Hub when they are published.', 'wpyvr-connect'); ?>
                                 </label>
                             </td>
                         </tr>
                     </table>
-                    <?php submit_button(__('설정 저장', 'wpyvr-connect')); ?>
+                    <?php submit_button(__('Save Settings', 'wpyvr-connect')); ?>
                 </form>
             </div>
 
             <div class="wpyvr-card">
-                <h2><?php esc_html_e('허브 연결 테스트', 'wpyvr-connect'); ?></h2>
-                <p><?php esc_html_e('테스트 버튼을 클릭하면 샘플 페이로드를 허브로 전송하여 인증/연결 상태를 확인합니다.', 'wpyvr-connect'); ?></p>
+                <h2><?php esc_html_e('Connection Test', 'wpyvr-connect'); ?></h2>
+                <p><?php esc_html_e('Send a sample payload to the Hub to confirm credentials and connectivity.', 'wpyvr-connect'); ?></p>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('wpyvr_connect_test_connection'); ?>
                     <input type="hidden" name="action" value="wpyvr_connect_test_connection" />
-                    <?php submit_button(__('연결 테스트', 'wpyvr-connect'), 'secondary'); ?>
+                    <?php submit_button(__('Run Test', 'wpyvr-connect'), 'secondary'); ?>
                 </form>
             </div>
         </div>
 
         <div class="wpyvr-card">
-            <h2><?php esc_html_e('콘텐츠 목록 및 수동 푸시', 'wpyvr-connect'); ?></h2>
+            <h2><?php esc_html_e('Content List & Manual Push', 'wpyvr-connect'); ?></h2>
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="wpyvr-push-form">
                 <?php wp_nonce_field('wpyvr_connect_manual_push'); ?>
                 <input type="hidden" name="action" value="wpyvr_connect_manual_push" />
@@ -118,18 +135,18 @@ function wpyvr_connect_render_admin_page(): void {
                     <table class="widefat fixed striped">
                         <thead>
                             <tr>
-                                <th class="column-select"><?php esc_html_e('선택', 'wpyvr-connect'); ?></th>
-                                <th><?php esc_html_e('제목', 'wpyvr-connect'); ?></th>
-                                <th><?php esc_html_e('유형', 'wpyvr-connect'); ?></th>
-                                <th><?php esc_html_e('상태', 'wpyvr-connect'); ?></th>
-                                <th><?php esc_html_e('마지막 수정', 'wpyvr-connect'); ?></th>
-                                <th><?php esc_html_e('푸시 상태', 'wpyvr-connect'); ?></th>
+                                <th class="column-select"><?php esc_html_e('Select', 'wpyvr-connect'); ?></th>
+                                <th><?php esc_html_e('Title', 'wpyvr-connect'); ?></th>
+                                <th><?php esc_html_e('Type', 'wpyvr-connect'); ?></th>
+                                <th><?php esc_html_e('Status', 'wpyvr-connect'); ?></th>
+                                <th><?php esc_html_e('Last Modified', 'wpyvr-connect'); ?></th>
+                                <th><?php esc_html_e('Push Status', 'wpyvr-connect'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($posts)) : ?>
                                 <tr>
-                                    <td colspan="6"><?php esc_html_e('표시할 콘텐츠가 없습니다.', 'wpyvr-connect'); ?></td>
+                                    <td colspan="6"><?php esc_html_e('No content available.', 'wpyvr-connect'); ?></td>
                                 </tr>
                             <?php else : ?>
                                 <?php
@@ -149,7 +166,7 @@ function wpyvr_connect_render_admin_page(): void {
                                             <strong><?php echo esc_html(get_the_title($post)); ?></strong>
                                             <div class="row-actions">
                                                 <a href="<?php echo esc_url(get_edit_post_link($post->ID)); ?>">
-                                                    <?php esc_html_e('편집', 'wpyvr-connect'); ?>
+                                                    <?php esc_html_e('Edit', 'wpyvr-connect'); ?>
                                                 </a>
                                             </div>
                                         </td>
@@ -159,14 +176,14 @@ function wpyvr_connect_render_admin_page(): void {
                                         <td>
                                             <?php
                                             if (!empty($last_push['status'])) {
-                                                $push_state_label = 'success' === $last_push['status'] ? __('성공', 'wpyvr-connect') : __('실패', 'wpyvr-connect');
+                                                $push_state_label = 'success' === $last_push['status'] ? __('Success', 'wpyvr-connect') : __('Failed', 'wpyvr-connect');
                                                 printf(
                                                     '<span class="status status-%1$s">%2$s</span>',
                                                     esc_attr($last_push['status']),
                                                     esc_html($push_state_label)
                                                 );
                                             } else {
-                                                esc_html_e('기록 없음', 'wpyvr-connect');
+                                                esc_html_e('No logs yet', 'wpyvr-connect');
                                             }
                                             ?>
                                         </td>
@@ -179,14 +196,14 @@ function wpyvr_connect_render_admin_page(): void {
                         </tbody>
                     </table>
                 </div>
-                <?php submit_button(__('선택한 콘텐츠 푸시', 'wpyvr-connect'), 'primary', 'submit', false); ?>
+                <?php submit_button(__('Push Selected Content', 'wpyvr-connect'), 'primary', 'submit', false); ?>
             </form>
         </div>
 
         <div class="wpyvr-card">
-            <h2><?php esc_html_e('최근 푸시 로그', 'wpyvr-connect'); ?></h2>
+            <h2><?php esc_html_e('Recent Push Log', 'wpyvr-connect'); ?></h2>
             <?php if (empty($settings['last_push_log'])) : ?>
-                <p><?php esc_html_e('아직 전송 로그가 없습니다.', 'wpyvr-connect'); ?></p>
+                <p><?php esc_html_e('No push logs yet.', 'wpyvr-connect'); ?></p>
             <?php else : ?>
                 <pre class="wpyvr-log"><?php echo esc_html(wp_json_encode($settings['last_push_log'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)); ?></pre>
             <?php endif; ?>
@@ -231,14 +248,14 @@ function wpyvr_connect_queue_notice(string $message, string $type = 'success'): 
 add_action('admin_post_wpyvr_connect_manual_push', 'wpyvr_connect_handle_manual_push');
 function wpyvr_connect_handle_manual_push(): void {
     if (!current_user_can('manage_options')) {
-        wp_die(__('권한이 없습니다.', 'wpyvr-connect'));
+        wp_die(__('You do not have permission to access this page.', 'wpyvr-connect'));
     }
 
     check_admin_referer('wpyvr_connect_manual_push');
 
     $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
     if (!$post_id) {
-        wpyvr_connect_queue_notice(__('콘텐츠를 선택해 주세요.', 'wpyvr-connect'), 'error');
+        wpyvr_connect_queue_notice(__('Please select content to push.', 'wpyvr-connect'), 'error');
         wp_safe_redirect(wpyvr_connect_get_admin_url());
         exit;
     }
@@ -247,7 +264,7 @@ function wpyvr_connect_handle_manual_push(): void {
     if (is_wp_error($result)) {
         wpyvr_connect_queue_notice(
             sprintf(
-                __('전송 실패: %s', 'wpyvr-connect'),
+                __('Push failed: %s', 'wpyvr-connect'),
                 $result->get_error_message()
             ),
             'error'
@@ -255,7 +272,7 @@ function wpyvr_connect_handle_manual_push(): void {
     } else {
         wpyvr_connect_queue_notice(
             sprintf(
-                __('허브 응답 코드 %d – 전송 성공', 'wpyvr-connect'),
+                __('Hub response code %d – push completed', 'wpyvr-connect'),
                 (int) $result['code']
             ),
             'success'
@@ -269,7 +286,7 @@ function wpyvr_connect_handle_manual_push(): void {
 add_action('admin_post_wpyvr_connect_test_connection', 'wpyvr_connect_handle_test_connection');
 function wpyvr_connect_handle_test_connection(): void {
     if (!current_user_can('manage_options')) {
-        wp_die(__('권한이 없습니다.', 'wpyvr-connect'));
+        wp_die(__('You do not have permission to access this page.', 'wpyvr-connect'));
     }
 
     check_admin_referer('wpyvr_connect_test_connection');
@@ -294,12 +311,12 @@ function wpyvr_connect_handle_test_connection(): void {
 
     if (is_wp_error($result)) {
         wpyvr_connect_queue_notice(
-            sprintf(__('테스트 실패: %s', 'wpyvr-connect'), $result->get_error_message()),
+            sprintf(__('Test failed: %s', 'wpyvr-connect'), $result->get_error_message()),
             'error'
         );
     } else {
         wpyvr_connect_queue_notice(
-            sprintf(__('테스트 성공 – 응답 코드 %d', 'wpyvr-connect'), (int) $result['code']),
+            sprintf(__('Test succeeded – response code %d', 'wpyvr-connect'), (int) $result['code']),
             'success'
         );
     }

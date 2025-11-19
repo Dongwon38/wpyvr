@@ -46,7 +46,7 @@ function wpyvr_connect_send_payload(array $payload, string $endpoint, string $to
     if (empty($endpoint) || empty($token)) {
         return new WP_Error(
             'missing_settings',
-            __('Hub API URL 또는 Push Token이 비어 있습니다.', 'wpyvr-connect')
+            __('Hub API URL or Push Token is missing.', 'wpyvr-connect')
         );
     }
 
@@ -81,7 +81,7 @@ function wpyvr_connect_send_payload(array $payload, string $endpoint, string $to
 function wpyvr_connect_push_post(int $post_id) {
     $post = get_post($post_id);
     if (!$post instanceof WP_Post) {
-        return new WP_Error('invalid_post', __('선택한 콘텐츠를 찾을 수 없습니다.', 'wpyvr-connect'));
+        return new WP_Error('invalid_post', __('The selected content could not be found.', 'wpyvr-connect'));
     }
 
     $settings = wpyvr_connect_get_settings();
