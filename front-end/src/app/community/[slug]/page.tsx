@@ -3,12 +3,14 @@ import { notFound } from "next/navigation"
 import HubPostDetail from "@/components/hub/HubPostDetail"
 import { fetchHubPost, fetchHubPosts } from "@/lib/hubApi"
 
-type Props = {
-  params: { slug: string }
+type RouteParams = { slug: string }
+
+async function getPostFromParams(params: RouteParams) {
+  return fetchHubPost(params.slug, { onlyPushed: true })
 }
 
-export async function generateMetadata({ params }: Props) {
-  const post = await fetchHubPost(params.slug, { onlyPushed: true })
+export async function generateMetadata({ params }: { params: RouteParams }) {
+  const post = await getPostFromParams(params)
   if (!post) {
     return {
       title: "Community Post",
@@ -26,8 +28,8 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug && post.slug.trim() ? post.slug : post.id.toString() }))
 }
 
-export default async function CommunityPostPage({ params }: Props) {
-  const post = await fetchHubPost(params.slug, { onlyPushed: true })
+export default async function CommunityPostPage({ params }: { params: RouteParams }) {
+  const post = await getPostFromParams(params)
   if (!post) {
     notFound()
   }
