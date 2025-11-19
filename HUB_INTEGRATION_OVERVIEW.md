@@ -10,7 +10,7 @@
 |--------|-----------|--------------------|
 | 멤버 워드프레스 (보내는 쪽) | 관리자 UI에서 허브 API URL/토큰 설정, 게시물 선택 푸시, 테스트 호출, publish 훅 기반 자동 푸시 | `package/plugins/wpyvr-connect/` |
 | 허브 워드프레스 (받는 쪽) | Firebase 토큰 검증, pending 저장, raw term 보존, 분류 맵핑, 좋아요/댓글/트렌드, 로깅/알림 | `package/headless-theme/inc/wpyvr-connect-*.php` |
-| 프런트엔드 (Next.js) | 허브 게시물 최신/인기/트렌딩 뷰, 상세 페이지 좋아요/댓글 UI, 허브 REST 호출 | `front-end/src/app/hub/`, `front-end/src/components/hub/`, `front-end/src/lib/hubApi.ts` |
+| 프런트엔드 (Next.js) | 커뮤니티 최신/인기/트렌딩 뷰, 상세 페이지 좋아요/댓글 UI, 허브 REST 호출 | `front-end/src/app/community/`, `front-end/src/components/hub/`, `front-end/src/lib/hubApi.ts` |
 | 문서·테스트 | 변경 이력 및 체크리스트, QA/모니터링 시나리오 | `INTEGRATION_PLAN.md`, `qa-checklist.md`, 현재 문서 |
 
 데이터 플로우:
@@ -34,8 +34,9 @@
 | `inc/push-handler.php` | 게시물 payload 생성, `wp_remote_post` 호출, 결과 로그 & 메타 `_wpyvr_last_*` 저장 |
 | `assets/admin.css` | 관리자 UI 스타일 (`.wpyvr-*` 클래스) |
 
-주요 관리자 URL: `wp-admin/admin.php?page=wpyvr-connect`   
-설정 값: `hub_api_url`, `push_token`, `origin_site`, `auto_push`  
+주요 관리자 URL: `wp-admin/admin.php?page=wpyvr-connect`  
+설정 값: `hub_api_url`, `push_token`, `origin_site`, `auto_push` (기본값은 허브 본 서버 URL과 `home_url()`을 사용)  
+Push Token 안내: 설정 카드 내에서 허브 프로필 페이지(<https://wpyvr.bitebuddy.ca/profile>) 링크 툴팁으로 “프로필에서 장기 토큰 발급” 절차 제공
 메타 키: `_wpyvr_last_push_status`, `_wpyvr_last_push_message`, `_wpyvr_last_push_log`
 
 ### 2.2 허브 워드프레스 — `package/headless-theme/inc/wpyvr-connect-*.php`
@@ -54,14 +55,15 @@
 
 ### 2.3 프런트엔드 — `front-end`
 
-- `src/lib/hubApi.ts`: 허브 포스트/통계/좋아요/댓글 REST 래퍼 (`fetchHubPosts`, `fetchHubPostBySlug`, `likeHubPost`, `submitHubComment` 등). 환경 변수 `NEXT_PUBLIC_HUB_WORDPRESS_URL`.
+- `src/lib/hubApi.ts`: 허브 포스트/통계/좋아요/댓글 REST 래퍼 (`fetchHubPosts`, `fetchHubPost`, `likeHubPost`, `submitHubComment` 등). slug가 비어 있는 포스트는 ID fallback을 사용.
 - 컴포넌트:
-  - `components/hub/HubTabs.tsx`, `HubPostList.tsx`, `HubPostCard.tsx` — 최신/인기/트렌딩 탭 UI.
-  - `components/hub/HubPostDetail.tsx` — 상세 페이지 본문 + `HubLikeButton`, `HubCommentForm`.
-  - `components/hub/HubLikeButton.tsx`, `HubCommentForm.tsx` — 실시간 좋아요/댓글 제출 UI.
+  - `components/hub/HubTabs.tsx`, `HubPostList.tsx`, `HubPostCard.tsx` — 최신/인기/트렌딩 탭 UI(placeholder 이미지/작성자 표기 포함).
+  - `components/hub/HubPostDetail.tsx` — 상세 페이지 본문 + `HubLikeButton`, `HubCommentForm`, 원문 링크.
+  - `components/hub/HubLikeButton.tsx`, `HubCommentForm.tsx` — 실시간 좋아요/댓글 제출 UI(영문 카피).
 - 페이지:
-  - `app/hub/page.tsx` → 목록 탭.
-  - `app/hub/[slug]/page.tsx` → 상세.
+  - `app/community/page.tsx` → 목록 탭 (홈페이지 Recent Posts 섹션과 동일 데이터를 사용하며 “View All Posts” CTA 제공).
+  - `app/community/[slug]/page.tsx` → 상세.
+  - `/hub` 라우트는 제거 → 기존 링크는 `/community`로 리디렉션.
 
 ### 2.4 데이터 스키마 & 문서
 
@@ -104,7 +106,8 @@
 ## 4. 관리자 워크플로우
 
 1. **WPYVR Connect 플러그인 설정**
-   - `허브 API URL`, `Push Token`, `Origin Site URL`, `자동 푸시` 여부 입력.
+   - `Hub API URL`, `Push Token`, `Origin Site URL`, `Automatic Push` 여부 입력 (기본값은 허브 본서버 & `home_url()`).
+   - Push Token은 허브 웹사이트 프로필 페이지(<https://wpyvr.bitebuddy.ca/profile>)에서 발급 → 발급 후 플러그인에 붙여넣는다.
    - `연결 테스트` 버튼으로 Firebase/허브 인증 확인.
    - `콘텐츠 목록 및 수동 푸시`에서 선택해 전송(로그 확인 가능).
 
@@ -117,7 +120,7 @@
      - 로그 테이블(`hub_push_logs`) 및 파일(`hub.log`) 기록.
 
 3. **좋아요/댓글/트렌드**
-   - 프런트엔드가 `/hub/v1/like` 및 `/posts/{id}/stats` 호출.
+   - 프런트엔드가 `/hub/v1/like`(POST/DELETE) 및 `/posts/{id}/stats` 호출. 허브 서버 CORS 설정에 `DELETE` 허용이 포함돼야 unlike가 정상 동작한다.
    - 댓글은 기본 WP 폼이나 Next.js 컴포넌트(토큰 전달)로 등록 → 자동으로 Firebase 사용자 매핑.
    - `wpyvr_hub_trend_event` (hourly)로 신선도 가중치 포함 hot score 재계산.
 
@@ -145,7 +148,7 @@
    - **푸시 실패**: 멤버 플러그인 `_wpyvr_last_*` 메타 & 관리자 UI 로그 → 허브 `hub.log`/`hub_push_logs` 확인.
    - **Firebase 인증 오류**: 허브 `.env` 또는 `wp-config.php`에 `WPYVR_FIREBASE_API_KEY` 설정 여부 체크.
    - **분류 미적용**: `hub_term_map`에 매핑 기록 (source_site/tax/term) 존재 여부, Publish 전후 `wp_set_post_terms` 호출 확인.
-   - **좋아요/트렌드 문제**: `wp_hub_likes` 데이터, `_hub_*` 메타 값, 크론 `wpyvr_hub_trend_event` 스케줄 상태 `wp cron event list`.
+    - **좋아요/트렌드 문제**: `wp_hub_likes` 데이터, `_hub_*` 메타 값, 크론 `wpyvr_hub_trend_event` 스케줄 상태 `wp cron event list`. DELETE 요청이 CORS로 차단되면 허브 서버의 `Access-Control-Allow-Methods`에 `DELETE`를 추가해야 unlike가 동작.
    - **프런트 표시 오류**: `hubApi.ts` 호출 URL, REST 응답에 `_hub_*` 메타 노출되는지 확인 (`register_post_meta` 참고).
 
 4. **명령형 디버깅 스니펫**
@@ -170,7 +173,7 @@
 
 - 멤버 플러그인: `package/plugins/wpyvr-connect/`
 - 허브 인클루드: `package/headless-theme/inc/wpyvr-connect-*.php`
-- 프런트 허브 페이지: `front-end/src/app/hub/` + `front-end/src/components/hub/`
+- 프런트 커뮤니티 페이지: `front-end/src/app/community/` + `front-end/src/components/hub/`
 - 문서: `INTEGRATION_PLAN.md`, `qa-checklist.md`, `HUB_INTEGRATION_OVERVIEW.md`
 - 스키마: `package/hub-integration-schema.sql`
 
