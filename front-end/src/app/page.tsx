@@ -163,17 +163,26 @@ export default function Home() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           >
-            <div className="mb-2 flex items-center gap-2">
-              <Users className="text-[#00749C]" size={24} />
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <Users className="text-[#00749C]" size={24} />
                 <h2 className="text-2xl font-black tracking-tight text-[#444140]">
-                Community Posts
-              </h2>
+                  Community Posts
+                </h2>
+              </div>
+              <p className="text-sm text-[#444140]/70">
+                Discover what our community is sharing
+              </p>
             </div>
-            <p className="text-sm text-[#444140]/70">
-              Discover what our community is sharing
-            </p>
+            <Link
+              href="/community"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#00749C] transition-colors hover:text-[#005A7A]"
+            >
+              View All Posts
+              <ArrowRight size={16} />
+            </Link>
           </motion.div>
 
           {/* Trending Posts Slider */}
